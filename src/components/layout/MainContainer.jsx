@@ -255,7 +255,7 @@ const MainLayout = () => {
     {
       key: 'sub12',
       label: (
-        <CustomLabel ref={ref13}>
+        <CustomLabel ref={ref12}>
           Survery
         </CustomLabel>
       ),
@@ -270,7 +270,7 @@ const MainLayout = () => {
     {
       key: 'sub11',
       label: (
-        <CustomLabel ref={ref12}>
+        <CustomLabel ref={ref13}>
           System Setting
         </CustomLabel>
       ),
