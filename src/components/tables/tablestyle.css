@@ -1,0 +1,30 @@
+
+
+/* .table_container{
+  overflow-x: hidden; 
+  overflow-y: hidden; 
+} */
+
+
+*::-webkit-scrollbar {
+  width: 0% !important;
+}
+
+
+.ant-table-thead > tr > th {
+  font-size: 13px; 
+}
+
+
+.ant-table-tbody > tr > td {
+  font-size: 12px; 
+}
+
+
+.ant-pagination-item a {
+  font-size: 12px; 
+}
+
+.ant-pagination-item-active a {
+  font-size: 12px; 
+}
