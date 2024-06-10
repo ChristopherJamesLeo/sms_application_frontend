@@ -7,7 +7,7 @@ import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 
-export default function Userstable({title}){
+export default function Announcements({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
