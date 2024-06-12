@@ -1,5 +1,5 @@
 import React, { useState , useRef , forwardRef} from 'react';
-import { Link } from 'react-router-dom';
+import { Routes, Route , Link } from 'react-router-dom';
 import {
   PieChartOutlined,
   UserOutlined,
@@ -23,6 +23,38 @@ import {
 import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
 import Userstable from '../tables/Userlist';
+import Overview from '../pages/Overview';
+import Courses from '../tables/Courseslist';
+import Enrolls from '../tables/Enrollslist';
+import Attendances from '../tables/Attendanceslist';
+import Leaverecords from '../tables/Leaverecordslist';
+import Videorecords from '../tables/Videorecordslist';
+import Gpalist from '../tables/Gpalist';
+import Announcements from '../tables/Announcementslist';
+import Realnames from '../tables/Realnameslist';
+import Deviceinfos from '../tables/Deviceinfoslist';
+import Verificationlogs from '../tables/Verificationlogslist';
+import Parteners from '../tables/Partenerslist';
+import Sponsorship from '../tables/Sponsorshipslist';
+import Attsupport from '../tables/Attsupportslist';
+import Servicegroups from '../tables/Servicegroupslist';
+import Servicebyone from '../tables/Servicebyonelist';
+import Customerservices from '../tables/Customerservicelist';
+import Surveyrecords from '../tables/Surveyrecordslist';
+import Theme from '../tables/Theme';
+import Statues from '../tables/Statuses';
+import Stages from '../tables/Stages';
+import Categories from '../tables/Categories';
+import Days from '../tables/Days';
+import Countries from '../tables/Countries';
+import Roles from '../tables/Roles';
+import Genders from '../tables/Genders';
+import Coursetypes from '../tables/Coursetypes';
+import Paymentstype from '../tables/Paymenttypes';
+import Paymentmethods from '../tables/Paymentmethods';
+import Operationplatform from '../tables/Operationplatforms';
+import Surveyplatform from '../tables/Surveyplatforms';
+import Gpagrades from '../tables/Gpagrades';
 
 const { Header, Sider, Content } = Layout;
 
@@ -37,9 +69,6 @@ const CustomLabel = forwardRef(({ children, ...props }, ref) => {
 });
 
 const MainLayout = () => {
-  // start tour 
-
-
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
@@ -53,16 +82,7 @@ const MainLayout = () => {
   const ref11 = useRef(null);
   const ref12 = useRef(null);
   const ref13 = useRef(null);
-  // const ref14 = useRef(null);
-  // const ref15 = useRef(null);
-  // const ref16 = useRef(null);
-  // const ref17 = useRef(null);
-  // const ref18 = useRef(null);
-  // const ref19 = useRef(null);
-  // const ref20 = useRef(null);
-  // const ref21 = useRef(null);
-  // const ref22 = useRef(null);
-  // const ref23 = useRef(null);
+
 
   const [open, setOpen] = useState(false);
 
@@ -263,7 +283,7 @@ const MainLayout = () => {
       children: [
         {
           key: '33',
-          label: <Link to="/surveryrecords">Survery Record</Link>,
+          label: <Link to="/surveyrecords">Survery Record</Link>,
         }
       ],
     },
@@ -506,7 +526,41 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Userstable/>
+          <Routes>
+            <Route path='/' element={<Overview title="Overview" />}/>
+            <Route path='/userlists' element={<Userstable title="User Lists" />}/>
+            <Route path='/courses' element={<Courses title="All Courses" />}/>
+            <Route path='/enrollLists' element={<Enrolls title="User Enroll" />}/>
+            <Route path='/attendances' element={<Attendances title="Student Attendences" />}/>
+            <Route path='/leaverecords' element={<Leaverecords title="Leave Records" />}/>
+            <Route path='/records' element={<Videorecords title="Video Records" />}/>
+            <Route path='/gpa' element={<Gpalist title="Grade Poing Average" />}/>
+            <Route path='/announcements' element={<Announcements title="Announcements" />}/>
+            <Route path='/realnames' element={<Realnames title="Users Real Name" />}/>
+            <Route path='/deviceinfos' element={<Deviceinfos title="User Device Info" />}/>
+            <Route path='/verificationlogs' element={<Verificationlogs title="Verification Logs" />}/>
+            <Route path='/relationships' element={<Parteners title="Pertanership" />}/>
+            <Route path='/sponsorships' element={<Sponsorship title="Sponsorships" />}/>
+            <Route path='/attendendships' element={<Attsupport title="Attendence Bonuces" />}/>
+            <Route path='/servicegroups' element={<Servicegroups title="Services By Group" />}/>
+            <Route path='/serviceindividuals' element={<Servicebyone title="One By One Services" />}/>
+            <Route path='/customerservices' element={<Customerservices title="Customer Service" />}/>
+            <Route path='/surveyrecords' element={<Surveyrecords title="Survey Records" />}/>
+            <Route path='/themes' element={<Theme title="Theme Setting" />}/>
+            <Route path='/statuses' element={<Statues title="Statuses" />}/>
+            <Route path='/stages' element={<Stages title="Stages" />}/>
+            <Route path='/categories' element={<Categories title="Categories" />}/>
+            <Route path='/days' element={<Days title="Days" />}/>
+            <Route path='/coutries' element={<Countries title="Countries" />}/>
+            <Route path='/roles' element={<Roles title="Roles" />}/>
+            <Route path='/genders' element={<Genders title="Genders" />}/>
+            <Route path='/coursetypes' element={<Coursetypes title="Course Type" />}/>
+            <Route path='/paymenttypes' element={<Paymentstype title="Payment Types" />}/>
+            <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
+            <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
+            <Route path='/serviceplatforms' element={<Surveyplatform title="Service Platforms" />}/>
+            <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
+          </Routes>
         </Content>
         <Tour
           open={open}

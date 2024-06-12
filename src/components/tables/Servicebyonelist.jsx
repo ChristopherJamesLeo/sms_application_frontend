@@ -120,7 +120,7 @@ export default function Servicebyone({title}){
             <Table
                 dataSource={data}
                 columns={columns}
-                loading={isLoading}
+                loading={Boolean(isLoading)}
                 pagination={false}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />

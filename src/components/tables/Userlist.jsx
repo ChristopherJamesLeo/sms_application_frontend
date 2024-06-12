@@ -30,8 +30,10 @@ export default function Userstable({title}){
             }));
             setfetchData(transformedData);
             setLoading(false);
+            
         }).catch(error => {
             console.error("There was an error fetching the data!", error);
+            setLoading(false);
         });
     }, []);
 
@@ -120,7 +122,7 @@ export default function Userstable({title}){
             <Table
                 dataSource={data}
                 columns={columns}
-                loading={isLoading}
+                loading={Boolean(isLoading)}
                 pagination={false}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
