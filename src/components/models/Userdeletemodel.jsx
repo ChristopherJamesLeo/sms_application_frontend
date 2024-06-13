@@ -1,19 +1,38 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal , message } from 'antd';
 export default function Userdeletemodel(){
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [buttonText, setbuttonText] = useState('Delete');
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+          type: 'success',
+          content: 'Delete Successful',
+        });
+    };
+
+    const error = () => {
+        messageApi.open({
+          type: 'error',
+          content: 'This is an error message',
+        });
+    };
     
     const showModal = () => {
         setOpen(true);
     };
     const handleOk = () => {
-        setbuttonText('Successful Deleted');
+        
         setConfirmLoading(true);
+
         setTimeout(() => {
-        setOpen(false);
-        setConfirmLoading(false);
+            setOpen(false);
+            setConfirmLoading(false);
+            setbuttonText('Successful Deleted');
+            success();
         }, 2000);
     };
     const handleCancel = () => {
@@ -22,6 +41,7 @@ export default function Userdeletemodel(){
     };
     return (
         <>
+        {contextHolder}
         <Button type="primary" danger onClick={showModal}>
             {buttonText}
         </Button>

@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Timeline } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import Coursedrawer from '../drawer/Coursedrawer';
 export default function Usertimeline(){
     return (
         <Timeline
@@ -14,7 +15,9 @@ export default function Usertimeline(){
                         children: ( 
                             <>
                                 <p>Web development foundation</p>
-                                <p>Batch 1</p>
+                                <p>
+                                    <Coursedrawer name={"Course 3"} postid={1}/>
+                                </p>
                                 <p>Attendance 90 %</p>
                                 <p className='font-bold'>Status - Success</p>
                             </>
@@ -33,7 +36,9 @@ export default function Usertimeline(){
                         children: ( 
                             <>
                                 <p>Web development foundation</p>
-                                <p>Batch 1</p>
+                                <p>
+                                    <Coursedrawer name={"Course 2"} postid={1}/>
+                                </p>
                                 <p>Attendance 30 %</p>
                                 
                                 <p>
@@ -48,7 +53,9 @@ export default function Usertimeline(){
                         children: ( 
                             <>
                                 <p>Web development foundation</p>
-                                <p>Batch 1</p>
+                                <p>
+                                    <Coursedrawer name={"Course 1"} postid={1}/>
+                                </p>
                                 <p>Attendance 30 %</p>
                                 <p className='font-bold'>Status - Reject</p>
                             </>

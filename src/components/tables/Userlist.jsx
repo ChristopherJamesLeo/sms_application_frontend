@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
+import Adduser from '../models/Adduser';
 import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
@@ -95,15 +96,13 @@ export default function Userstable({title}){
             width: 150,
         },
         {
-            title: 'Action',
+            title: 'Status',
             key: 'operation',
             fixed: 'right',
-            width: 150,
+            width: 100,
             render: (_, record) => (
                 <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
+                    <Link to={`/delete/${record.id}`} className='text-red-700'>Online</Link>
                 </div>
             ),
         },
@@ -118,7 +117,11 @@ export default function Userstable({title}){
 
     return (
         <div className="table-container">
-            <h2>{title}</h2>
+            <h2 className='text-lg'>{title}</h2>
+            <div className="my-4">
+                <Adduser />
+            </div>
+            
             <Table
                 dataSource={data}
                 columns={columns}
