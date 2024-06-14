@@ -337,6 +337,10 @@ const items = [
         label: <Link to="/coursetypes">Course Type</Link>,
       },
       {
+        key: '33',
+        label: <Link to="/coursetypes">Course Level</Link>,
+      },
+      {
         key: '28',
         label: <Link to="/paymenttypes">Payment Type</Link>,
       },

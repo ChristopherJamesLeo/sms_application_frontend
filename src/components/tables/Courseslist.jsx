@@ -7,6 +7,7 @@ import "./tablestyle.css";
 
 import Coursedrawer from '../drawer/Coursedrawer';
 import Postcomments from '../drawer/Postcommets';
+import AddCourse from '../models/AddCourse';
 
 export default function Courses({title}){
     const [data, setfetchData] = useState([]);
@@ -171,6 +172,10 @@ export default function Courses({title}){
     return (
         <div className="table-container">
             <h2>{title}</h2>
+            <div className="my-3">
+                <AddCourse />
+            </div>
+            
             <Table
                 dataSource={data}
                 columns={columns}
