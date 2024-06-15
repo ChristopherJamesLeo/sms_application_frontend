@@ -1,29 +1,153 @@
 import React, { useState } from 'react';
-import { Button, Modal , ConfigProvider , Col, DatePicker, Form, Input, Row, Select, Space , InputNumber } from 'antd';
+import { Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber } from 'antd';
 
-const SubmitButton = ({ form, children }) => {
-    const [submittable, setSubmittable] = React.useState(false);
-  
-    // Watch all values
-    const values = Form.useWatch([], form);
-    React.useEffect(() => {
-      form
-        .validateFields({
-          validateOnly: true,
-        })
-        .then(() => setSubmittable(true))
-        .catch(() => setSubmittable(false));
-    }, [form, values]);
-    return (
-      <Button type="primary" htmlType="submit" disabled={!submittable}>
-        {children}
-      </Button>
-    );
-};
+
+
+// start img upload
+
+// end img upload 
+
 
 const AddCourse = () => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
+    const [infoBox , setInfoBox] = useState(false);
+
+    // start check box array
+    const options = [
+        { label: 'Sunday', value: '1' },
+        { label: 'Monday', value: '2' },
+        { label: 'Thursday', value: '3' },
+        { label: 'Wednesday', value: '4' },
+        { label: 'Tuesday', value: '5' },
+        { label: 'Friday', value: '6' },
+        { label: 'Saturday', value: '7' },
+    ];
+    // end check box array
+
+
+    // start submit button
+    const SubmitButton = ({ form, children }) => {
+
+        const [submittable, setSubmittable] = React.useState(false);
+      
+        // Watch all values
+        const values = Form.useWatch([], form);
+        React.useEffect(() => {
+          form
+            .validateFields({
+              validateOnly: true,
+            })
+            .then(() => setSubmittable(true))
+            .catch(() => setSubmittable(false));
+        }, [form, values]);
+        return (
+          <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
+            {children}
+          </Button>
+        );
+    };
+
+    // end submit btn
+
+    
+    function classTypeHandler(value) {
+        setInfoBox(value);
+        
+      }
+    function infoBoxHandler(type ){
+        
+        if(type == 2){
+            
+            return(
+                <Row gutter={16} className='offline_class'>
+                    <Col span={8}>
+                        <Form.Item
+                            name="room_no"
+                            label="Room Number"
+                            defaultValue = "Room 122"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Title',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Course Title" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item
+                            name="address"
+                            label="Address"
+                            defaultValue = "Oakthar Myo Thit"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Title',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Course Title" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item
+                            name="location"
+                            label="Location"
+                            defaultValue = "Bago"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Location',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Course Location" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                
+            )
+        }else if(type == 1){
+            return (
+                <Row gutter={16} className='online_class'>
+                    <Col span={12}>
+                        <Form.Item
+                            name="zoomId"
+                            label="Zoom Id"
+                            defaultValue = "3334 4242 9283"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter zoom id',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Zoom ID" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="passcode"
+                            label="Passcode"
+                            defaultValue = "American"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Passcode',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Passcode" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            )
+        }
+    }
+
+
     return (
         <>
             <ConfigProvider >
@@ -79,7 +203,7 @@ const AddCourse = () => {
                     <Col span={12}>
                         <Form.Item
                             name="course"
-                            label="course"
+                            label="Course"
                             rules={[
                             {
                                 required: true,
@@ -124,9 +248,9 @@ const AddCourse = () => {
                             },
                             ]}
                         >
-                            <Select placeholder="Please choose the Type">
-                            <Option value="private">Onlie</Option>
-                            <Option value="public">Offline</Option>
+                            <Select onChange={classTypeHandler} placeholder="Please choose the Type">
+                                <Option value="1">Onlie</Option>
+                                <Option value="2">Offline</Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -157,126 +281,19 @@ const AddCourse = () => {
                     </Col>
 
                 </Row>
-                <Row gutter={16} className='offline_class'>
-                    <Col span={8}>
-                        <Form.Item
-                            name="room_no"
-                            label="Room Number"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Title',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Course Title" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item
-                            name="address"
-                            label="Address"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Title',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Course Title" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item
-                            name="location"
-                            label="Location"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Location',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Course Location" />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={16} className='online_class'>
-                    <Col span={12}>
-                        <Form.Item
-                            name="zoomId"
-                            label="Zoom Id"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter zoom id',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Zoom ID" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="passcode"
-                            label="Passcode"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Passcode',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Passcode" />
-                        </Form.Item>
-                    </Col>
-                </Row>
+                {
+                    infoBoxHandler(infoBox)
+                }
+                
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item
-                            name="owner"
-                            label="Owner"
+                            name="date"
+                            label="Date"
                             rules={[
                             {
                                 required: true,
-                                message: 'Please select an owner',
-                            },
-                            ]}
-                        >
-                            <Select placeholder="Please select an owner">
-                            <Option value="xiao">Xiaoxiao Fu</Option>
-                            <Option value="mao">Maomao Zhou</Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    
-                </Row>
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            name="approver"
-                            label="Approver"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please choose the approver',
-                            },
-                            ]}
-                        >
-                            <Select placeholder="Please choose the approver">
-                            <Option value="jack">Jack Ma</Option>
-                            <Option value="tom">Tom Liu</Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="dateTime"
-                            label="DateTime"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please choose the dateTime',
+                                message: 'Please choose the Date',
                             },
                             ]}
                         >
@@ -284,25 +301,60 @@ const AddCourse = () => {
                             style={{
                                 width: '100%',
                             }}
-                            getPopupContainer={(trigger) => trigger.parentElement}
+                                getPopupContainer={(trigger) => trigger.parentElement}
                             />
                         </Form.Item>
                     </Col>
-                </Row>
-                <Row gutter={16}>
-                    <Col span={24}>
+                    <Col span={12}>
                         <Form.Item
-                            name="description"
-                            label="Description"
+                            name="time"
+                            label="Time"
                             rules={[
                             {
                                 required: true,
-                                message: 'please enter url description',
+                                message: 'please enter Time',
                             },
                             ]}
                         >
-                            <Input.TextArea rows={4} placeholder="please enter url description" />
+                            <TimePicker.RangePicker style={{
+                                width: '100%',
+                            }}/>
                         </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item
+                            name="days"
+                            label="Days"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter select days',
+                            },
+                            ]}
+                        >
+                             <Checkbox.Group options={options} defaultValue={['Pear']} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                    
+
+                <Row gutter={16}>
+                    <Col span={24}>
+                        <Form.Item
+                            name="outline"
+                            label="Course Outline"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Course Outline',
+                            },
+                            ]}
+                        >
+                            <Input.TextArea rows={10} placeholder="Please enter Course Outline" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                        
                     </Col>
                 </Row>
                 <div className='flex justify-end'>
