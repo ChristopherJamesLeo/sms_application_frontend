@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber } from 'antd';
-
+import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber } from 'antd';
+import axios from 'axios';
+import $ from "jquery";
 
 
 // start img upload
@@ -12,6 +13,21 @@ const AddCourse = () => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [infoBox , setInfoBox] = useState(false);
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+          type: 'success',
+          content: 'User Add Successful',
+        });
+    };
+    const error = () => {
+        messageApi.open({
+          type: 'error',
+          content: 'User Add Fail',
+        })
+    };
 
     // start check box array
     const options = [
@@ -27,29 +43,46 @@ const AddCourse = () => {
 
 
     // start submit button
-    const SubmitButton = ({ form, children }) => {
+    // const SubmitButton = ({ form, children }) => {
 
-        const [submittable, setSubmittable] = React.useState(false);
+    //     const [submittable, setSubmittable] = React.useState(false);
       
-        // Watch all values
-        const values = Form.useWatch([], form);
-        React.useEffect(() => {
-          form
-            .validateFields({
-              validateOnly: true,
-            })
-            .then(() => setSubmittable(true))
-            .catch(() => setSubmittable(false));
-        }, [form, values]);
-        return (
-          <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
-            {children}
-          </Button>
-        );
-    };
+    //     // Watch all values
+    //     const values = Form.useWatch([], form);
+    //     React.useEffect(() => {
+    //       form
+    //         .validateFields({
+    //           validateOnly: true,
+    //         })
+    //         .then(() => setSubmittable(true))
+    //         .catch(() => setSubmittable(false));
+    //     }, [form, values]);
+    //     return (
+    //       <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
+    //         {children}
+    //       </Button>
+    //     );
+    // };
 
     // end submit btn
 
+    // start form submit
+    function formHandler(value){
+        console.log("hello form");
+        
+        const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
+       
+        axios.post(url,value).then(function(response){
+            console.log(response.data);
+            setOpen(false);
+            success();
+
+        }).catch(error => {
+           
+            error();
+        });
+    }
+    // end form submit
     
     function classTypeHandler(value) {
         setInfoBox(value);
@@ -63,7 +96,7 @@ const AddCourse = () => {
                 <Row gutter={16} className='offline_class'>
                     <Col span={8}>
                         <Form.Item
-                            name="room_no"
+                            name="roomNo"
                             label="Room Number"
                             defaultValue = "Room 122"
                             rules={[
@@ -150,12 +183,12 @@ const AddCourse = () => {
 
     return (
         <>
-            <ConfigProvider >
-                <Button type="primary" onClick={() => setOpen(true)}>
-                    Add Course
-                </Button>
-            </ConfigProvider>
-        
+        <ConfigProvider >
+            <Button type="primary" onClick={() => setOpen(true)}>
+                Add Course
+            </Button>
+        </ConfigProvider>
+            {contextHolder}
         <Modal
             title="Add Course"
             centered
@@ -165,7 +198,7 @@ const AddCourse = () => {
             width={1000}
             footer={null}
         >
-            <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+            <Form form={form} onFinish={formHandler} name="validateOnly" layout="vertical" autoComplete="off">
                 <Row gutter={16}>
                     <Col span={24}>
                         <Form.Item
@@ -183,7 +216,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            name="trainer"
+                            name="trainer_id"
                             label="Trainer"
                             rules={[
                             {
@@ -193,16 +226,16 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Traier">
-                            <Option value="private">James</Option>
-                            <Option value="public">Christopher</Option>
-                            <Option value="public">Leo</Option>
-                            <Option value="public">Aung</Option>
+                            <Option value="1">James</Option>
+                            <Option value="2">Christopher</Option>
+                            <Option value="3">Leo</Option>
+                            <Option value="4">Aung</Option>
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            name="course"
+                            name="category_id"
                             label="Course"
                             rules={[
                             {
@@ -212,16 +245,16 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Course">
-                            <Option value="private">Web Development Foundation</Option>
-                            <Option value="public">PHP</Option>
-                            <Option value="public">Javascript</Option>
-                            <Option value="public">Mysql</Option>
+                            <Option value="1">Web Development Foundation</Option>
+                            <Option value="2">PHP</Option>
+                            <Option value="3">Javascript</Option>
+                            <Option value="4">Mysql</Option>
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item
-                            name="level"
+                            name="level_id"
                             label="Level"
                             rules={[
                             {
@@ -231,15 +264,15 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Level">
-                            <Option value="private">Level 1</Option>
-                            <Option value="public">Level 2</Option>
-                            <Option value="public">Level 3</Option>
+                            <Option value="1">Level 1</Option>
+                            <Option value="2">Level 2</Option>
+                            <Option value="3">Level 3</Option>
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item
-                            name="classtype"
+                            name="classtype_id"
                             label="Type"
                             rules={[
                             {
@@ -332,7 +365,7 @@ const AddCourse = () => {
                             },
                             ]}
                         >
-                             <Checkbox.Group options={options} defaultValue={['Pear']} />
+                             <Checkbox.Group options={options}  />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -341,7 +374,7 @@ const AddCourse = () => {
                 <Row gutter={16}>
                     <Col span={24}>
                         <Form.Item
-                            name="outline"
+                            name="description"
                             label="Course Outline"
                             rules={[
                             {
@@ -359,7 +392,7 @@ const AddCourse = () => {
                 </Row>
                 <div className='flex justify-end'>
                     <Space>
-                        <SubmitButton form={form}>Submit</SubmitButton>
+                        <Button type="primary" htmlType="submit">Submit</Button>
                         <Button htmlType="reset">Reset</Button>
                     </Space>
                 </div>

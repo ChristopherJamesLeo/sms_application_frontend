@@ -13,7 +13,7 @@ export default function Userstable({title}){
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+        let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
@@ -23,11 +23,11 @@ export default function Userstable({title}){
                 name: <Userlistdrawer name={item.name} userid={item.id}/>,
                 email: item.email,
                 website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                city: item.city,
+                street: item.street,
+                zipcode: item.zipcode,
+                latitude: item.latitude,
+                longitude: item.longitude
             }));
             setfetchData(transformedData);
             setLoading(false);

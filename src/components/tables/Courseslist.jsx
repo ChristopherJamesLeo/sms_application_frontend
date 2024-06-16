@@ -17,32 +17,29 @@ export default function Courses({title}){
 
         // let url = "https://jsonplaceholder.typicode.com/users";
 
-        let url = "https://jsonplaceholder.typicode.com/posts";
+        let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-
-                // start course
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Coursedrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng,
-                // days: "Mon / Thu / Wed / Tue / Fri / Sat / Sun"
-                // end course
 
                 // start demo
                     key: item.id,
                     no: index + 1,
                     id: item.id, 
-                    title: <Coursedrawer name={item.title} postid={item.id}/>,
-                    body: item.body,
+                    name: <Coursedrawer name={item.name} postid={item.id}/>,
+                    trainer: item.trainer_id,
+                    categories: item.category_id,
+                    level: item.level_id,
+                    type: item.classtype_id,
+                    fee: item.fee,
+                    zoomId: item.zoomId,
+                    passcode: item.passcode,
+                    roomNo: item.roomNo,
+                    address: item.address,
+                    location: item.location,
+                    date: Array.isArray(item.date) ? item.date.map((date, idx) => <span key={idx}>{date} </span>) : "loading...",
+                    time:  Array.isArray(item.time) ? item.time.map((time, idx) => <span key={idx}>{time} </span>) : "loading...",
+                    days:  Array.isArray(item.days) ? item.days.map((day, idx) => <span key={idx}>{day}</span>) : "loading...",
                 // end demo
             }));
             setfetchData(transformedData);
@@ -51,92 +48,6 @@ export default function Courses({title}){
             console.error("There was an error fetching the data!", error);
         });
     }, []);
-
-    
-    // const columns = [
-    //     {
-    //         title: 'No',
-    //         width: 60,
-    //         dataIndex: 'no',
-    //         key: 'no',
-    //         fixed: 'left',
-    //     },
-    //     {
-    //         title: 'Categories',
-    //         width: 200,
-    //         dataIndex: 'name',
-    //         key: 'name',
-    //         fixed: 'left',
-    //     },
-    //     {
-    //         title: 'Class',
-    //         width: 250,
-    //         dataIndex: 'email',
-    //         key: 'email',
-    //     },
-    //     {
-    //         title: 'Class Type',
-    //         dataIndex: 'website',
-    //         key: 'website',
-    //         width: 180,
-    //     },
-    //     {
-    //         title: 'Fee',
-    //         dataIndex: 'city',
-    //         key: 'city',
-    //         width: 150,
-    //     },
-    //     {
-    //         title: 'Trainer',
-    //         dataIndex: 'street',
-    //         key: 'street',
-    //         width: 150,
-    //     },
-    //     {
-    //         title: 'Start Date',
-    //         dataIndex: 'latitude',
-    //         key: 'latitude',
-    //         width: 150,
-    //     },
-    //     {
-    //         title: 'End Date',
-    //         dataIndex: 'longitude',
-    //         key: 'longitude',
-    //         width: 150,
-    //     },
-    //     {
-    //         title: 'Start Time',
-    //         dataIndex: 'longitude',
-    //         key: 'longitude',
-    //         width: 150,
-    //     },
-        
-    //     {
-    //         title: 'End Time',
-    //         dataIndex: 'longitude',
-    //         key: 'longitude',
-    //         width: 150,
-    //     },
-    //     {
-    //         title: 'Days',  // 3 days in a week or 4 days in a week
-    //         dataIndex: 'days',
-    //         key: 'longitude',
-    //         width: 200,
-    //     },
-    //     {
-    //         title: 'Action',
-    //         key: 'operation',
-    //         fixed: 'right',
-    //         width: 150,
-    //         render: (_, record) => (
-    //             <div className='flex gap-x-3'>
-    //                 <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-    //                 <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-    //                 <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-    //             </div>
-    //         ),
-    //     },
-    // ];
 
     // start demo 
     const columns = [
@@ -150,16 +61,104 @@ export default function Courses({title}){
         {
             title: 'Name',
             width: 200,
-            dataIndex: 'title',
-            key: 'title',
+            dataIndex: 'name',
+            key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Body',
-            width: 800,
-            dataIndex: 'body',
-            key: 'body',
+            title: 'Trainer',
+            width: 200,
+            dataIndex: 'trainer',
+            key: 'trainer',
+        },
+        {
+            title: 'Categories',
+            width: 200,
+            dataIndex: 'categories',
+            key: 'categories'
+        },
+        {
+            title: 'Level',
+            width: 200,
+            dataIndex: 'level',
+            key: 'level'
+        },
+        {
+            title: 'Type',
+            width: 200,
+            dataIndex: 'type',
+            key: 'type',
+        },
+        {
+            title: 'fee',
+            width: 200,
+            dataIndex: 'fee',
+            key: 'fee'
+        },
+        {
+            title: 'zoom Id',
+            width: 200,
+            dataIndex: 'zoomId',
+            key: 'zoomId'
+        },
+        {
+            title: 'Pass Code',
+            width: 200,
+            dataIndex: 'passcode',
+            key: 'passcode',
+        },
+        {
+            title: 'Room No',
+            width: 200,
+            dataIndex: 'roomNo',
+            key: 'roomNo',
+        },
+        {
+            title: 'Address',
+            width: 200,
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Location',
+            width: 200,
+            dataIndex: 'location',
+            key: 'location',
         }
+        ,
+        {
+            title: 'Date',
+            width: 500,
+            dataIndex: 'date',
+            key: 'date',
+        }
+        ,
+        {
+            title: 'Time',
+            width: 400,
+            dataIndex: 'time',
+            key: 'time',
+        }
+        ,
+        {
+            title: 'Days',
+            width: 100,
+            dataIndex: 'days',
+            key: 'days',
+        }, 
+        {
+            title: 'Action',
+            key: 'operation',
+            fixed: 'right',
+            width: 150,
+            render: (_, record) => (
+                <div className='flex gap-x-3'>
+                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
+                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
+                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
+                </div>
+            ),
+        },
     ]
     // end demo 
     let tableWidth = 0 ;
