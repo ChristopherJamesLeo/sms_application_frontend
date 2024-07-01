@@ -5,9 +5,9 @@ import { Button , Divider , Switch , Col, DatePicker, Drawer, Form, Input, Row, 
 import Usertimeline from '../timeline/Usertimeline';
 import Userdeletemodel from '../models/Userdeletemodel';
 import Userpromotemodel from '../models/Userpromotemodel';
+import UserVerify from '../models/UserVerify';
 
 import {
-    ClockCircleOutlined,
     LockOutlined,
     UnlockOutlined
   } from '@ant-design/icons';
@@ -197,6 +197,11 @@ const Userlistdrawer = ({name,userid}) => {
                     <Divider/>
                     {/* start Enrll */}
                     
+                    {/* Start Verify  */}
+                    <div className='my-3'>
+                        <UserVerify userid={userid}/>
+                    </div>
+                    {/* End Verify  */}
                     
                     <div>
                         <h3 className='text-lg'>

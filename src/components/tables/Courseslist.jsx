@@ -15,9 +15,9 @@ export default function Courses({title}){
 
     useEffect(() => {
 
-        // let url = "https://jsonplaceholder.typicode.com/users";
+        let url = "https://jsonplaceholder.typicode.com/users";
 
-        let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
+        // let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
@@ -146,19 +146,19 @@ export default function Courses({title}){
             dataIndex: 'days',
             key: 'days',
         }, 
-        {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
-        },
+        // {
+        //     title: 'Action',
+        //     key: 'operation',
+        //     fixed: 'right',
+        //     width: 150,
+        //     render: (_, record) => (
+        //         <div className='flex gap-x-3'>
+        //             <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
+        //             <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
+        //             <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
+        //         </div>
+        //     ),
+        // },
     ]
     // end demo 
     let tableWidth = 0 ;

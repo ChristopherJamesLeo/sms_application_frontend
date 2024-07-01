@@ -13,7 +13,9 @@ export default function Userstable({title}){
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
+        // let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
+        let url = "https://jsonplaceholder.typicode.com/users";
+
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
@@ -103,6 +105,17 @@ export default function Userstable({title}){
             render: (_, record) => (
                 <div className='flex gap-x-3'>
                     <Link to={`/delete/${record.id}`} className='text-red-700'>Online</Link>
+                </div>
+            ),
+        },
+        {
+            title: 'Last Online',
+            key: 'operation',
+            fixed: 'right',
+            width: 150,
+            render: (_, record) => (
+                <div className='flex gap-x-3'>
+                    <Link to={`/delete/${record.id}`} className='text-red-700'>Last Seen Online</Link>
                 </div>
             ),
         },
