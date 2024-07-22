@@ -5,7 +5,7 @@ import { Table } from 'antd';
 import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
-import Userlistdrawer from '../drawer/userlistdrawer';
+import AddRecordVideo from '../models/AddRecordVideo';
 
 export default function Videorecords({title}){
     const [data, setfetchData] = useState([]);
@@ -16,17 +16,17 @@ export default function Videorecords({title}){
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                // key: item.id,
+                // no: index + 1,
+                // id: item.id, 
+                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                // email: item.email,
+                // website: item.website,
+                // city: item.address.city,
+                // street: item.address.street,
+                // zipcode: item.address.zipcode,
+                // latitude: item.address.geo.lat,
+                // longitude: item.address.geo.lng
             }));
             setfetchData(transformedData);
             setLoading(false);
@@ -44,52 +44,34 @@ export default function Videorecords({title}){
             fixed: 'left',
         },
         {
-            title: 'Full Name',
+            title: 'Course Id',
             width: 200,
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'course_id',
+            key: 'course_id',
             fixed: 'left',
         },
         {
-            title: 'Email',
+            title: 'Link',
             width: 250,
-            dataIndex: 'email',
-            key: 'email',
+            dataIndex: 'video_link',
+            key: 'video_link',
         },
         {
-            title: 'Website',
-            dataIndex: 'website',
-            key: 'website',
+            title: 'Download Count',
+            dataIndex: 'count',
+            key: 'count',
             width: 180,
         },
         {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
+            title: 'Admit By',
+            dataIndex: 'admit_by',
+            key: 'admit_by',
             width: 150,
         },
         {
-            title: 'Street',
-            dataIndex: 'street',
-            key: 'street',
-            width: 150,
-        },
-        {
-            title: 'Zip-code',
-            dataIndex: 'zipcode',
-            key: 'zipcode',
-            width: 150,
-        },
-        {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
+            title: 'Status',
+            dataIndex: 'status_id',
+            key: 'status_id',
             width: 150,
         },
         {
@@ -117,6 +99,9 @@ export default function Videorecords({title}){
     return (
         <div className="table-container">
             <h2>{title}</h2>
+            <div className="my-4">
+                <AddRecordVideo />
+            </div>
             <Table
                 dataSource={data}
                 columns={columns}

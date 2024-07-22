@@ -16,17 +16,17 @@ export default function Gpalist({title}){
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                // key: item.id,
+                // no: index + 1,
+                // id: item.id, 
+                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                // email: item.email,
+                // website: item.website,
+                // city: item.address.city,
+                // street: item.address.street,
+                // zipcode: item.address.zipcode,
+                // latitude: item.address.geo.lat,
+                // longitude: item.address.geo.lng
             }));
             setfetchData(transformedData);
             setLoading(false);
@@ -44,54 +44,37 @@ export default function Gpalist({title}){
             fixed: 'left',
         },
         {
-            title: 'Full Name',
+            title: 'Student Id',
             width: 200,
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'user_id',
+            key: 'user_id',
             fixed: 'left',
         },
         {
-            title: 'Email',
+            title: 'Course Point',
             width: 250,
-            dataIndex: 'email',
-            key: 'email',
+            dataIndex: 'coursepoint',
+            key: 'coursepoint',
         },
         {
-            title: 'Website',
-            dataIndex: 'website',
-            key: 'website',
-            width: 180,
+            title: 'Teacher Point',
+            width: 250,
+            dataIndex: 'teacherpoint',
+            key: 'teacherpoint',
         },
         {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            width: 150,
+            title: 'Admit By',
+            width: 250,
+            dataIndex: 'admit_by',
+            key: 'admit_by',
         },
         {
-            title: 'Street',
-            dataIndex: 'street',
-            key: 'street',
-            width: 150,
+            title: 'Status',
+            width: 250,
+            dataIndex: 'status_id',
+            key: 'status_id',
         },
-        {
-            title: 'Zip-code',
-            dataIndex: 'zipcode',
-            key: 'zipcode',
-            width: 150,
-        },
-        {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
-            width: 150,
-        },
+        
         {
             title: 'Action',
             key: 'operation',

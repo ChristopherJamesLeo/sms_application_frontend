@@ -31,15 +31,13 @@ import Leaverecords from '../tables/Leaverecordslist';
 import Videorecords from '../tables/Videorecordslist';
 import Gpalist from '../tables/Gpalist';
 import Announcements from '../tables/Announcementslist';
+import Activities from '../tables/Activitieslist';
 import Realnames from '../tables/Realnameslist';
 import Deviceinfos from '../tables/Deviceinfoslist';
 import Verificationlogs from '../tables/Verificationlogslist';
-import Parteners from '../tables/Partenerslist';
-import Sponsorship from '../tables/Sponsorshipslist';
-import Attsupport from '../tables/Attsupportslist';
-import Servicegroups from '../tables/Servicegroupslist';
-import Servicebyone from '../tables/Servicebyonelist';
-import Customerservices from '../tables/Customerservicelist';
+import Invitations from '../tables/Invitationlists';
+import Courseservices from '../tables/Courseservices';
+import Services from '../tables/Servicelists';
 import Surveyrecords from '../tables/Surveyrecordslist';
 import Theme from '../tables/Theme';
 import Statues from '../tables/Statuses';
@@ -204,6 +202,10 @@ const items = [
       {
         key: '9',
         label: <Link to="/announcements">Announcements</Link>,
+      },
+      {
+        key: '34',
+        label: <Link to="/activities">Activities</Link>,
       }
     ],
   },
@@ -234,22 +236,14 @@ const items = [
     key: 'sub9',
     label:  (
       <CustomLabel ref={ref11}>
-        Sponsorship
+        Relationship
       </CustomLabel>
     ),
     icon: <PoundCircleOutlined />,
     children: [
       {
         key: '13',
-        label: <Link to="/relationships">Relatioship</Link>,
-      },
-      {
-        key: '14',
-        label: <Link to="/sponsorships">Sponsorship</Link>,
-      },
-      {
-        key: '15',
-        label: <Link to="/attendendships">Attendence</Link>,
+        label: <Link to="/invitations">Invitations</Link>,
       },
     ],
   },
@@ -264,15 +258,11 @@ const items = [
     children: [
       {
         key: '16',
-        label: <Link to="/servicegroups">Groups</Link>,
-      },
-      {
-        key: '17',
-        label: <Link to="/serviceindividuals">By One</Link>,
+        label: <Link to="/courseservices">Course Service</Link>,
       },
       {
         key: '18',
-        label: <Link to="/customerservices">Customer Service</Link>,
+        label: <Link to="/servicelinks">Customer Service</Link>,
       },
     ],
   },
@@ -593,23 +583,32 @@ const levelKeys = getLevelKeys(items);
           <Routes>
             <Route path='/' element={<Overview title="Overview" />}/>
             <Route path='/userlists' element={<Userstable title="User Lists" />}/>
+
             <Route path='/courses' element={<Courses title="All Courses" />}/>
+
             <Route path='/enrollLists' element={<Enrolls title="User Enroll" />}/>
+
             <Route path='/attendances' element={<Attendances title="Student Attendences" />}/>
             <Route path='/leaverecords' element={<Leaverecords title="Leave Records" />}/>
+
             <Route path='/records' element={<Videorecords title="Video Records" />}/>
+
             <Route path='/gpa' element={<Gpalist title="Grade Poing Average" />}/>
+
             <Route path='/announcements' element={<Announcements title="Announcements" />}/>
+            <Route path='/activities' element={<Activities title="Activities" />}/>
+
             <Route path='/realnames' element={<Realnames title="Users Real Name" />}/>
             <Route path='/deviceinfos' element={<Deviceinfos title="User Device Info" />}/>
             <Route path='/verificationlogs' element={<Verificationlogs title="Verification Logs" />}/>
-            <Route path='/relationships' element={<Parteners title="Pertanership" />}/>
-            <Route path='/sponsorships' element={<Sponsorship title="Sponsorships" />}/>
-            <Route path='/attendendships' element={<Attsupport title="Attendence Bonuces" />}/>
-            <Route path='/servicegroups' element={<Servicegroups title="Services By Group" />}/>
-            <Route path='/serviceindividuals' element={<Servicebyone title="One By One Services" />}/>
-            <Route path='/customerservices' element={<Customerservices title="Customer Service" />}/>
+
+            <Route path='/invitations' element={<Invitations title="Invitation List" />}/>
+
+            <Route path='/courseservices' element={<Courseservices title="Course Services Links" />}/>
+            <Route path='/servicelinks' element={<Services title="Customer Service" />}/>
+
             <Route path='/surveyrecords' element={<Surveyrecords title="Survey Records" />}/>
+
             <Route path='/themes' element={<Theme title="Theme Setting" />}/>
             <Route path='/statuses' element={<Statues title="Statuses" />}/>
             <Route path='/stages' element={<Stages title="Stages" />}/>

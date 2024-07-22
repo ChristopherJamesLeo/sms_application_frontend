@@ -23,23 +23,23 @@ export default function Courses({title}){
             const transformedData = response.data.map((item, index) => ({
 
                 // start demo
-                    key: item.id,
-                    no: index + 1,
-                    id: item.id, 
-                    name: <Coursedrawer name={item.name} postid={item.id}/>,
-                    trainer: item.trainer_id,
-                    categories: item.category_id,
-                    level: item.level_id,
-                    type: item.classtype_id,
-                    fee: item.fee,
-                    zoomId: item.zoomId,
-                    passcode: item.passcode,
-                    roomNo: item.roomNo,
-                    address: item.address,
-                    location: item.location,
-                    date: Array.isArray(item.date) ? item.date.map((date, idx) => <span key={idx}>{date} </span>) : "loading...",
-                    time:  Array.isArray(item.time) ? item.time.map((time, idx) => <span key={idx}>{time} </span>) : "loading...",
-                    days:  Array.isArray(item.days) ? item.days.map((day, idx) => <span key={idx}>{day}</span>) : "loading...",
+                    // key: item.id,
+                    // no: index + 1,
+                    // id: item.id, 
+                    // name: <Coursedrawer name={item.name} postid={item.id}/>,
+                    // trainer: item.trainer_id,
+                    // categories: item.category_id,
+                    // level: item.level_id,
+                    // type: item.classtype_id,
+                    // fee: item.fee,
+                    // zoomId: item.zoomId,
+                    // passcode: item.passcode,
+                    // roomNo: item.roomNo,
+                    // address: item.address,
+                    // location: item.location,
+                    // date: Array.isArray(item.date) ? item.date.map((date, idx) => <span key={idx}>{date} </span>) : "loading...",
+                    // time:  Array.isArray(item.time) ? item.time.map((time, idx) => <span key={idx}>{time} </span>) : "loading...",
+                    // days:  Array.isArray(item.days) ? item.days.map((day, idx) => <span key={idx}>{day}</span>) : "loading...",
                 // end demo
             }));
             setfetchData(transformedData);
@@ -57,13 +57,30 @@ export default function Courses({title}){
             dataIndex: 'no',
             key: 'no',
             fixed: 'left',
-        },
-        {
+        },{
             title: 'Name',
             width: 200,
             dataIndex: 'name',
             key: 'name',
+        },
+        {
+            title: 'Categorie',
+            width: 200,
+            dataIndex: 'categorie',
+            key: 'categorie',
             fixed: 'left',
+        },
+        {
+            title: 'Course Id',
+            width: 200,
+            dataIndex: 'regId',
+            key: 'regId',
+        },
+        {
+            title: 'Post By',
+            width: 200,
+            dataIndex: 'user_id',
+            key: 'user_id',
         },
         {
             title: 'Trainer',
@@ -72,80 +89,86 @@ export default function Courses({title}){
             key: 'trainer',
         },
         {
-            title: 'Categories',
-            width: 200,
-            dataIndex: 'categories',
-            key: 'categories'
-        },
-        {
-            title: 'Level',
-            width: 200,
-            dataIndex: 'level',
-            key: 'level'
-        },
-        {
             title: 'Type',
             width: 200,
-            dataIndex: 'type',
-            key: 'type',
-        },
-        {
-            title: 'fee',
+            dataIndex: 'type_id',
+            key: 'type_id',
+        },{
+            title: 'Level',
+            width: 200,
+            dataIndex: 'level_id',
+            key: 'level_id',
+        },{
+            title: 'Status',
+            width: 200,
+            dataIndex: 'status_id',
+            key: 'status_id',
+        },{
+            title: 'Payment Type',
+            width: 200,
+            dataIndex: 'paymenttype_id',
+            key: 'paymenttype_id',
+        },{
+            title: 'Fee',
             width: 200,
             dataIndex: 'fee',
-            key: 'fee'
-        },
-        {
-            title: 'zoom Id',
+            key: 'fee',
+        },{
+            title: 'video_count',
             width: 200,
-            dataIndex: 'zoomId',
-            key: 'zoomId'
-        },
-        {
-            title: 'Pass Code',
+            dataIndex: 'video_count',
+            key: 'video_count',
+        },{
+            title: 'point',
             width: 200,
-            dataIndex: 'passcode',
-            key: 'passcode',
-        },
-        {
-            title: 'Room No',
+            dataIndex: 'point',
+            key: 'point',
+        },{
+            title: 'Student Count',
             width: 200,
-            dataIndex: 'roomNo',
-            key: 'roomNo',
-        },
-        {
-            title: 'Address',
+            dataIndex: 'student_count',
+            key: 'student_count',
+        },{
+            title: 'Cover Photo',
             width: 200,
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: 'Location',
+            dataIndex: 'image',
+            key: 'image',
+        },{
+            title: 'State Date',
             width: 200,
-            dataIndex: 'location',
-            key: 'location',
-        }
-        ,
-        {
-            title: 'Date',
-            width: 500,
-            dataIndex: 'date',
-            key: 'date',
-        }
-        ,
-        {
-            title: 'Time',
-            width: 400,
-            dataIndex: 'time',
-            key: 'time',
-        }
-        ,
-        {
+            dataIndex: 'start_date',
+            key: 'start_date',
+        },{
+            title: 'End Date',
+            width: 200,
+            dataIndex: 'end_date',
+            key: 'end_date',
+        },{
+            title: 'Start Time',
+            width: 200,
+            dataIndex: 'start_time',
+            key: 'start_time',
+        },{
+            title: 'End Time',
+            width: 200,
+            dataIndex: 'end_time',
+            key: 'end_time',
+        },{
             title: 'Days',
-            width: 100,
+            width: 200,
             dataIndex: 'days',
             key: 'days',
-        }, 
+        },{
+            title: 'Created At',
+            width: 200,
+            dataIndex: 'created_at',
+            key: 'created_at',
+        },{
+            title: 'Updated At',
+            width: 200,
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+        },
         // {
         //     title: 'Action',
         //     key: 'operation',

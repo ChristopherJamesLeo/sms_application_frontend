@@ -16,17 +16,17 @@ export default function Surveyrecords({title}){
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                // key: item.id,
+                // no: index + 1,
+                // id: item.id, 
+                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                // email: item.email,
+                // website: item.website,
+                // city: item.address.city,
+                // street: item.address.street,
+                // zipcode: item.address.zipcode,
+                // latitude: item.address.geo.lat,
+                // longitude: item.address.geo.lng
             }));
             setfetchData(transformedData);
             setLoading(false);
@@ -44,53 +44,17 @@ export default function Surveyrecords({title}){
             fixed: 'left',
         },
         {
-            title: 'Full Name',
+            title: 'Name',
             width: 200,
             dataIndex: 'name',
             key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Email',
+            title: 'Count',
             width: 250,
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Website',
-            dataIndex: 'website',
-            key: 'website',
-            width: 180,
-        },
-        {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            width: 150,
-        },
-        {
-            title: 'Street',
-            dataIndex: 'street',
-            key: 'street',
-            width: 150,
-        },
-        {
-            title: 'Zip-code',
-            dataIndex: 'zipcode',
-            key: 'zipcode',
-            width: 150,
-        },
-        {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
-            width: 150,
+            dataIndex: 'count',
+            key: 'count',
         },
         {
             title: 'Action',
