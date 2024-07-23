@@ -8,7 +8,9 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function Allsearch(){
     return (
         <>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton />
+            <Search placeholder="Search All" style={{
+                width: "350px"
+            }} onSearch={onSearch} enterButton />
         </>
     )
 }

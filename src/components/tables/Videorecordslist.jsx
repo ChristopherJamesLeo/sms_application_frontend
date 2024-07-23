@@ -6,6 +6,9 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
 import AddRecordVideo from '../models/AddRecordVideo';
+import Userlistdrawer from '../drawer/userlistdrawer';
+import UserSearch from "../inputs/UserSearch";
+import UserExport from "../buttons/UserExport";
 
 export default function Videorecords({title}){
     const [data, setfetchData] = useState([]);
@@ -99,8 +102,13 @@ export default function Videorecords({title}){
     return (
         <div className="table-container">
             <h2>{title}</h2>
-            <div className="my-4">
-                <AddRecordVideo />
+
+            <div className="my-4 flex justify-between">
+                <div className='flex gap-x-2'>
+                    <AddRecordVideo />
+                    <UserExport/>
+                </div>
+                <UserSearch/>
             </div>
             <Table
                 dataSource={data}

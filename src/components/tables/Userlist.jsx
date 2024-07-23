@@ -2,9 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
-import Adduser from '../models/Adduser';
+// import Adduser from '../models/Adduser';
 import axios, { Axios } from 'axios';
 import "./tablestyle.css";
+import Adduser from '../models/Adduser';
+import UserSearch from "../inputs/UserSearch";
+import UserExport from "../buttons/UserExport";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 
@@ -53,6 +56,12 @@ export default function Userstable({title}){
             width: 200,
             dataIndex: 'name',
             key: 'name',
+            fixed: 'left',
+        },{
+            title: 'Student Id',
+            width: 200,
+            dataIndex: 'reg_id',
+            key: 'reg_id',
             fixed: 'left',
         },
         {
@@ -131,8 +140,12 @@ export default function Userstable({title}){
     return (
         <div className="table-container">
             <h2 className='text-lg'>{title}</h2>
-            <div className="my-4">
-                <Adduser />
+            <div className="my-4 flex justify-between">
+                <div className='flex gap-x-2'>
+                    <Adduser />
+                    <UserExport/>
+                </div>
+                <UserSearch/>
             </div>
             
             <Table

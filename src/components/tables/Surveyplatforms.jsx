@@ -6,6 +6,8 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
+import UserSearch from "../inputs/UserSearch";
+import UserExport from "../buttons/UserExport";
 
 export default function Surveyplatform({title}){
     const [data, setfetchData] = useState([]);

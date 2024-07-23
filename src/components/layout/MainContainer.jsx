@@ -276,7 +276,7 @@ const items = [
     icon: <NotificationOutlined />,
     children: [
       {
-        key: '33',
+        key: '3473',
         label: <Link to="/surveyrecords">Survery Record</Link>,
       }
     ],
@@ -499,77 +499,90 @@ const levelKeys = getLevelKeys(items);
   } = theme.useToken();
   return (
     <Layout theme="light">
-      <Sider trigger={null} collapsible collapsed={collapsed} theme='light' style={
-        {
-            height : "100vh",
-            overflowY : "scroll",
-            padding : "20px 0px"
-        }
-        }>
-       
 
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          openKeys={stateOpenKeys}
-          onOpenChange={onOpenChange}
-          theme="light"
-          style={
-            {
-              fontSize: "13px"
-            }
-          }
-          items={items}
-        />
-        
-        <span ref = {ref1} title='Help' onClick={() => helpHandler() } style={
-          {
-            position: "fixed",
-            right : "15px",
-            bottom : "15px",
-            fontSize : "20px",
-            cursor: "pointer",
-            zIndex : 100
-          }
-        }>
-          <QuestionCircleOutlined />
-        </span>
-        
-           
+
       
-      </Sider>
       <Layout>
         <Header
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
-        >
-
+        > 
           <div className='flex items-center justify-between px-5'>
-            <div>
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                style={{
-                fontSize: '16px',
-                width: 30,
-                height: 30,
-                }}
-              />
+            <div className='flex items-center'>
+              <div className='flex items-center gap-x-3 '>
+                <img src={`${process.env.PUBLIC_URL}/logo.jpg`} alt="" style={
+                    {
+                      width :"50px",
+                      height: "50px"
+                    }
+                  } />
+                  <h2 className='text-2xl'>Ninth Programming</h2>
+                  <Button
+                    type="text"
+                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => setCollapsed(!collapsed)}
+                    style={{
+                    fontSize: '18px',
+                    width: 30,
+                    height: 30,
+                    }}
+                  />
+                
+              </div>
+              <div className='flex ml-4'>
+                <Allsearch />
+              </div>
+              
             </div>
             
-
-            <div className='flex items-center'>
-              
-              <Allsearch/>
-            </div>
+            
 
             <div>Hello James</div>
+
           </div>
           
         </Header>
+        <Layout>
+          <Sider trigger={null} collapsedWidth={70} width={250} collapsible collapsed={collapsed} theme='light' style={
+          {
+              height : "100vh",
+              overflowY : "scroll",
+              padding : "0px 0px 0px 0px",
+          }
+          }>
+
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            openKeys={stateOpenKeys}
+            onOpenChange={onOpenChange}
+            theme="light"
+            style={
+              {
+                fontSize: "13px",
+              }
+            }
+            items={items}
+          />
+          
+          <span ref = {ref1} title='Help' onClick={() => helpHandler() } style={
+            {
+              position: "fixed",
+              right : "15px",
+              bottom : "15px",
+              fontSize : "20px",
+              cursor: "pointer",
+              zIndex : 100
+            }
+          }>
+            <QuestionCircleOutlined />
+          </span>
+          
+            
+        
+        </Sider>
         <Content style={{
             margin: '24px 16px',
             padding: 24,
@@ -580,6 +593,7 @@ const levelKeys = getLevelKeys(items);
             borderRadius: borderRadiusLG,
           }}
         >
+          
           <Routes>
             <Route path='/' element={<Overview title="Overview" />}/>
             <Route path='/userlists' element={<Userstable title="User Lists" />}/>
@@ -623,8 +637,13 @@ const levelKeys = getLevelKeys(items);
             <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
             <Route path='/serviceplatforms' element={<Surveyplatform title="Service Platforms" />}/>
             <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
+
+               
           </Routes>
         </Content>
+
+        </Layout>
+
         <Tour
           open={open}
           onClose={() => setOpen(false)}
@@ -641,6 +660,7 @@ const levelKeys = getLevelKeys(items);
           )}
         />
       </Layout>
+
     </Layout>
   );
 };

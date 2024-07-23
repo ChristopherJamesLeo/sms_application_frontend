@@ -6,6 +6,8 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
+import UserSearch from "../inputs/UserSearch";
+import UserExport from "../buttons/UserExport";
 
 export default function Leaverecords({title}){
     const [data, setfetchData] = useState([]);
@@ -16,17 +18,17 @@ export default function Leaverecords({title}){
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                // key: item.id,
+                // no: index + 1,
+                // id: item.id, 
+                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                // email: item.email,
+                // website: item.website,
+                // city: item.address.city,
+                // street: item.address.street,
+                // zipcode: item.address.zipcode,
+                // latitude: item.address.geo.lat,
+                // longitude: item.address.geo.lng
             }));
             setfetchData(transformedData);
             setLoading(false);
@@ -105,6 +107,12 @@ export default function Leaverecords({title}){
     return (
         <div className="table-container">
             <h2>{title}</h2>
+            <div className="my-4 flex justify-between">
+                <div className='flex gap-x-2'>
+                    <UserExport/>
+                </div>
+                <UserSearch/>
+            </div>
             <Table
                 dataSource={data}
                 columns={columns}
