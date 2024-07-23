@@ -7,7 +7,6 @@ import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 import AddAttended from "../models/AddAttended";
 
 export default function Attendances({title}){
@@ -111,7 +110,6 @@ export default function Attendances({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <AddAttended/>
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>

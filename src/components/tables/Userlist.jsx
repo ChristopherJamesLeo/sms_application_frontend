@@ -7,7 +7,6 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 
@@ -149,7 +148,7 @@ export default function Userstable({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <Adduser />
-                    <UserExport/>
+                    {/* <UserExport/> */}
                 </div>
                 <UserSearch/>
             </div>

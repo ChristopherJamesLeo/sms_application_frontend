@@ -8,7 +8,7 @@ import "./tablestyle.css";
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function Roles({title}){
+export default function CourseLevel({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 

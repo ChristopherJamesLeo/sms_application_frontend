@@ -11,7 +11,7 @@ import {
   BarChartOutlined,
   NotificationOutlined,
   NodeExpandOutlined,
-  PoundCircleOutlined,
+  BranchesOutlined,
   LinkOutlined,
   SettingOutlined,
   MenuFoldOutlined,
@@ -49,6 +49,7 @@ import Countries from '../tables/Countries';
 import Roles from '../tables/Roles';
 import Genders from '../tables/Genders';
 import Coursetypes from '../tables/Coursetypes';
+import CourseLevel from '../tables/CourseLevel';
 import Paymentstype from '../tables/Paymenttypes';
 import Paymentmethods from '../tables/Paymentmethods';
 import Operationplatform from '../tables/Operationplatforms';
@@ -244,7 +245,7 @@ const items = [
         Relationship
       </CustomLabel>
     ),
-    icon: <PoundCircleOutlined />,
+    icon: <BranchesOutlined />,
     children: [
       {
         key: '13',
@@ -333,7 +334,7 @@ const items = [
       },
       {
         key: '33',
-        label: <Link to="/coursetypes">Course Level</Link>,
+        label: <Link to="/courselevel">Course Level</Link>,
       },
       {
         key: '28',
@@ -640,6 +641,7 @@ const levelKeys = getLevelKeys(items);
             <Route path='/roles' element={<Roles title="Roles" />}/>
             <Route path='/genders' element={<Genders title="Genders" />}/>
             <Route path='/coursetypes' element={<Coursetypes title="Course Type" />}/>
+            <Route path='/courselevel' element={<CourseLevel title="Course Level" />}/>
             <Route path='/paymenttypes' element={<Paymentstype title="Payment Types" />}/>
             <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
             <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>

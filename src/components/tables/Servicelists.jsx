@@ -8,7 +8,6 @@ import "./tablestyle.css";
 import Userlistdrawer from '../drawer/userlistdrawer';
 import AddService from '../models/AddService';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 
 export default function Servicelists({title}){
     const [data, setfetchData] = useState([]);
@@ -99,7 +98,6 @@ export default function Servicelists({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <AddService/>
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>

@@ -7,7 +7,6 @@ import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 import AddStaff from "../models/AddStaff";
 
 export default function StaffLists({title}){
@@ -123,7 +122,6 @@ export default function StaffLists({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <AddStaff/>
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>

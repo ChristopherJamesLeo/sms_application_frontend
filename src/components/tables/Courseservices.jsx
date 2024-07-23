@@ -8,7 +8,6 @@ import "./tablestyle.css";
 import Userlistdrawer from '../drawer/userlistdrawer';
 import AddCourseService from '../models/AddCourseService';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 
 export default function Courseservices({title}){
     const [data, setfetchData] = useState([]);
@@ -111,7 +110,6 @@ export default function Courseservices({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <AddCourseService/>
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>

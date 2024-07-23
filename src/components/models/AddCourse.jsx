@@ -312,6 +312,56 @@ const AddCourse = () => {
                             />
                         </Form.Item>
                     </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="point"
+                            label="Paid Point"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Paid Point',
+                            },
+                            ]}
+                        >
+                            <InputNumber
+                                style={
+                                        {
+                                    width: "100%",
+                                    }
+                                }
+                                defaultValue='0'
+                                min="0"
+                                max="5000000"
+                                step="1000"
+                                stringMode
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="bonous_point"
+                            label="Bonous Point"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Bonous Point',
+                            },
+                            ]}
+                        >
+                            <InputNumber
+                                style={
+                                        {
+                                    width: "100%",
+                                    }
+                                }
+                                defaultValue='0'
+                                min="0"
+                                max="5000000"
+                                step="1000"
+                                stringMode
+                            />
+                        </Form.Item>
+                    </Col>
 
                 </Row>
                 {

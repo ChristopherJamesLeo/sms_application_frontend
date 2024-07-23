@@ -7,8 +7,7 @@ import "./tablestyle.css";
 
 import AddRecordVideo from '../models/AddRecordVideo';
 import Userlistdrawer from '../drawer/userlistdrawer';
-import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
+import UserSearch from "../inputs/UserSearch";;
 
 export default function Videorecords({title}){
     const [data, setfetchData] = useState([]);
@@ -106,7 +105,6 @@ export default function Videorecords({title}){
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                     <AddRecordVideo />
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>

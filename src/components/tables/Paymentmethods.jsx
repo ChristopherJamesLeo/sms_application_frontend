@@ -7,7 +7,6 @@ import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
-import UserExport from "../buttons/UserExport";
 
 export default function Paymentmethods({title}){
     const [data, setfetchData] = useState([]);
@@ -46,53 +45,33 @@ export default function Paymentmethods({title}){
             fixed: 'left',
         },
         {
-            title: 'Full Name',
+            title: 'Name',
             width: 200,
             dataIndex: 'name',
             key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Email',
+            title: 'Status',
             width: 250,
-            dataIndex: 'email',
-            key: 'email',
+            dataIndex: 'status_id',
+            key: 'status_id',
         },
         {
-            title: 'Website',
-            dataIndex: 'website',
-            key: 'website',
+            title: 'Admit By',
+            dataIndex: 'admit_by',
+            key: 'admit_by',
             width: 180,
-        },
-        {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            width: 150,
-        },
-        {
-            title: 'Street',
-            dataIndex: 'street',
-            key: 'street',
-            width: 150,
-        },
-        {
-            title: 'Zip-code',
-            dataIndex: 'zipcode',
-            key: 'zipcode',
-            width: 150,
-        },
-        {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
-            width: 150,
+        },{
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 180,
+        },{
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 180,
         },
         {
             title: 'Action',
@@ -121,7 +100,6 @@ export default function Paymentmethods({title}){
             <h2>{title}</h2>
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
-                    <UserExport/>
                 </div>
                 <UserSearch/>
             </div>
