@@ -116,15 +116,21 @@ export default function Courses({title}){
             dataIndex: 'fee',
             key: 'fee',
         },{
-            title: 'video_count',
+            title: 'Video Count',
             width: 200,
             dataIndex: 'video_count',
             key: 'video_count',
-        },{
-            title: 'point',
+        },
+        {
+            title: 'Paid Point',
             width: 200,
-            dataIndex: 'point',
-            key: 'point',
+            dataIndex: 'paid_point',
+            key: 'paid_point',
+        },{
+            title: 'Bonous Point',
+            width: 200,
+            dataIndex: 'bonous_point',
+            key: 'bonous_point',
         },{
             title: 'Student Count',
             width: 200,
