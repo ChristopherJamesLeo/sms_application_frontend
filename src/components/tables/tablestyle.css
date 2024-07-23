@@ -28,3 +28,29 @@
 .ant-pagination-item-active a {
   font-size: 12px; 
 }
+
+.table_title {
+  padding-left: 15px;
+  font-size: 25px;
+  display: inline-block;
+  position: relative;
+}
+
+.table_title::before,.table_title::after{
+  content: "";
+  background-color: rgb(255, 157, 0);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.table_title::before{
+  width: calc( 100% + 30px);
+  height: 3px;
+}
+
+.table_title::after{
+
+  width: 3px;
+  height: 100%;
+
+}

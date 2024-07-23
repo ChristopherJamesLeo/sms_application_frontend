@@ -116,7 +116,7 @@ export default function Theme({title}){
 
     return (
         <div className="table-container">
-            <h2>{title}</h2>
+            <h2 className='table_title'>{title}</h2>
             <Table
                 dataSource={data}
                 columns={columns}

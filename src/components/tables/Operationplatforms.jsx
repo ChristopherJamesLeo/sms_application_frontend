@@ -97,7 +97,7 @@ export default function Operationplatform({title}){
 
     return (
         <div className="table-container">
-            <h2>{title}</h2>
+            <h2 className='table_title'>{title}</h2>
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
                 </div>

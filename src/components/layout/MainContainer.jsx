@@ -551,7 +551,7 @@ const levelKeys = getLevelKeys(items);
           
         </Header>
         <Layout>
-          <Sider trigger={null} collapsedWidth={70} width={250} collapsible collapsed={collapsed} theme='light' style={
+          <Sider trigger={null} collapsedWidth={100} width={250} collapsible collapsed={collapsed} theme='light' style={
           {
               height : "100vh",
               overflowY : "scroll",
