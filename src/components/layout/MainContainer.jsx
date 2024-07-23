@@ -23,6 +23,7 @@ import {
 import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
 import Userstable from '../tables/Userlist';
+import StaffLists from '../tables/StaffLists';
 import Overview from '../pages/Overview';
 import Courses from '../tables/Courseslist';
 import Enrolls from '../tables/Enrollslist';
@@ -108,6 +109,10 @@ const items = [
       {
         key: '2',
         label: <Link to="/userlists"  >User List</Link>,
+      },
+      {
+        key: '332',
+        label: <Link to="/stafflists"  >Staff List</Link>,
       }
     ],
   },
@@ -596,7 +601,10 @@ const levelKeys = getLevelKeys(items);
           
           <Routes>
             <Route path='/' element={<Overview title="Overview" />}/>
+            
             <Route path='/userlists' element={<Userstable title="User Lists" />}/>
+            <Route path='/stafflists' element={<StaffLists title="Staff Lists" />}/>
+            
 
             <Route path='/courses' element={<Courses title="All Courses" />}/>
 

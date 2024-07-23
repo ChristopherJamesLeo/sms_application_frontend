@@ -6,11 +6,11 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
-import AddAnnouncement from '../models/AddAnnouncement';
 import UserSearch from "../inputs/UserSearch";
 import UserExport from "../buttons/UserExport";
+import AddStaff from "../models/AddStaff";
 
-export default function Announcements({title}){
+export default function StaffLists({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -47,47 +47,53 @@ export default function Announcements({title}){
             fixed: 'left',
         },
         {
-            title: 'Title',
+            title: 'Name',
             width: 200,
-            dataIndex: 'title',
-            key: 'title',
+            dataIndex: 'name',
+            key: 'name',
+            fixed: 'left',
+        },
+        
+        {
+            title: 'Role',
+            width: 200,
+            dataIndex: 'role',
+            key: 'role',
             fixed: 'left',
         },
         {
-            title: 'Post By',
-            width: 250,
-            dataIndex: 'user_id',
-            key: 'user_id',
+            title: 'Online/Offline',
+            width: 200,
+            dataIndex: 'online_offline',
+            key: 'online_offline'
         },
         {
-            title: 'Announcement ID',
-            width: 250,
-            dataIndex: 'generate_id',
-            key: 'generate_id',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
-            width: 180,
-        },
-        {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            width: 150,
-        },
-        {
-            title: 'Visibility',
-            dataIndex: 'visibility',
-            key: 'visibility',
-            width: 150,
+            title: 'Last Online',
+            width: 200,
+            dataIndex: 'last_online',
+            key: 'last_online'
         },
         {
             title: 'Status',
+            width: 250,
             dataIndex: 'status_id',
             key: 'status_id',
-            width: 150,
+        },
+        {
+            title: 'Admit By',
+            dataIndex: 'admit_by',
+            key: 'admit_by',
+            width: 180,
+        },{
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 180,
+        },{
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 180,
         },
         {
             title: 'Action',
@@ -116,7 +122,7 @@ export default function Announcements({title}){
             <h2>{title}</h2>
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
-                    <AddAnnouncement />
+                    <AddStaff/>
                     <UserExport/>
                 </div>
                 <UserSearch/>

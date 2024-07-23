@@ -63,6 +63,12 @@ export default function Userstable({title}){
             dataIndex: 'reg_id',
             key: 'reg_id',
             fixed: 'left',
+        },{
+            title: 'Points',
+            width: 200,
+            dataIndex: 'point',
+            key: 'point',
+            fixed: 'left',
         },
         {
             title: 'Email',
@@ -95,25 +101,25 @@ export default function Userstable({title}){
             width: 150,
         },
         {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
             width: 150,
         },
         {
             title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            width: 150,
+        },
+        {
+            title: 'Online/Offline',
             key: 'operation',
             fixed: 'right',
-            width: 100,
+            width: 150,
             render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Online</Link>
+                <div className='flex justify-center'>
+                    <Link to={`/userlists/delete/${record.id}`} className='text-red-700'>Online</Link>
                 </div>
             ),
         },
@@ -124,7 +130,7 @@ export default function Userstable({title}){
             width: 150,
             render: (_, record) => (
                 <div className='flex gap-x-3'>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Last Seen Online</Link>
+                    <Link to={`/userlists/delete/${record.id}`} className='text-red-700'>Last Seen Online</Link>
                 </div>
             ),
         },

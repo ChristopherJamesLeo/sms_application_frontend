@@ -46,7 +46,7 @@ export default function Realnames({title}){
             fixed: 'left',
         },
         {
-            title: 'Student Id',
+            title: 'User Name',
             width: 200,
             dataIndex: 'user_id',
             key: 'user_id',

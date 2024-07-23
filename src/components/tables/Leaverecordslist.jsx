@@ -7,6 +7,7 @@ import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
+import AddLeave from "../models/AddLeave";
 import UserExport from "../buttons/UserExport";
 
 export default function Leaverecords({title}){
@@ -109,6 +110,7 @@ export default function Leaverecords({title}){
             <h2>{title}</h2>
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
+                    <AddLeave/>
                     <UserExport/>
                 </div>
                 <UserSearch/>

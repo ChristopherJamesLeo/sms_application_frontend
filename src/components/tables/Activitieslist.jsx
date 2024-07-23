@@ -6,6 +6,7 @@ import axios, { Axios } from 'axios';
 import "./tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
+import AddActivity from '../models/AddActivity';
 import UserSearch from "../inputs/UserSearch";
 import UserExport from "../buttons/UserExport";
 
@@ -97,6 +98,7 @@ export default function Announcements({title}){
             <h2>{title}</h2>
             <div className="my-4 flex justify-between">
                 <div className='flex gap-x-2'>
+                    <AddActivity/>
                     <UserExport/>
                 </div>
                 <UserSearch/>
