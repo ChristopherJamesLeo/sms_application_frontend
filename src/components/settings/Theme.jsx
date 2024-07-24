@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
-import UserSearch from "../inputs/UserSearch";
 
-export default function Paymentstype({title}){
+export default function Theme({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -45,33 +44,53 @@ export default function Paymentstype({title}){
             fixed: 'left',
         },
         {
-            title: 'Name',
+            title: 'Full Name',
             width: 200,
             dataIndex: 'name',
             key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Status',
+            title: 'Email',
             width: 250,
-            dataIndex: 'status_id',
-            key: 'status_id',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
-            title: 'Admit By',
-            dataIndex: 'admit_by',
-            key: 'admit_by',
+            title: 'Website',
+            dataIndex: 'website',
+            key: 'website',
             width: 180,
-        },{
-            title: 'Created At',
-            dataIndex: 'created_at',
-            key: 'created_at',
-            width: 180,
-        },{
-            title: 'Updated At',
-            dataIndex: 'updated_at',
-            key: 'updated_at',
-            width: 180,
+        },
+        {
+            title: 'City',
+            dataIndex: 'city',
+            key: 'city',
+            width: 150,
+        },
+        {
+            title: 'Street',
+            dataIndex: 'street',
+            key: 'street',
+            width: 150,
+        },
+        {
+            title: 'Zip-code',
+            dataIndex: 'zipcode',
+            key: 'zipcode',
+            width: 150,
+        },
+        {
+            title: 'Latitude',
+            dataIndex: 'latitude',
+            key: 'latitude',
+            width: 150,
+        },
+        {
+            title: 'Longitude',
+            dataIndex: 'longitude',
+            key: 'longitude',
+            width: 150,
         },
         {
             title: 'Action',
@@ -98,11 +117,6 @@ export default function Paymentstype({title}){
     return (
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
-            <div className="my-4 flex justify-between">
-                <div className='flex gap-x-2'>
-                </div>
-                <UserSearch/>
-            </div>
             <Table
                 dataSource={data}
                 columns={columns}

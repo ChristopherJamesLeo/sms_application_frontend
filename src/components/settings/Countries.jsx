@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function Gpagrades({title}){
+export default function Countries({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 

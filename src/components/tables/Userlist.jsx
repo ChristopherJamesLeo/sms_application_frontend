@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 // import Adduser from '../models/Adduser';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
 

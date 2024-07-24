@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function CourseLevel({title}){
+export default function Stages({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -17,17 +17,17 @@ export default function CourseLevel({title}){
 
         axios.get(url).then(response => {
             const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
+                // key: item.id,
+                // no: index + 1,
+                // id: item.id, 
+                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                // email: item.email,
+                // website: item.website,
+                // city: item.address.city,
+                // street: item.address.street,
+                // zipcode: item.address.zipcode,
+                // latitude: item.address.geo.lat,
+                // longitude: item.address.geo.lng
             }));
             setfetchData(transformedData);
             setLoading(false);

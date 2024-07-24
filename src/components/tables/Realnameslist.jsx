@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
@@ -68,22 +68,6 @@ export default function Realnames({title}){
             width: 250,
             dataIndex: 'nrc_id',
             key: 'nrc_id',
-        },{
-            title: 'Front Photo',
-            width: 250,
-            dataIndex: 'id_card_front',
-            key: 'id_card_front',
-        },{
-            title: 'Back Photo',
-            width: 250,
-            dataIndex: 'id_card_back',
-            key: 'id_card_back',
-        },
-        {
-            title: 'Selfie Photo',
-            dataIndex: 'image',
-            key: 'image',
-            width: 180,
         },
         {
             title: 'Admit By',

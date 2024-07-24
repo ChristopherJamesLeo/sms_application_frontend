@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
-import "./tablestyle.css";
+import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/userlistdrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function Days({title}){
+export default function Roles({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -35,7 +35,7 @@ export default function Days({title}){
             console.error("There was an error fetching the data!", error);
         });
     }, []);
-    
+
     const columns = [
         {
             title: 'No',
