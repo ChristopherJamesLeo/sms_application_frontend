@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber } from 'antd';
 import axios from 'axios';
 import $ from "jquery";
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 
 // start img upload
 
@@ -40,6 +41,20 @@ const AddCourse = () => {
         { label: 'Saturday', value: '7' },
     ];
     // end check box array
+
+    // start quill
+    const [quillValue, setQuillValue] = useState('');
+
+
+    function QuillValue(content){
+        setQuillValue(content)
+        
+    }
+
+    function getQuilValue(){
+        console.log(quillValue);
+    }
+    // end quill
 
 
     // start submit button
@@ -423,21 +438,30 @@ const AddCourse = () => {
 
                 <Row gutter={16}>
                     <Col span={24}>
-                        <Form.Item
-                            name="description"
-                            label="Course Outline"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Course Outline',
-                            },
-                            ]}
-                        >
-                            <Input.TextArea rows={10} placeholder="Please enter Course Outline" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
                         
+                        <ReactQuill
+                            placeholder='Syllabus'
+                            style={
+                                {
+                                    marginBottom : "60px",
+                                    height: "200px"
+                                }
+                            }
+                            value={quillValue}
+                            modules={{
+                                
+                                toolbar: [
+                                [{ header: '1' }, { header: '2' }, { font: [] }],
+                                [{ size: [] }],
+                                ['bold', 'italic', 'underline', 'strike', 'blockquote'],[{ 'align': [] }],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                ['link', 'image'],
+                                ['code-block'],
+                                ['clean'],
+                                ],
+                            }}
+                            onChange={QuillValue}
+                        />
                     </Col>
                 </Row>
                 <div className='flex justify-end'>
