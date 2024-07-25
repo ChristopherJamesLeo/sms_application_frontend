@@ -12,6 +12,8 @@ import UserPointManagement from './UserPointManagement';
 import AttendedRecord from '../models/AttendedRecord';
 import LeaveRecord from '../models/LeaveRecord';
 import UserNote from '../models/UserNote';
+import PointChangeRecord from '../models/PointChangeRecord';
+
 
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 
@@ -222,12 +224,12 @@ const Userlistdrawer = ({name,userid}) => {
                         </div>
 
                         {/* user records */}
-                        <div className='my-3'>
+                        <div className='my-5'>
                             <Space>
 
                                 <AttendedRecord userid={userid}/>
                                 <LeaveRecord userid={userid}/>
-                                
+                                <PointChangeRecord userid={userid}/>
                                 { isVerify( condition , userid) } {/* is user verify , insert (true) on parameter */}
                                 
                             </Space>

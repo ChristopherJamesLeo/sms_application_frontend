@@ -34,7 +34,13 @@ const AttendedRecord = ({userid}) => {
 
     return (
         <>
-        <ConfigProvider >
+        <ConfigProvider 
+            theme={{
+                token: {
+                  colorPrimary: '#1677ff', 
+                },
+            }}
+        >
             <Button type="primary" onClick={() => setOpen(true)}>
                 Attended Record
             </Button>
