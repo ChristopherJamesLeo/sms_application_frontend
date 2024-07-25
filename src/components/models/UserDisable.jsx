@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Button, Modal , message } from 'antd';
-export default function Userdeletemodel(){
+export default function UserDisable(){
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [buttonText, setbuttonText] = useState('Delete');
+    const [buttonText, setbuttonText] = useState('Disable');
 
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
         messageApi.open({
           type: 'success',
-          content: 'Delete Successful',
+          content: 'Disable Successful',
         });
     };
 
@@ -31,7 +31,7 @@ export default function Userdeletemodel(){
         setTimeout(() => {
             setOpen(false);
             setConfirmLoading(false);
-            setbuttonText('Successful Deleted');
+            setbuttonText('Successful Disable');
             success();
         }, 2000);
     };

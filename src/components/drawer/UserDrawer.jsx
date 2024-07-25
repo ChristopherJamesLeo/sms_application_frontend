@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined ,CheckCircleOutlined } from '@ant-design/icons';
 import { Button , Divider , Switch , Col, DatePicker, Drawer, Form, Input, Row, Select, Space , Progress } from 'antd';
-import Usertimeline from '../timeline/Usertimeline';
-import Userdeletemodel from '../models/Userdeletemodel';
-import Userpromotemodel from '../models/Userpromotemodel';
-import UserVerify from '../models/UserVerify';
 
-import {
-    LockOutlined,
-    UnlockOutlined
-  } from '@ant-design/icons';
+import Usertimeline from '../timeline/Usertimeline';
+
+import UserDisable from '../models/UserDisable';
+import UserPromote from '../models/UserPromote';
+import UserVerify from '../models/UserVerify';
+import UserPointManagement from './UserPointManagement';
+import AttendedRecord from '../models/AttendedRecord';
+import LeaveRecord from '../models/LeaveRecord';
+import UserNote from '../models/UserNote';
+
+import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+
 import axios, { Axios } from 'axios';
+
 const { Option } = Select;
 
 const conicColors = {
@@ -34,9 +39,39 @@ const getGrade = (percent) =>{
     };
 }
 
+const isVerify = (con , userid) => {
+    if(con){
+        return (
+            <>
+                <UserVerify userid={userid}/>
+            </>
+        )
+    } else {
+        return false;
+    }
+}
+
+const isAdmin = (con , userid) => {
+    if(con){
+        return (
+            <>
+                    <div className="flex justify-evenly">
+                        <UserPromote userid = {userid}/>
+                        <UserDisable userid = {userid}/>
+                        
+                    </div>
+            </>
+        )
+    } else {
+        return false;
+    }
+}
+
 const Userlistdrawer = ({name,userid}) => {
 
-    
+    const [condition, setCondition] = useState(true); 
+    const [permission, setAdmin] = useState(true);
+
     const [open, setOpen] = useState(false);
     const [data , setData] = useState({});
     const [isLoading , setloading] = useState(true);
@@ -106,7 +141,7 @@ const Userlistdrawer = ({name,userid}) => {
             <Drawer
                 // title={`Name : ${data.address ? data.address.street : "Loading..."}`}
                 title={`Name : ${data.name ? data.name : "Loading..."}`}
-                width={720}
+                width={1000}
                 onClose={onClose}
                 loading = {Boolean(isLoading)}
                 open={open}
@@ -116,7 +151,8 @@ const Userlistdrawer = ({name,userid}) => {
                     },
                 }}
                 extra={
-                <Space>
+                <Space >
+                    <span className='block mr-3'>Verified { condition ? <CheckCircleOutlined className='text-green-700' /> : <CloseCircleOutlined className='text-red-700'/> }</span>
                     {lockfun(isLock)}
                     
                     <Switch disabled={disabled} defaultChecked />
@@ -184,12 +220,32 @@ const Userlistdrawer = ({name,userid}) => {
                                 }
                             } />
                         </div>
-                       
+
+                        {/* user records */}
+                        <div className='my-3'>
+                            <Space>
+
+                                <AttendedRecord userid={userid}/>
+                                <LeaveRecord userid={userid}/>
+                                
+                                { isVerify( condition , userid) } {/* is user verify , insert (true) on parameter */}
+                                
+                            </Space>
+                            
+                        </div>
+                        {/* user records */}
+
+
                     </div>
                     {/* end grade */}
                     <Divider/>
+                    
+                    <UserPointManagement />
+
+                    <Divider/>
+
                     <div>
-                        <h3 className="text-lg">Note </h3>
+                        <h3 className="text-lg">Note <UserNote userid={userid}/></h3>
                         <p>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat quibusdam laboriosam eaque, maxime distinctio error similique quasi quisquam non harum, pariatur praesentium. Nulla velit illo expedita blanditiis odit molestias soluta!
                         </p>
@@ -197,11 +253,6 @@ const Userlistdrawer = ({name,userid}) => {
                     <Divider/>
                     {/* start Enrll */}
                     
-                    {/* Start Verify  */}
-                    <div className='my-3'>
-                        <UserVerify userid={userid}/>
-                    </div>
-                    {/* End Verify  */}
                     
                     <div>
                         <h3 className='text-lg'>
@@ -222,14 +273,9 @@ const Userlistdrawer = ({name,userid}) => {
                     {/* end enroll */}
 
                     {/* start account deletion */}
-                    <div className="flex justify-evenly">
-                        {/* <Button type="primary">Promote</Button> */}
-                        <Userpromotemodel/>
-                        <Userdeletemodel/>
-                        
-                    </div>
+                    { isAdmin(permission,userid) }
                     {/* end account deletion */}
-
+                        
 
 
                     

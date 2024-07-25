@@ -8,7 +8,7 @@ import "./../CustomCss/tablestyle.css";
 import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
 
-import Userlistdrawer from '../drawer/userlistdrawer';
+import Userlistdrawer from '../drawer/UserDrawer';
 
 export default function Userstable({title}){
     const [data, setfetchData] = useState([]);

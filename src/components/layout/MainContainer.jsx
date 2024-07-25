@@ -21,7 +21,7 @@ import {
   
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme , Tour } from 'antd';
-import Allsearch from '../pages/Allsearch';
+import Allsearch from '../inputs/Allsearch';
 import Userstable from '../pages/UserList';
 import StaffLists from '../pages/StaffLists';
 import Overview from '../pages/Overview';
@@ -34,7 +34,7 @@ import Gpalist from '../pages/GpaList';
 import Announcements from '../pages/AnnouncementsList';
 import Activities from '../pages/ActivitiesList';
 import Realnames from '../pages/RealNamesList';
-import Deviceinfos from '../tapagesbpagesles/DeviceInfosList';
+import Deviceinfos from '../pages/DeviceInfosList';
 import Verificationlogs from '../pages/VerificationLogsList';
 import Invitations from '../pages/InvitationLists';
 import Courseservices from '../pages/CourseServices';

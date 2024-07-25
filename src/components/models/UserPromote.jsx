@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal , Select , message } from 'antd';
-export default function Userpromotemodel(){
+export default function UserPromote(){
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [value , setValue] = useState("");

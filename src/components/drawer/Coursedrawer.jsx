@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button , Divider , Switch , Image , Col, DatePicker, Drawer, Form, Input, Row, Select, Space , Progress } from 'antd';
 import Usertimeline from '../timeline/Usertimeline';
-import Userdeletemodel from '../models/Userdeletemodel';
-import Userpromotemodel from '../models/Userpromotemodel';
-import Userlistdrawer from './userlistdrawer';
+import Userdeletemodel from '../models/UserDisable';
+import Userpromotemodel from '../models/UserPromote';
+import Userlistdrawer from './UserDrawer';
 import Postcomments from './Postcommets';
 import EnrollDrawer from './EnrollDrawer';
 import {

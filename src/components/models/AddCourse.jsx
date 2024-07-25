@@ -327,10 +327,10 @@ const AddCourse = () => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
                         <Form.Item
-                            name="point"
-                            label="Paid Point"
+                            name="payment_point"
+                            label="Payment Point"
                             rules={[
                             {
                                 required: true,
@@ -352,7 +352,7 @@ const AddCourse = () => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
                         <Form.Item
                             name="bonous_point"
                             label="Bonous Point"
@@ -360,6 +360,56 @@ const AddCourse = () => {
                             {
                                 required: true,
                                 message: 'Bonous Point',
+                            },
+                            ]}
+                        >
+                            <InputNumber
+                                style={
+                                        {
+                                    width: "100%",
+                                    }
+                                }
+                                defaultValue='0'
+                                min="0"
+                                max="5000000"
+                                step="1000"
+                                stringMode
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item
+                            name="atteneded_point"
+                            label="Attended Point"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Attened Point',
+                            },
+                            ]}
+                        >
+                            <InputNumber
+                                style={
+                                        {
+                                    width: "100%",
+                                    }
+                                }
+                                defaultValue='0'
+                                min="0"
+                                max="5000000"
+                                step="1000"
+                                stringMode
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item
+                            name="leave_point"
+                            label="Leave Point"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Leave Point',
                             },
                             ]}
                         >

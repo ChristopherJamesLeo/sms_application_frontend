@@ -5,7 +5,7 @@ import { Table } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
-import Userlistdrawer from '../drawer/userlistdrawer';
+import Userlistdrawer from '../drawer/UserDrawer';
 import AddActivity from '../models/AddActivity';
 import UserSearch from "../inputs/UserSearch";
 

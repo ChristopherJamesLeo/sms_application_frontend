@@ -6,7 +6,7 @@ import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import AddRecordVideo from '../models/AddRecordVideo';
-import Userlistdrawer from '../drawer/userlistdrawer';
+import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";;
 
 export default function Videorecords({title}){
