@@ -144,6 +144,14 @@ const items = [
       {
         key: '4',
         label: <Link to="/enrollLists">Enroll List</Link>,
+      },
+      {
+        key: '2933',
+        label: <Link to="/enrollLists">Point Enroll</Link>,
+      },
+      {
+        key: '2133',
+        label: <Link to="/enrollLists">Fee Enroll</Link>,
       }
     ],
   },
