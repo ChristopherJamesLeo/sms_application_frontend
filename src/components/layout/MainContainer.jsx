@@ -16,17 +16,29 @@ import {
   SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  EllipsisOutlined,
+  DollarOutlined,
   QuestionCircleOutlined
   
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
+
 import Userstable from '../pages/UserList';
 import StaffLists from '../pages/StaffLists';
+import BanLists from '../pages/BanLists';
+
 import Overview from '../pages/Overview';
+
+import BuyAppeals from '../pages/BuyAppeals';
+import BuyOrders from '../pages/BuyOrders';
+import BuyPackages from '../pages/BuyPackages';
+
 import Courses from '../pages/CoursesList';
+
 import Enrolls from '../pages/EnrollsList';
+import PointEnrolls from '../pages/PointEnrolls';
+import FeeEnrolls from '../pages/FeeEnrolls';
+
 import Attendances from '../pages/AttendancesList';
 import Leaverecords from '../pages/LeaveRecordsList';
 import Videorecords from '../pages/VideoRecordsList';
@@ -51,6 +63,8 @@ import Genders from '../settings/Genders';
 import Coursetypes from '../settings/CourseTypes';
 import CourseLevel from '../settings/CourseLevel';
 import Paymentstype from '../settings/PaymentTypes';
+import Packages from '../settings/Packages';
+
 import Paymentmethods from '../settings/PaymentMethods';
 import Operationplatform from '../settings/OperationPlatforms';
 import Surveyplatform from '../settings/SurveyPlatforms';
@@ -114,11 +128,38 @@ const items = [
       {
         key: '332',
         label: <Link to="/stafflists"  >Staff List</Link>,
+      },
+      {
+        key: '333',
+        label: <Link to="/banlists"  >Ban List</Link>,
+      }
+    ],
+  },{
+    key: 'sub2',
+    label: (
+      <CustomLabel ref={ref3}>
+          Point Management
+      </CustomLabel>
+    ) ,
+   
+    icon: <DollarOutlined />,
+    children: [
+      {
+        key: '2343',
+        label: <Link to="/orderlists"  >Buy Order</Link>,
+      },
+      {
+        key: '837',
+        label: <Link to="/appeallists"  >Buy Appeal</Link>,
+      },
+      {
+        key: '1112',
+        label: <Link to="/buypackagelists"  >Buy Packages</Link>,
       }
     ],
   },
   {
-    key: 'sub2',
+    key: 'sub3',
     label:  (
       <CustomLabel ref={ref4}>
         Courses
@@ -133,7 +174,7 @@ const items = [
     ],
   },
   {
-    key: 'sub3',
+    key: 'sub4',
     label:  (
       <CustomLabel ref= {ref5}>
         Roster
@@ -147,16 +188,16 @@ const items = [
       },
       {
         key: '2933',
-        label: <Link to="/enrollLists">Point Enroll</Link>,
+        label: <Link to="/pointenrolls">Point Enroll</Link>,
       },
       {
         key: '2133',
-        label: <Link to="/enrollLists">Fee Enroll</Link>,
+        label: <Link to="/feeEnrolls">Fee Enroll</Link>,
       }
     ],
   },
   {
-    key: 'sub4',
+    key: 'sub5',
     label:  (
       <CustomLabel ref={ref6}>
         Attendances
@@ -175,7 +216,7 @@ const items = [
     ],
   },
   {
-    key: 'sub5',
+    key: 'sub6',
     label: (
       <CustomLabel ref={ref7}>
         Record Management
@@ -185,12 +226,12 @@ const items = [
     children: [
       {
         key: '7',
-        label: <Link to="/records">Records</Link>,
+        label: <Link to="/records">Video Records</Link>,
       }
     ],
   },
   {
-    key: 'sub6',
+    key: 'sub7',
     label:(
       <CustomLabel ref={ref8}>
         GPA Management
@@ -205,7 +246,7 @@ const items = [
     ],
   },
   {
-    key: 'sub7',
+    key: 'sub8',
     label: (
       <CustomLabel ref={ref9}>
         Announcements
@@ -224,7 +265,7 @@ const items = [
     ],
   },
   {
-    key: 'sub8',
+    key: 'sub9',
     label:  (
       <CustomLabel ref={ref10}>
         User Operation
@@ -247,7 +288,7 @@ const items = [
     ],
   },
   {
-    key: 'sub9',
+    key: 'sub10',
     label:  (
       <CustomLabel ref={ref11}>
         Relationship
@@ -262,7 +303,7 @@ const items = [
     ],
   },
   {
-    key: 'sub10',
+    key: 'sub11',
     label: (
       <CustomLabel ref={ref12}>
         Services
@@ -296,7 +337,7 @@ const items = [
     ],
   },
   {
-    key: 'sub11',
+    key: 'sub13',
     label: (
       <CustomLabel ref={ref14}>
         System Setting
@@ -347,6 +388,11 @@ const items = [
       {
         key: '28',
         label: <Link to="/paymenttypes">Payment Type</Link>,
+      }
+      ,
+      {
+        key: '6213',
+        label: <Link to="/packages"  >Packages</Link>,
       },
       {
         key: '29',
@@ -613,11 +659,18 @@ const levelKeys = getLevelKeys(items);
             
             <Route path='/userlists' element={<Userstable title="User Lists" />}/>
             <Route path='/stafflists' element={<StaffLists title="Staff Lists" />}/>
+            <Route path='/banlists' element={<BanLists title="Ban Lists" />}/>
+
+            <Route path='/orderlists' element={<BuyOrders title="Order Lists" />}/>
+            <Route path='/appeallists' element={<BuyAppeals title="Appeal Lists" />}/>
+            <Route path='/buypackagelists' element={<BuyPackages title="Buy Package Lists" />}/>
             
 
             <Route path='/courses' element={<Courses title="All Courses" />}/>
 
-            <Route path='/enrollLists' element={<Enrolls title="User Enroll" />}/>
+            <Route path='/enrollLists' element={<Enrolls title="Enroll Orders" />}/>
+            <Route path='/pointenrolls' element={<PointEnrolls title="Enroll With Point" />}/>
+            <Route path='/feeEnrolls' element={<FeeEnrolls title="Enroll With Fee" />}/>
 
             <Route path='/attendances' element={<Attendances title="Student Attendences" />}/>
             <Route path='/leaverecords' element={<Leaverecords title="Leave Records" />}/>
@@ -652,6 +705,7 @@ const levelKeys = getLevelKeys(items);
             <Route path='/courselevel' element={<CourseLevel title="Course Level" />}/>
             <Route path='/paymenttypes' element={<Paymentstype title="Payment Types" />}/>
             <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
+            <Route path='/packages' element={<Packages title="Packages"/>}/>
             <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
             <Route path='/serviceplatforms' element={<Surveyplatform title="Service Platforms" />}/>
             <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
