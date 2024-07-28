@@ -3,7 +3,7 @@ import { Button, Modal, Col, Form, Input, Row, Upload, Space, message } from 'an
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const AddEnroll = () => {
+const AddBuyOrders = () => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
@@ -59,11 +59,11 @@ const AddEnroll = () => {
     return (
         <>
             <Button type="primary" onClick={() => setOpen(true)}>
-                Add Leave
+                Add Buy Orders
             </Button>
             {contextHolder}
             <Modal
-                title="Add Leave"
+                title="Add Buy Order"
                 centered
                 open={open}
                 onOk={() => setOpen(false)}
@@ -173,4 +173,4 @@ const AddEnroll = () => {
     );
 };
 
-export default AddEnroll;
+export default AddBuyOrders;

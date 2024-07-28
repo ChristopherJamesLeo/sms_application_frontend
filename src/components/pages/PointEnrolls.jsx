@@ -142,7 +142,7 @@ export default function PointEnrolls({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4">
                 <div className='flex gap-x-2'>
-                    <AddEnroll/>
+                    {/* <AddEnroll/> */}
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>

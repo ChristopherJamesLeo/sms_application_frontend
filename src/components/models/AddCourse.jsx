@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber } from 'antd';
+import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber , Upload} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import $ from "jquery";
 import ReactQuill from 'react-quill';
@@ -56,6 +57,23 @@ const AddCourse = () => {
     }
     // end quill
 
+    // start image preview
+    const [previewUrl, setPreviewUrl] = useState(null);
+
+    const beforeUpload = (file) => {
+        // Read the selected file as a data URL for preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result);
+        };
+        reader.readAsDataURL(file);
+
+        // Prevent the file from being uploaded immediately
+        return false;
+    };
+    
+        // end image preview
+
 
     // start submit button
     // const SubmitButton = ({ form, children }) => {
@@ -82,20 +100,21 @@ const AddCourse = () => {
     // end submit btn
 
     // start form submit
-    function formHandler(value){
-        console.log("hello form");
+    function formHandler(values){
+        values.description = quillValue;
+        // console.log("hello form");
         
-        const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
+        // const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
        
-        axios.post(url,value).then(function(response){
-            console.log(response.data);
-            setOpen(false);
-            success();
+        // axios.post(url,value).then(function(response){
+        //     console.log(response.data);
+        //     setOpen(false);
+        //     success();
 
-        }).catch(error => {
+        // }).catch(error => {
            
-            error();
-        });
+        //     error();
+        // });
     }
     // end form submit
     
@@ -209,7 +228,10 @@ const AddCourse = () => {
             centered
             open={open}
             onOk={() => setOpen(false)}
-            onCancel={() => setOpen(false)}
+            onCancel={() => {
+                setOpen(false);
+                setPreviewUrl(null);
+            }}
             width={1000}
             footer={null}
         >
@@ -514,10 +536,35 @@ const AddCourse = () => {
                         />
                     </Col>
                 </Row>
+                <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="image"
+                                label="Poster"
+                            >
+                                <Upload 
+                                    beforeUpload={beforeUpload}
+                                    maxCount={1}
+                                    accept="image/png, image/jpeg, image/jpg"
+                                >
+                                    <Button icon={<UploadOutlined />}>Select File</Button>
+                                </Upload>
+                            </Form.Item>
+                            {previewUrl && (
+                                <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
+                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                                </div>
+                            )}
+                        </Col>
+                    </Row>
                 <div className='flex justify-end'>
                     <Space>
                         <Button type="primary" htmlType="submit">Submit</Button>
-                        <Button htmlType="reset">Reset</Button>
+                        <Button htmlType="reset" onClick={
+                            ()=>{
+                                setPreviewUrl(null);
+                            }
+                        }>Reset</Button>
                     </Space>
                 </div>
                

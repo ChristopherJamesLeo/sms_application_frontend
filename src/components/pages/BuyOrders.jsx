@@ -5,7 +5,7 @@ import { Table } from 'antd';
 // import Adduser from '../models/Adduser';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
-import Adduser from '../models/Adduser';
+import AddBuyOrders from '../models/AddBuyOrders';
 import UserSearch from "../inputs/UserSearch";
 
 import Userlistdrawer from '../drawer/UserDrawer';
@@ -147,7 +147,7 @@ export default function BuyOrders({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2'>
-                    <Adduser />
+                    <AddBuyOrders />
                     {/* <UserExport/> */}
                 </div>
                 <div className='flex justify-end'>

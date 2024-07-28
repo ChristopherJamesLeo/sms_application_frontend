@@ -147,7 +147,6 @@ export default function BuyPackages({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2'>
-                    <Adduser />
                     {/* <UserExport/> */}
                 </div>
                 <div className='flex justify-end'>
