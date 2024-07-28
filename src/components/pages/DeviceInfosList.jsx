@@ -151,9 +151,8 @@ export default function Deviceinfos({title}){
     return (
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
-            <div className="my-4 flex justify-between">
-                <div className='flex gap-x-2'>
-                </div>
+            <div className="my-4 flex justify-end">
+                
                 <UserSearch/>
             </div>
             <Table

@@ -91,10 +91,12 @@ export default function Statues({title}){
     return (
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
-            <div className="my-4 flex justify-between">
+            <div className="my-4 ">
                 <div className='flex gap-x-2'>
                 </div>
-                <UserSearch/>
+                <div className='flex justify-end'>
+                    <UserSearch/>
+                </div>
             </div>
             <Table
                 dataSource={data}

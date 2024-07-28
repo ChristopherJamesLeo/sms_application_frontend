@@ -146,15 +146,15 @@ const items = [
     children: [
       {
         key: '2343',
-        label: <Link to="/orderlists"  >Buy Order</Link>,
+        label: <Link to="/orderlists"  >Orders</Link>,
       },
       {
         key: '837',
-        label: <Link to="/appeallists"  >Buy Appeal</Link>,
+        label: <Link to="/appeallists"  >Appeals</Link>,
       },
       {
         key: '1112',
-        label: <Link to="/buypackagelists"  >Buy Packages</Link>,
+        label: <Link to="/buypackagelists"  >Packages Orders</Link>,
       }
     ],
   },
