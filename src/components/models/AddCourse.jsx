@@ -301,9 +301,9 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Level">
-                            <Option value="1">Level 1</Option>
-                            <Option value="2">Level 2</Option>
-                            <Option value="3">Level 3</Option>
+                                <Option value="1">Level 1</Option>
+                                <Option value="2">Level 2</Option>
+                                <Option value="3">Level 3</Option>
                             </Select>
                         </Form.Item>
                     </Col>

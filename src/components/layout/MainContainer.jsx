@@ -4,7 +4,6 @@ import {
   PieChartOutlined,
   UserOutlined,
   BookOutlined,
-  MailOutlined,
   UserSwitchOutlined,
   AuditOutlined,
   VideoCameraAddOutlined,
@@ -12,12 +11,13 @@ import {
   NotificationOutlined,
   NodeExpandOutlined,
   BranchesOutlined,
-  LinkOutlined,
   SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DollarOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  CommentOutlined,
+  TransactionOutlined
   
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme , Tour } from 'antd';
@@ -52,6 +52,7 @@ import Invitations from '../pages/InvitationLists';
 import Courseservices from '../pages/CourseServices';
 import Services from '../pages/ServiceLists';
 import Surveyrecords from '../pages/SurveyRecordsList';
+import PointChangeRecord from '../pages/PointChangeRecord';
 import Theme from '../settings/Theme';
 import Statues from '../settings/Statuses';
 import Stages from '../settings/Stages';
@@ -103,6 +104,8 @@ const ref11 = useRef(null);
 const ref12 = useRef(null);
 const ref13 = useRef(null);
 const ref14 = useRef(null);
+const ref15 = useRef(null);
+const ref16 = useRef(null);
 
 const items = [
   {
@@ -137,7 +140,7 @@ const items = [
   },{
     key: 'sub2',
     label: (
-      <CustomLabel ref={ref3}>
+      <CustomLabel ref={ref4}>
           Point Management
       </CustomLabel>
     ) ,
@@ -161,7 +164,7 @@ const items = [
   {
     key: 'sub3',
     label:  (
-      <CustomLabel ref={ref4}>
+      <CustomLabel ref={ref5}>
         Courses
       </CustomLabel>
     ) ,
@@ -176,7 +179,7 @@ const items = [
   {
     key: 'sub4',
     label:  (
-      <CustomLabel ref= {ref5}>
+      <CustomLabel ref= {ref6}>
         Roster
       </CustomLabel>
     ) ,
@@ -199,7 +202,7 @@ const items = [
   {
     key: 'sub5',
     label:  (
-      <CustomLabel ref={ref6}>
+      <CustomLabel ref={ref7}>
         Attendances
       </CustomLabel>
     ) ,
@@ -218,7 +221,7 @@ const items = [
   {
     key: 'sub6',
     label: (
-      <CustomLabel ref={ref7}>
+      <CustomLabel ref={ref8}>
         Record Management
       </CustomLabel>
     ) ,
@@ -233,7 +236,7 @@ const items = [
   {
     key: 'sub7',
     label:(
-      <CustomLabel ref={ref8}>
+      <CustomLabel ref={ref9}>
         GPA Management
       </CustomLabel>
     ),
@@ -248,7 +251,7 @@ const items = [
   {
     key: 'sub8',
     label: (
-      <CustomLabel ref={ref9}>
+      <CustomLabel ref={ref10}>
         Announcements
       </CustomLabel>
     ),
@@ -267,7 +270,7 @@ const items = [
   {
     key: 'sub9',
     label:  (
-      <CustomLabel ref={ref10}>
+      <CustomLabel ref={ref11}>
         User Operation
       </CustomLabel>
     ),
@@ -290,7 +293,7 @@ const items = [
   {
     key: 'sub10',
     label:  (
-      <CustomLabel ref={ref11}>
+      <CustomLabel ref={ref12}>
         Relationship
       </CustomLabel>
     ),
@@ -305,11 +308,11 @@ const items = [
   {
     key: 'sub11',
     label: (
-      <CustomLabel ref={ref12}>
+      <CustomLabel ref={ref13}>
         Services
       </CustomLabel>
     ),
-    icon: <LinkOutlined />,
+    icon: <CommentOutlined />,
     children: [
       {
         key: '16',
@@ -324,7 +327,7 @@ const items = [
   {
     key: 'sub12',
     label: (
-      <CustomLabel ref={ref13}>
+      <CustomLabel ref={ref14}>
         Survery
       </CustomLabel>
     ),
@@ -335,11 +338,25 @@ const items = [
         label: <Link to="/surveyrecords">Survery Record</Link>,
       }
     ],
-  },
-  {
+  },{
     key: 'sub13',
     label: (
-      <CustomLabel ref={ref14}>
+      <CustomLabel ref={ref15}>
+        Point Control
+      </CustomLabel>
+    ),
+    icon: <TransactionOutlined />,
+    children: [
+      {
+        key: '27632',
+        label: <Link to="/pointchangerecords">Points Change Records</Link>,
+      }
+    ],
+  },
+  {
+    key: 'sub14',
+    label: (
+      <CustomLabel ref={ref16}>
         System Setting
       </CustomLabel>
     ),
@@ -498,6 +515,18 @@ const steps = [
     title: 'Other Actions',
     description: 'Click to see other actions.',
     target: () => ref14.current,
+    style : {padding : "0px 0px"}
+  },
+  {
+    title: 'Other Actions',
+    description: 'Click to see other actions.',
+    target: () => ref15.current,
+    style : {padding : "0px 0px"}
+  },
+  {
+    title: 'Other Actions',
+    description: 'Click to see other actions.',
+    target: () => ref16.current,
     style : {padding : "0px 0px"}
   }
 ];
@@ -692,6 +721,8 @@ const levelKeys = getLevelKeys(items);
             <Route path='/servicelinks' element={<Services title="Customer Service" />}/>
 
             <Route path='/surveyrecords' element={<Surveyrecords title="Survey Records" />}/>
+
+            <Route path='/pointchangerecords' element={<PointChangeRecord title="Point Change Records" />}/>
 
             <Route path='/themes' element={<Theme title="Theme Setting" />}/>
             <Route path='/statuses' element={<Statues title="Statuses" />}/>

@@ -43,7 +43,7 @@ const UserManualVerification = ({userid}) => {
         {/* error message */}
         <Modal
             title="User Manual Verification"
-            centered
+            
             open={open}
             onOk={() => setOpen(false)}
             onCancel={() => setOpen(false)}

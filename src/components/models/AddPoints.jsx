@@ -10,7 +10,7 @@ import $ from "jquery";
 // end img upload 
 
 
-const PointChangeRecord = ({userid}) => {
+const AddPoints = ({userid}) => {
     const [open, setOpen] = useState(false);
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -42,23 +42,22 @@ const PointChangeRecord = ({userid}) => {
                 }}
             >
                 <Button type="primary" onClick={() => setOpen(true)}>
-                    Point Change Record
+                    Point Add
                 </Button>
             </ConfigProvider>
             {/* error message */}
                 {contextHolder}
             {/* error message */}
             <Modal
-                title="User Verification"
-                centered
+                title="Add Point"
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => setOpen(false)}
-                width={1000}
+                width={500}
                 footer={null}
             >
                 <div className='flex justify-between'>
-                    <h2>Attended Record</h2>
+                    <h2></h2>
                     <UserManualVerification userid={userid} />
                 </div>
                 
@@ -66,4 +65,4 @@ const PointChangeRecord = ({userid}) => {
         </>
     );
 };
-export default PointChangeRecord;
+export default AddPoints;

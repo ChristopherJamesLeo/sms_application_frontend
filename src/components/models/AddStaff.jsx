@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Col, Form, Input, Row, Upload, Space, message } from 'antd';
+import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Image} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -154,7 +154,7 @@ const AddStaff = () => {
                             </Form.Item>
                             {previewUrl && (
                                 <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
-                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                                    <Image src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
                                 </div>
                             )}
                         </Col>

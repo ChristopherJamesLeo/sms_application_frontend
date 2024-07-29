@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Col, Form, Input, Row, Upload, Space, message } from 'antd';
+import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , Image , Divider} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -38,9 +38,98 @@ const AddEnroll = () => {
 
     // end image preview
 
+    const [paymentType, setPaymentType] = useState(false);
+
+    function paymentHandle(value){
+        setPaymentType(value);
+
+    }
+
+    function paymentTypeRender(value){
+        if(value == "1"){
+            return (
+                <Row gutter={16}>
+                    <Col span={24}>
+                        <Form.Item
+                            name="image"
+                            label="User Image"
+                            rules={[{ required: true, message: 'Please Enter Receipt' }]}
+                        >
+                            <Upload 
+                                beforeUpload={beforeUpload}
+                                maxCount={1}
+                                accept="image/png, image/jpeg, image/jpg"
+                                
+                            >
+                                <Button icon={<UploadOutlined />}>Select File</Button>
+                            </Upload>
+                        </Form.Item>
+                        {previewUrl && (
+                            <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
+                                <Image src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                            </div>
+                        )}
+                    </Col>
+                </Row>
+            ) 
+            
+        } else if(value == "2"){
+            return (
+                <div className='mb-3'>
+                    
+                </div>
+            );
+        } else {
+            return false;
+        }
+    }
+
+    function showPaymentMethod(value){
+        if(value == "1"){
+            return (
+                <Col span={24}>
+                    <Form.Item
+                        name="payment_method"
+                        label="Payment Method"
+                        rules={[{ required: true, message: 'Please Payment Method' }]}
+                    >
+                        <Select placeholder="Choose Payment Method">
+                            <Option value="1">KBZ pay</Option>
+                            <Option value="2">Wave Pay</Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+            ) 
+            
+        } else {
+            return false;
+        }
+    }
+
+    let [regNumber , setRegNumber] = useState(null);
+
+    function userRegHangler(value){
+        setRegNumber(value.target.value);
+    }
+    
+    function showUserInfo(value){
+        
+        if(value != null){
+            return (
+                <>
+                    <div className='mb-3'> <span> Name - {value}  </span> & <span>NRC - </span> & <span> Student Point - </span> </div>
+                </>
+            )
+        }else {
+            return false;
+        }
+        
+    }
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
+        setPaymentType(null);
+        setRegNumber(null)
     };
 
     const formHandler = (values) => {
@@ -71,62 +160,52 @@ const AddEnroll = () => {
                     setOpen(false)
                     form.resetFields();
                     setPreviewUrl(null);
+                    setPaymentType(null);
+                    setRegNumber(null);
                 }}
                 footer={null}
-                width={1000}
+                width={500}
             >
+                {showUserInfo(regNumber)}
                 <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="name"
-                                label="Name"
-                                rules={[{ required: true, message: 'Please enter user name' }]}
-                            >
-                                <Input placeholder="Please enter user name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="email"
-                                label="Email"
-                                rules={[{ required: true, message: 'Please enter email' }]}
-                            >
-                                <Input placeholder="Please enter email" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="phone"
-                                label="Phone"
-                                rules={[{ required: true, message: 'Please enter phone number' }]}
-                            >
-                                <Input placeholder="Please enter phone number" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="emergency"
-                                label="Emergency Contact Number"
-                                rules={[{ required: true, message: 'Please enter emergency contact number' }]}
-                            >
-                                <Input placeholder="Please enter emergency contact number" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="address"
-                                label="Address"
-                                rules={[{ required: true, message: 'Please enter address' }]}
+                                name="reg_number"
+                                label="Student Id"
+                                rules={[{ required: true, message: 'Please enter user name' }]}
                             >
-                                <Input placeholder="Please enter address" />
+                                <Input placeholder="Please enter user name" onBlur={userRegHangler}/>
                             </Form.Item>
                         </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                name="course_id"
+                                label="Course"
+                                rules={[{ required: true, message: 'Please enter email' }]}
+                            >
+                                <Select placeholder="Choose Class" onChange={paymentHandle}>
+                                    <Option value="1">Mobile Banking</Option>
+                                    <Option value="2">Point</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                name="payment_type"
+                                label="Payment Type"
+                                rules={[{ required: true, message: 'Please Payment Type' }]}
+                            >
+                                <Select placeholder="Choose Payment Type" onChange={paymentHandle}>
+                                    <Option value="1">Mobile Banking</Option>
+                                    <Option value="2">Point</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        {showPaymentMethod(paymentType)}
+                        
                     </Row>
+                    
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
@@ -138,27 +217,7 @@ const AddEnroll = () => {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                name="image"
-                                label="User Image"
-                            >
-                                <Upload 
-                                    beforeUpload={beforeUpload}
-                                    maxCount={1}
-                                    accept="image/png, image/jpeg, image/jpg"
-                                >
-                                    <Button icon={<UploadOutlined />}>Select File</Button>
-                                </Upload>
-                            </Form.Item>
-                            {previewUrl && (
-                                <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
-                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
-                                </div>
-                            )}
-                        </Col>
-                    </Row>
+                    {paymentTypeRender(paymentType)}
                     <Space>
                         <Button type="primary" htmlType="submit">
                             Submit

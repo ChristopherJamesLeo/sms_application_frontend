@@ -12,7 +12,7 @@ import UserPointManagement from './UserPointManagement';
 import AttendedRecord from '../models/AttendedRecord';
 import LeaveRecord from '../models/LeaveRecord';
 import UserNote from '../models/UserNote';
-import PointChangeRecord from '../models/PointChangeRecord';
+import PointChangeRecord from '../models/AddPoints';
 
 
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
