@@ -184,7 +184,7 @@ const AddEnroll = () => {
                                 label="Course"
                                 rules={[{ required: true, message: 'Please enter email' }]}
                             >
-                                <Select placeholder="Choose Class" onChange={paymentHandle}>
+                                <Select placeholder="Choose Class" >
                                     <Option value="1">Mobile Banking</Option>
                                     <Option value="2">Point</Option>
                                 </Select>
