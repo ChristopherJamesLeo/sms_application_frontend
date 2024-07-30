@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Col, Form, Input, Row, Upload, Space, message } from 'antd';
+import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , DatePicker} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -38,12 +38,21 @@ const AddRecordVideo = () => {
 
     // end image preview
 
+    // start data
+    let [dateTime,setDateTime] = useState(null);
+    const onOk = (value,dateString) => {
+        // console.log('onOk: ', dateString);
+        setDateTime(dateString);
+    };
+    // end date
+
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
     };
 
     const formHandler = (values) => {
+        values.datetime = dateTime;
         console.log(values);
         // const url = "https://66a6acfe23b29e17a1a342ff.mockapi.io/sms/user/image";
         // const url = "";
@@ -64,7 +73,7 @@ const AddRecordVideo = () => {
             {contextHolder}
             <Modal
                 title="Add Video"
-                centered
+                
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => { 
@@ -73,68 +82,45 @@ const AddRecordVideo = () => {
                     setPreviewUrl(null);
                 }}
                 footer={null}
-                width={1000}
+                width={500}
             >
                 <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                     <Row gutter={16}>
-                        <Col span={12}>
+                        <Col span={24}>
                             <Form.Item
-                                name="name"
-                                label="Name"
-                                rules={[{ required: true, message: 'Please enter user name' }]}
-                            >
-                                <Input placeholder="Please enter user name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="email"
-                                label="Email"
+                                name="course_id"
+                                label="Course"
                                 rules={[{ required: true, message: 'Please enter email' }]}
                             >
-                                <Input placeholder="Please enter email" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="phone"
-                                label="Phone"
-                                rules={[{ required: true, message: 'Please enter phone number' }]}
-                            >
-                                <Input placeholder="Please enter phone number" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="emergency"
-                                label="Emergency Contact Number"
-                                rules={[{ required: true, message: 'Please enter emergency contact number' }]}
-                            >
-                                <Input placeholder="Please enter emergency contact number" />
+                                <Select placeholder="Choose Class" >
+                                    <Option value="1">Web development</Option>
+                                    <Option value="2">Linux</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="address"
-                                label="Address"
-                                rules={[{ required: true, message: 'Please enter address' }]}
+                                name="datetime"
+                                label="Date Time"
+                                rules={[
+                                {
+                                    required: true,
+                                    message: 'Please Enter Phone',
+                                },
+                                ]}
                             >
-                                <Input placeholder="Please enter address" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                name="description"
-                                label="Description"
-                                rules={[{ required: true, message: 'Please enter description' }]}
-                            >
-                                <Input.TextArea rows={4} placeholder="Please enter description" />
+                                <DatePicker
+                                    showTime
+                                    onChange={(value,dateString)=>{onOk(value,dateString)}}
+                                    style={
+                                        {
+                                            width : "100%"
+                                        }
+                                    }
+                                    onOk={onOk}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

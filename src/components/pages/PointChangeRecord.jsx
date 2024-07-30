@@ -96,7 +96,7 @@ export default function PointChangeRecord({title}){
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
-                <div className='flex gap-x-2'>
+                <div className='mb-3 flex gap-x-2'>
                     <AddPoints/>
                 </div>
                 <div className='flex justify-end'>

@@ -22,22 +22,55 @@ const AddAttended = () => {
         })
     };
 
+    // start verify reg number
+    let [regNumber , setRegNumber] = useState(null);
+
+    function userRegHangler(value){
+        setRegNumber(value.target.value);
+    }
+    
+    function showUserInfo(value){
+        
+        if(value != null){
+            return (
+                <>
+                    <div className='mb-3'> <span> Name - {value}  </span> & <span>NRC - </span> & <span> Student Point - </span> </div>
+                </>
+            )
+        }else {
+            return false;
+        }
+        
+    }
+    // end verify reg number 
+
+    // start data
+    let [dateTime,setDateTime] = useState(null);
+    const onOk = (value,dateString) => {
+        // console.log('onOk: ', dateString);
+        setDateTime(dateString);
+    };
+    // end date
+
     const onReset = () => {
         form.resetFields();
     };
 
     function formHandler(values){
-        const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        axios.post(url, values)
-        .then(response => {
-            console.log('Data successfully posted:', response.data);
-            onReset();
-            setOpen(false);
-            success();
-        }).catch(error => {
+        values.datetime = dateTime;
+        console.log(values);
+
+        // const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
+        // axios.post(url, values)
+        // .then(response => {
+        //     console.log('Data successfully posted:', response.data);
+        //     onReset();
+        //     setOpen(false);
+        //     success();
+        // }).catch(error => {
            
-            error();
-        });
+        //     error();
+        // });
     }
   return (
     <>
@@ -46,17 +79,18 @@ const AddAttended = () => {
         </Button>
         {contextHolder}
         <Modal
-            title="Add User"
+            title="Add Attended Code"
             centered
             open={open}
             onOk={() => setOpen(false)}
             onCancel={() => setOpen(false)}
             footer={null}
-            width={1000}
+            width={500}
         >
+            {showUserInfo(regNumber)}
              <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item
                             name="name"
                             label="Name"
@@ -67,82 +101,59 @@ const AddAttended = () => {
                             },
                             ]}
                         >
-                            <Input placeholder="Please enter user name" />
+                            <Input placeholder="Please enter user name" onBlur={userRegHangler} />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Email',
-                            },
-                            ]}
+                            name="course_id"
+                            label="Course"
+                            rules={[{ required: true, message: 'Please enter email' }]}
                         >
-                            <Input placeholder="Please Enter Email" />
+                            <Select placeholder="Choose Class" >
+                                <Option value="1">Web development</Option>
+                                <Option value="2">Linux</Option>
+                            </Select>
                         </Form.Item>
                     </Col>
                    
                 </Row>
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item
-                            name="phone"
-                            label="Phone"
+                            name="datetime"
+                            label="Date"
                             rules={[
                             {
                                 required: true,
-                                message: 'Please Enter Phone',
+                                message: 'Please Enter Date Time',
                             },
                             ]}
                         >
-                            <Input placeholder="Please Enter Phone" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="emergency"
-                            label="Emergency Contact Number"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Phone',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Phone" />
+                            <DatePicker
+                                showTime
+                                onChange={(value,dateString)=>{onOk(value,dateString)}}
+                                style={
+                                    {
+                                        width : "100%"
+                                    }
+                                }
+                                onOk={onOk}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={24}>
                         <Form.Item
-                            name="address"
-                            label="Address"
+                            name="attcode"
+                            label="Attended Code"
                             rules={[
                             {
                                 required: true,
-                                message: 'Please Enter Address',
+                                message: 'Please Enter Attended Code',
                             },
                             ]}
                         >
-                            <Input placeholder="Please Enter Address" />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={16}>
-                    <Col span={24}>
-                        <Form.Item
-                            name="description"
-                            label="Description"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'please enter url description',
-                            },
-                            ]}
-                        >
-                            <Input.TextArea rows={4} placeholder="please enter url description" />
+                            <Input placeholder="Please Enter Attended Code" />
                         </Form.Item>
                     </Col>
                 </Row>

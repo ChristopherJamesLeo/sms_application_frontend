@@ -46,17 +46,16 @@ const AddActivity = () => {
         </Button>
         {contextHolder}
         <Modal
-            title="Add User"
-            centered
+            title="Add Iframe"
             open={open}
             onOk={() => setOpen(false)}
             onCancel={() => setOpen(false)}
             footer={null}
-            width={1000}
+            width={500}
         >
              <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item
                             name="name"
                             label="Name"
@@ -67,82 +66,7 @@ const AddActivity = () => {
                             },
                             ]}
                         >
-                            <Input placeholder="Please enter user name" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Email',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Email" />
-                        </Form.Item>
-                    </Col>
-                   
-                </Row>
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Phone',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Phone" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="emergency"
-                            label="Emergency Contact Number"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Phone',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Phone" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
-                        <Form.Item
-                            name="address"
-                            label="Address"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please Enter Address',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter Address" />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={16}>
-                    <Col span={24}>
-                        <Form.Item
-                            name="description"
-                            label="Description"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'please enter url description',
-                            },
-                            ]}
-                        >
-                            <Input.TextArea rows={4} placeholder="please enter url description" />
+                            <Input placeholder="Please enter iFrame" />
                         </Form.Item>
                     </Col>
                 </Row>

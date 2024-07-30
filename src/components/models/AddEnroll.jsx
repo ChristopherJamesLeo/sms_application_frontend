@@ -106,6 +106,7 @@ const AddEnroll = () => {
         }
     }
 
+    // start verify reg number
     let [regNumber , setRegNumber] = useState(null);
 
     function userRegHangler(value){
@@ -125,6 +126,8 @@ const AddEnroll = () => {
         }
         
     }
+    // end verify reg number 
+
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
@@ -153,7 +156,6 @@ const AddEnroll = () => {
             {contextHolder}
             <Modal
                 title="Add Enroll"
-                centered
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => { 

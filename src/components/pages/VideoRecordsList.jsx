@@ -103,7 +103,7 @@ export default function Videorecords({title}){
             <h2 className='table_title'>{title}</h2>
 
             <div className="my-4 ">
-                <div className='flex gap-x-2'>
+                <div className='mb-3 flex gap-x-2'>
                     <AddRecordVideo />
                 </div>
                 <div className='flex justify-end'>

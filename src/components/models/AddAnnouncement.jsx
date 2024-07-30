@@ -82,7 +82,7 @@ const AddAnnouncement = () => {
             {contextHolder}
             <Modal
                 title="Add Announcement"
-                centered
+                
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => { 
@@ -95,56 +95,17 @@ const AddAnnouncement = () => {
             >
                 <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                     <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="name"
-                                label="Name"
-                                rules={[{ required: true, message: 'Please enter user name' }]}
-                            >
-                                <Input placeholder="Please enter user name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="email"
-                                label="Email"
-                                rules={[{ required: true, message: 'Please enter email' }]}
-                            >
-                                <Input placeholder="Please enter email" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="phone"
-                                label="Phone"
-                                rules={[{ required: true, message: 'Please enter phone number' }]}
-                            >
-                                <Input placeholder="Please enter phone number" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="emergency"
-                                label="Emergency Contact Number"
-                                rules={[{ required: true, message: 'Please enter emergency contact number' }]}
-                            >
-                                <Input placeholder="Please enter emergency contact number" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="address"
-                                label="Address"
-                                rules={[{ required: true, message: 'Please enter address' }]}
+                                name="title"
+                                label="Title"
+                                rules={[{ required: true, message: 'Please enter title' }]}
                             >
-                                <Input placeholder="Please enter address" />
+                                <Input placeholder="Please enter title" />
                             </Form.Item>
                         </Col>
                     </Row>
+
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item>
