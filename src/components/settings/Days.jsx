@@ -8,6 +8,8 @@ import "./../CustomCss/tablestyle.css";
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
+import AddDays from '../models/SettingModels/AddDays';
+
 export default function Days({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -100,6 +102,7 @@ export default function Days({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2'>
+                    <AddDays/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>

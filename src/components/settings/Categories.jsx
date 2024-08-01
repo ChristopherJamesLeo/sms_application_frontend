@@ -8,6 +8,8 @@ import "./../CustomCss/tablestyle.css";
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
+import AddCategories from '../models/SettingModels/AddCategories';
+
 export default function Categories({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -98,7 +100,8 @@ export default function Categories({title}){
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
-                <div className='flex gap-x-2'>
+                <div className=' mb-3 flex gap-x-2'>
+                    <AddCategories />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>

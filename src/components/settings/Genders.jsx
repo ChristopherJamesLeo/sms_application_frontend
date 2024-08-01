@@ -8,6 +8,8 @@ import "./../CustomCss/tablestyle.css";
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
+import AddGender from '../models/SettingModels/AddGender';
+
 export default function Genders({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -100,6 +102,7 @@ export default function Genders({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2'>
+                    <AddGender/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
