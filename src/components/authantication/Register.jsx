@@ -3,7 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Routes , Route,  Link, useNavigate} from 'react-router-dom';
 import { Button, Checkbox, Form, Input } from 'antd';
 import axios, { Axios } from 'axios';
+import $ from "jquery";
 import "./style.css";
+
+
+import { register } from './Auth';
+import api from '../api/api';
 
 
 export default function Register({setData}){
@@ -15,7 +20,7 @@ export default function Register({setData}){
             
         localStorage.setItem('userData', JSON.stringify(values));
         logInFormSubmit(values)
-        setData(values);
+        // setData(values);
 
     };
 
@@ -24,14 +29,44 @@ export default function Register({setData}){
 
     };
 
+    // $.ajaxSetup(   // ajax ဖြင့် စကတည်းက ပို့ထားမည် csrf ကို ပို့ထားမည် 
+    //     {
+    //         headers : { 
+               
+    //             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr("content"), 
+    //         }
+    //     }
+    // )
+
+    
+
     function logInFormSubmit(values){
-        console.log(values.username,values.password);
-        setData(values);
-        if (!values.username && !values.password) {
-            navigate('/login');
-          } else {
-            navigate("/");
-          }
+        try {
+            register(values).then((response)=>{
+                return response.data
+            }).then((data)=>{
+                console.log(data.user);
+
+                setData(values);
+                if (!data.user.name && !data.user.name && !data.user.password  ) {
+                    navigate('/login');
+                } else {
+                    navigate("/");
+                }
+            });
+            
+        } catch (error) {
+            console.log(error);
+        }
+        
+
+        // console.log(values.username,values.password);
+        // setData(values);
+        // if (!values.username && !values.password) {
+        //     navigate('/login');
+        //   } else {
+        //     navigate("/");
+        //   }
     }
 
       
@@ -69,7 +104,7 @@ export default function Register({setData}){
                         >
                             <Form.Item
                             label="Username"
-                            name="username"
+                            name="name"
                             rules={[
                                 {
                                 required: true,

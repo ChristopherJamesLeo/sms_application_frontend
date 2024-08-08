@@ -5,6 +5,8 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import axios, { Axios } from 'axios';
 import MainLayout from '../layout/MainContainer';
 
+import { login } from './Auth';
+
 import "./style.css";
 
 
@@ -14,9 +16,9 @@ export default function Login({setData}){
     const navigate = useNavigate();
     
     const onFinish = (values) => {
-    
-        localStorage.setItem('userData', JSON.stringify(values));
-
+        
+        login(values);
+        
         logInFormSubmit(values)
         setData(values);
 
@@ -69,12 +71,12 @@ export default function Login({setData}){
                             autoComplete="off"
                         >
                             <Form.Item
-                            label="Username"
-                            name="username"
+                            label="Eamil"
+                            name="email"
                             rules={[
                                 {
                                 required: true,
-                                message: 'Please input your username!',
+                                message: 'Please input your Eamil!',
                                 },
                             ]}
                             >
