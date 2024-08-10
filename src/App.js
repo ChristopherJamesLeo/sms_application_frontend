@@ -16,8 +16,8 @@ export default function App() {
         <Route
           path="/*"
           element={
-            <ProtectRoute userData={userData}>
-              <MainLayout userData={userData} setData={setUserData} />
+            <ProtectRoute userData={JSON.parse(localStorage.getItem("userData"))}>
+              <MainLayout />
             </ProtectRoute>
           }
         />

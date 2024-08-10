@@ -1,135 +1,89 @@
-
-import React, { useEffect, useState } from 'react';
-import {Routes , Route, Link , useNavigate} from 'react-router-dom';
-import { Button, Checkbox, Form, Input } from 'antd';
-import axios, { Axios } from 'axios';
-import MainLayout from '../layout/MainContainer';
-
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Checkbox, Form, Input, message } from 'antd';
 import { login } from './Auth';
-
 import "./style.css";
 
-
-export default function Login({setData}){
-
-
+export default function Login({ setData }) {
+    const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
-    
-    const onFinish = (values) => {
-        
-        login(values);
-        
-        logInFormSubmit(values)
-        setData(values);
 
+    const showMessage = (type, content) => {
+        messageApi.open({ type, content });
     };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+    const onFinish = async (values) => {
+        try {
+            const response = await login(values);
+            const data = response.data;
+            if (data) {
+                localStorage.setItem('userData', JSON.stringify(data.user));
+                localStorage.setItem('api_token', data.token);
+                localStorage.setItem('remember_token', data.remember_token);
 
+                if (data.user && data.remember_token) {
+                    setData(data.user);
+                    navigate("/");
+                    showMessage('success', "Login successful");
+                } else {
+                    navigate('/login');
+                }
+            } else {
+                showMessage('error', "Username or password is incorrect");
+                return false;
+                // console.log('Data processing failed');
+            }
+        } catch (err) {
+            
+            showMessage('error', "Username or password is incorrect");
+            return false;
+            // console.log("Login failed", err);
+        }
     };
 
-    function logInFormSubmit(values){
-        console.log(values.username,values.password);
-        setData(values);
-        if (!values.username && !values.password) {
-            navigate('/login');
-          } else {
-            navigate("/");
-          }
-    }
-
-      
-
-      
-
-    
     return (
-        <>
-            <div className='w-100 h-screen  flex justify-center items-center login_container'>
-                 <div className='w-2/6 flex justify-center items-center p-16 login_box_container'>
-                    <div className='border p-2 rounded-lg login_form_container'>
-                        <h1 className='text-3xl text-center'>Log In</h1>
-                        <Form
-                            name="basic"
-                            labelCol={{
-                            span: 24,
-                            }}
-                            wrapperCol={{
-                            span: 24,
-                            }}
-                            style={{
-                                width : "500px",
-                                height : "",
-                                padding: "20px"
-                            }}
-                            initialValues={{
-                            remember: true,
-                            }}
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
-                            autoComplete="off"
-                        >
-                            <Form.Item
-                            label="Eamil"
+        <div className='w-100 h-screen flex justify-center items-center login_container'>
+            <div className='w-2/6 flex justify-center items-center p-16 login_box_container'>
+                <div className='border p-2 rounded-lg login_form_container'>
+                    <h1 className='text-3xl text-center'>Log In</h1>
+                    <Form
+                        name="basic"
+                        labelCol={{ span: 24 }}
+                        wrapperCol={{ span: 24 }}
+                        style={{ width: "500px", padding: "20px" }}
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        autoComplete="off"
+                    >
+                        <Form.Item
+                            label="Email"
                             name="email"
-                            rules={[
-                                {
-                                required: true,
-                                message: 'Please input your Eamil!',
-                                },
-                            ]}
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
+                            rules={[{ required: true, message: 'Please input your Email!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
                             label="Password"
                             name="password"
-                            rules={[
-                                {
-                                required: true,
-                                message: 'Please input your password!',
-                                },
-                            ]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-
-                            <div className='flex items-start justify-between'>
-                                <Form.Item
-                                name="remember"
-                                valuePropName="checked"
-                                className=' text-start p-0'
-                                
-                                >
+                            rules={[{ required: true, message: 'Please input your password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <div className='flex items-start justify-between'>
+                            <Form.Item name="remember" valuePropName="checked">
                                 <Checkbox>Remember me</Checkbox>
-                                </Form.Item>
-                                <div>
-                                    <div onClick={()=>{
-                                        navigate('/register')
-                                    }}><span>Register</span></div>
-                                    
-                                </div>
-                            </div>
-                            
-
-                            <Form.Item
-                            wrapperCol={{
-                                offset: 20,
-                                span:24,
-
-                                
-                            }}
-                            >
-                                <Button type="primary" htmlType="submit">
-                                    Submit
-                                </Button>
                             </Form.Item>
-                        </Form>
-                    </div>
-                 </div>
+                            <div onClick={() => navigate('/register')} style={{ cursor: "pointer" }}>
+                                Register
+                            </div>
+                        </div>
+                        <Form.Item wrapperCol={{ offset: 20, span: 24 }}>
+                            <Button type="primary" htmlType="submit">Submit</Button>
+                        </Form.Item>
+                        {contextHolder}
+                    </Form>
+                </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }

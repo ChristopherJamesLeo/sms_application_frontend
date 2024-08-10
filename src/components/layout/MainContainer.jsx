@@ -20,6 +20,7 @@ import {
   TransactionOutlined
   
 } from '@ant-design/icons';
+import { logout } from '../authantication/Auth';
 import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
 
@@ -90,9 +91,11 @@ const CustomLabel = forwardRef(({ children, ...props }, ref) => {
 
 
 
-const MainLayout = ({userData,setData}) => {
+const MainLayout = () => {
 
   const navigate = useNavigate();
+  let userData = JSON.parse(localStorage.getItem('userData'));;
+  console.log(userData);
   // console.log(userData);
   // useEffect(()=>{
   //   console.log(userData);
@@ -102,7 +105,7 @@ const MainLayout = ({userData,setData}) => {
   // },[]);
 
   // console.log(localStorage.getItem("userData"));
-  let {username,password,email} = userData;
+  let name = userData.name;
 
   // console.log(username,password,email);
 
@@ -647,7 +650,7 @@ const MainLayout = ({userData,setData}) => {
 
               <div className='flex gap-x-5'>
                   <div>
-                    Hello {username}
+                    Hello {name}
                   </div>
                   <div 
                     style={
@@ -657,13 +660,19 @@ const MainLayout = ({userData,setData}) => {
                     }
                     onClick={()=>{
                       if(window.confirm("Are You sure to log our")){
-                        navigate('/login');
-                        localStorage.removeItem('userData')
-                        setData(null);
+                        logout().then((response)=> {
+                          if(response.status === "ok"){
+                            localStorage.removeItem('userData');
+                            localStorage.removeItem('api_token');
+                            localStorage.removeItem('remember_token');
+                            navigate('/login');
+                          }
+                        })
+                        
                       }
                       
                   }}>
-                    log out
+                    Log Out
                   </div>
               </div>
 

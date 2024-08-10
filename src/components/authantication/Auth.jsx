@@ -1,35 +1,34 @@
-import React from 'react';
+import api from './../api/api';
 
-import api, { getCSRFToken } from './../api/api';
-
-export async function login(value){
+export const login = async (value) => {
     try {
         const response = await api.post("/login", value);
-        return response;
+        return response || false;
     } catch (error) {
-        console.error("Error logging in:", error);
-        throw error;
+        return false;
+        console.warn("Error logging in:", error);
     }
-}
+};
 
-export async function register(value){
+export const register = async (value) => {
     try {
-        let response = await api.post("/register", value)
-        return response;
-        
-
+        return await api.post("/register", value);
     } catch (error) {
+        return false;
         console.error("Error registering:", error);
         throw error;
     }
-}
+};
 
-export async function logout(){
+export const logout = async () => {
     try {
-        const response = await api.post("/logout");
+        const response = await api.post("/logout", {}, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+        });
         return response.data;
     } catch (error) {
+        return false;
         console.error("Error logging out:", error);
         throw error;
     }
-}
+};

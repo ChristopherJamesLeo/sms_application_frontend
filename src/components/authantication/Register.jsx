@@ -45,12 +45,16 @@ export default function Register({setData}){
             register(values).then((response)=>{
                 return response.data
             }).then((data)=>{
-                console.log(data.user);
+                // console.log(data);
 
-                setData(values);
+                // setData(values);
                 if (!data.user.name && !data.user.name && !data.user.password  ) {
                     navigate('/login');
                 } else {
+                    setData(data.user);
+                    localStorage.setItem('userData',JSON.stringify(data.user));
+                    localStorage.setItem('api_token',data.token);
+                    localStorage.setItem('remember_token',data.remember_token);
                     navigate("/");
                 }
             });
@@ -143,8 +147,12 @@ export default function Register({setData}){
                             <div className='flex items-start justify-between'>
                                 <div>
                                     <div onClick={()=>{
-                                        navigate('/')
-                                    }}><span>Log In</span></div>
+                                        navigate('/login')
+                                    }}><span style={
+                                        {
+                                            cursor: "pointer"
+                                        }
+                                    }>Log In</span></div>
                                     
                                 </div>
                             </div>
