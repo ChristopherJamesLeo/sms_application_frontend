@@ -4,36 +4,41 @@ import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
+import AddStatus , {EditStatus} from '../models/SettingModels/Status';
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
+import api from '../api/api';
 
 export default function Statues({title}){
-    const [data, setfetchData] = useState([]);
+    const [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
+    function fetchingData(){
+        api.get('/statuses',{
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+        }).then((response)=>response.data).then((data)=>{
+            // console.log(data);
+            let showData = data.data.map((item, index) => ({
+                key: item.id,
+                no: index + 1,
+                id: item.id,
+                name: item.name,
+                user_id: item.user.name,
+                created_at: item.created_at,
+                updated_at: item.updated_at,
+                action: <EditStatus idx={item.id} name={item.name} fetchData={fetchingData} />
             }));
-            setfetchData(transformedData);
+            setfetchData(showData);
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        })
+    }
+
+    // console.log(fetchData);
+    useEffect(() => {
+
+        fetchingData();
+
     }, []);
 
     const columns = [
@@ -66,18 +71,18 @@ export default function Statues({title}){
             dataIndex: 'updated_at',
             key: 'updated_at',
             width: 180,
-        },{
+        },
+        {
             title: 'Action',
-            key: 'operation',
+            key: 'action',
+            dataIndex: 'action',
             fixed: 'right',
             width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+            // render: (_, record) => (
+            //     <div className='flex gap-x-3'>
+            //         <EditStatus idx = {fetchData.id} name={fetchData.name} fetchData={fetchingData} />
+            //     </div>
+            // ),
         },
     ];
 
@@ -92,18 +97,19 @@ export default function Statues({title}){
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
-                <div className='flex gap-x-2'>
+                <div className='flex gap-x-2 mb-2'>
+                    <AddStatus userData ={setfetchData} fetchData={fetchingData} />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
                 </div>
             </div>
             <Table
-                dataSource={data}
+                dataSource={fetchData}
                 columns={columns}
                 loading={isLoading}
                 pagination={false}
-                scroll={{ x: {tableWidth} , y : "68vh" }}
+                scroll={{ x: {tableWidth} , y : "84vh" }}
             />
         </div>
     );

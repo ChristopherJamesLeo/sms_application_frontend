@@ -95,7 +95,7 @@ const MainLayout = () => {
 
   const navigate = useNavigate();
   let userData = JSON.parse(localStorage.getItem('userData'));;
-  console.log(userData);
+  // console.log(userData);
   // console.log(userData);
   // useEffect(()=>{
   //   console.log(userData);
@@ -591,10 +591,6 @@ const MainLayout = () => {
       const [open, setOpen] = useState(false);
 
 
-
-
-
-
       const [collapsed, setCollapsed] = useState(false);
 
       function helpHandler(){
@@ -724,7 +720,7 @@ const MainLayout = () => {
               margin: '24px 16px',
               padding: 24,
               minHeight: 100,
-              height : "80vh",
+              height : "95vh",
               overflowY: "scroll", 
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
