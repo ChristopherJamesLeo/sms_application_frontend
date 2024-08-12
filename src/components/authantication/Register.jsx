@@ -1,42 +1,33 @@
 
 import React, { useEffect, useState } from 'react';
-import { Routes , Route,  Link, useNavigate} from 'react-router-dom';
-import { Button, Checkbox, Form, Input } from 'antd';
-import axios, { Axios } from 'axios';
-import $ from "jquery";
+import { useNavigate} from 'react-router-dom';
+import { Button, Form, Input , message} from 'antd';
 import "./style.css";
 
 
 import { register } from './Auth';
-import api from '../api/api';
 
 
 export default function Register({setData}){
 
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     const navigate = useNavigate();
     
     const onFinish = (values) => {
             
         localStorage.setItem('userData', JSON.stringify(values));
-        logInFormSubmit(values)
-        // setData(values);
-
+        logInFormSubmit(values);
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        return false;
+        // console.log('Failed:', errorInfo);
 
     };
-
-    // $.ajaxSetup(   // ajax ဖြင့် စကတည်းက ပို့ထားမည် csrf ကို ပို့ထားမည် 
-    //     {
-    //         headers : { 
-               
-    //             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr("content"), 
-    //         }
-    //     }
-    // )
 
     
 
@@ -45,46 +36,37 @@ export default function Register({setData}){
             register(values).then((response)=>{
                 return response.data
             }).then((data)=>{
-                // console.log(data);
-
-                // setData(values);
-                if (!data.user.name && !data.user.name && !data.user.password  ) {
-                    navigate('/login');
-                } else {
-                    setData(data.user);
-                    localStorage.setItem('userData',JSON.stringify(data.user));
-                    localStorage.setItem('api_token',data.token);
-                    localStorage.setItem('remember_token',data.remember_token);
-                    navigate("/");
+                if(data){
+                    if (!data.user.name && !data.user.name && !data.user.password  ) {
+                        navigate('/login');
+                    } else {
+                        setData(data.user);
+                        localStorage.setItem('userData',JSON.stringify(data.user));
+                        localStorage.setItem('api_token',data.token);
+                        localStorage.setItem('remember_token',data.remember_token);
+                        navigate("/");
+                        success("Register Successful");
+                    }
+                }else {
+                    error("Please check you internet connection");
                 }
+                
             });
             
         } catch (error) {
-            console.log(error);
+            error("Please check your internet connection...");
+            // console.log(error);
         }
         
-
-        // console.log(values.username,values.password);
-        // setData(values);
-        // if (!values.username && !values.password) {
-        //     navigate('/login');
-        //   } else {
-        //     navigate("/");
-        //   }
     }
 
-      
 
-      
-
-      
-
-    
     return (
         <>
             <div className='w-100 h-screen  flex justify-center items-center login_container'>
                  <div className='w-2/6 flex justify-center items-center p-16 login_box_container'>
                     <div className='border p-2 rounded-lg login_form_container'>
+                        {contextHolder}
                         <h1 className='text-3xl text-center'>Register</h1>
                         <Form
                             name="basic"

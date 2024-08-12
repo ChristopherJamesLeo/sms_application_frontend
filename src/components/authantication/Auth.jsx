@@ -6,7 +6,6 @@ export const login = async (value) => {
         return response || false;
     } catch (error) {
         return false;
-        console.warn("Error logging in:", error);
     }
 };
 
@@ -15,8 +14,6 @@ export const register = async (value) => {
         return await api.post("/register", value);
     } catch (error) {
         return false;
-        console.error("Error registering:", error);
-        throw error;
     }
 };
 
@@ -28,7 +25,5 @@ export const logout = async () => {
         return response.data;
     } catch (error) {
         return false;
-        console.error("Error logging out:", error);
-        throw error;
     }
 };
