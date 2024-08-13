@@ -12,6 +12,14 @@ import $ from "jquery";
         }
     })
 
+    api.interceptors.response.use(
+        response => response,
+        error => {
+            console.error('API request error:', error);
+            return Promise.reject(error);
+        }
+    );
+
 export default api
 
 

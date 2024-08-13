@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table  , message } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 import AddStatus , {EditStatus} from '../models/SettingModels/Status';
@@ -11,28 +11,51 @@ import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
 export default function Statues({title}){
-    const [fetchData, setfetchData] = useState([]);
+    var [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [messageApi, contextHolder] = message.useMessage();
 
-    function fetchingData(){
-        api.get('/statuses',{
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
-        }).then((response)=>response.data).then((data)=>{
-            // console.log(data);
-            let showData = data.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id,
-                name: item.name,
-                user_id: item.user.name,
-                created_at: item.created_at,
-                updated_at: item.updated_at,
-                action: <EditStatus idx={item.id} name={item.name} fetchData={fetchingData} />
-            }));
-            setfetchData(showData);
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    const fetchingData = async () => {
+        try {
+            const response = await api.get('/statuses', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+
+            if (response.data && response.data.data) {
+                let data = response.data.data;
+                let showData = data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    name: item.name,
+                    user_id: item.user.name,
+                    created_at: item.created_at,
+                    updated_at: item.updated_at,
+                    action: <EditStatus idx={item.id} name={item.name} fetchData={fetchingData} />
+                }));
+                // console.log(showData);
+
+                setfetchData(showData);
+                setLoading(false);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        })
-    }
+        }
+    };
 
     // console.log(fetchData);
     useEffect(() => {
@@ -78,11 +101,6 @@ export default function Statues({title}){
             dataIndex: 'action',
             fixed: 'right',
             width: 150,
-            // render: (_, record) => (
-            //     <div className='flex gap-x-3'>
-            //         <EditStatus idx = {fetchData.id} name={fetchData.name} fetchData={fetchingData} />
-            //     </div>
-            // ),
         },
     ];
 
@@ -95,6 +113,7 @@ export default function Statues({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2 mb-2'>

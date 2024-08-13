@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Col, ConfigProvider, Form, Input, Row, Popconfirm, Space, message } from 'antd';
 import api from '../../api/api';
 
-const AddStatus = ({ setfetchData, fetchData }) => {
+const Stage = ({ setfetchData, fetchData }) => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
@@ -14,19 +14,8 @@ const AddStatus = ({ setfetchData, fetchData }) => {
     const formConfirm = () => form.submit();
 
     const formHandler = async (values) => {
-        // api.post('/statuses', values, {
-        //     headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
-        // }).then((response) => {
-        //     if (response.data) {
-        //         form.resetFields();
-        //         setOpen(false);
-        //         success(response.data.message);
-        //         fetchData();
-        //     }
-        // }).catch(() => error('Add Status Fail !!!'));
-
         try {
-            const response = await api.post('/statuses', values, {
+            const response = await api.post('/stages', values, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
@@ -58,11 +47,11 @@ const AddStatus = ({ setfetchData, fetchData }) => {
     return (
         <>
             <ConfigProvider theme={{ token: { colorPrimary: '#1677ff' } }}>
-                <Button type="primary" onClick={() => setOpen(true)}>Add Status</Button>
+                <Button type="primary" onClick={() => setOpen(true)}>Add Stage</Button>
             </ConfigProvider>
             {contextHolder}
             <Modal
-                title="Add Status"
+                title="Add Stage"
                 open={open}
                 onCancel={() => { setOpen(false); onReset(); }}
                 width={500}
@@ -100,7 +89,7 @@ const AddStatus = ({ setfetchData, fetchData }) => {
     );
 };
 
-export function EditStatus({ idx, name, fetchData }) {
+export function EditStage({ idx, name, fetchData }) {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
@@ -112,8 +101,9 @@ export function EditStatus({ idx, name, fetchData }) {
     const formConfirm = () => form.submit();
 
     const formHandler = async (values) => {
+        values.id = idx;
         try {
-            const response = await api.put(`/statuses/${idx}`, values, {
+            const response = await api.put(`/stages/${idx}`, values, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
@@ -139,7 +129,7 @@ export function EditStatus({ idx, name, fetchData }) {
             } else {
                 error("Error in setting up request.");
             }
-        }
+        } 
     };
 
     return (
@@ -191,4 +181,4 @@ export function EditStatus({ idx, name, fetchData }) {
     );
 };
 
-export default AddStatus;
+export default Stage;
