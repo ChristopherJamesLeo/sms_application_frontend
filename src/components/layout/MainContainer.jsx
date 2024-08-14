@@ -440,7 +440,7 @@ const MainLayout = () => {
           },
           {
             key: '31',
-            label: <Link to="/serviceplatforms">Service Platform</Link>,
+            label: <Link to="/surveyplatforms">Survey Platform</Link>,
           },
           {
             key: '32',
@@ -784,7 +784,7 @@ const MainLayout = () => {
                 <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
                 <Route path='/packages' element={<Packages title="Packages"/>}/>
                 <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
-                <Route path='/serviceplatforms' element={<Surveyplatform title="Service Platforms" />}/>
+                <Route path='/surveyplatforms' element={<Surveyplatform title="Survey Platforms" />}/>
                 <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
 
                 

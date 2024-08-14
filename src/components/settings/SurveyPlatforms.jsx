@@ -1,39 +1,107 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message , Switch} from 'antd';
 import "./../CustomCss/tablestyle.css";
+import api from '../api/api';
 
-import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function Surveyplatform({title}){
-    const [data, setfetchData] = useState([]);
+import AddSurveyPlatform,{EditSurveyPlatform} from '../models/SettingModels/SurveyPlatform';
+
+export default function SurveyPlatform({title}){
+    var [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+    const [messageApi, contextHolder] = message.useMessage();
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.address.city,
-                street: item.address.street,
-                zipcode: item.address.zipcode,
-                latitude: item.address.geo.lat,
-                longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4; 
+        // console.log("status id is", statusId);
+        
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+        
+        try {
+            const response = await api.put(`/surveyplatforms/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end active switch
+
+    const fetchingData = async () => {
+        try {
+            const response = await api.get('/surveyplatforms', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data.data)
+            if (response.data && response.data.data) {
+                console.log(response.data.data)
+                let showData = response.data.data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    name: item.name,
+                    status_id: (
+                        <Switch 
+                        defaultChecked={item.status.id === 3} 
+                        onChange={(checked) => onChange(checked, item.id)} />
+                    ),
+                    admit_by: item.user.name,
+                    created_at: item.created_at,
+                    updated_at: item.updated_at,
+                    action: 
+                        <EditSurveyPlatform 
+                            idx={item.id} 
+                            name={item.name} 
+                            fetchData={fetchingData} 
+                        />
+                    
+                }));
+                // console.log(showData);
+
+                setfetchData(showData);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchingData()
     }, []);
 
     const columns = [
@@ -75,19 +143,12 @@ export default function Surveyplatform({title}){
         },
         {
             title: 'Action',
-            key: 'operation',
+            key: 'action',
             fixed: 'right',
+            dataIndex: "action",
             width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
         },
     ];
-
     let tableWidth = 0 ;
     
     columns.forEach(function(column){
@@ -97,16 +158,18 @@ export default function Surveyplatform({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
-                <div className='flex gap-x-2'>
+                <div className=' mb-3 flex gap-x-2'>
+                    <AddSurveyPlatform fetchData = {fetchingData} />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
                 </div>
             </div>
             <Table
-                dataSource={data}
+                dataSource={fetchData}
                 columns={columns}
                 loading={isLoading}
                 pagination={false}

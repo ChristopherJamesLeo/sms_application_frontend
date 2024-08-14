@@ -8,7 +8,7 @@ import UserSearch from "../inputs/UserSearch";
 
 import AddCountry,{EditCountry} from '../models/SettingModels/Countries';
 
-export default function Categories({title}){
+export default function Countries({title}){
     var [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 

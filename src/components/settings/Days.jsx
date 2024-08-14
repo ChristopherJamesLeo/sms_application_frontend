@@ -8,7 +8,7 @@ import UserSearch from "../inputs/UserSearch";
 
 import AddDay,{EditDay} from '../models/SettingModels/Days';
 
-export default function Categories({title}){
+export default function Days({title}){
     var [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
