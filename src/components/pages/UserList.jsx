@@ -1,12 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
-// import Adduser from '../models/Adduser';
-import axios, { Axios } from 'axios';
+import { Table , message , Tag} from 'antd';
 import "./../CustomCss/tablestyle.css";
 import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
+import api from '../api/api';
 
 import Userlistdrawer from '../drawer/UserDrawer';
 
@@ -14,33 +13,61 @@ export default function Userstable({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const fetchingData = async () => {
+        try {
+            const response = await api.get('/users', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data.data)
+            if (response.data && response.data.data) {
+                console.log(response.data.data)
+                let showData = response.data.data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                    reg_id: item.regnumber,
+                    point: null,
+                    email: item.email,
+                    gender: null,
+                    city: null,
+                    country: null,
+                    role: item.role.name,
+                    status: item.status.name,
+                    createdAt : item.created_at,
+                    onlinestatus : item.active === "online" ? <Tag color="green">Online</Tag> : <Tag color="red">Offline</Tag>,
+                    lastonline : item.updated_at,
+                    
+                }));
+                // console.log(showData);
+
+                setfetchData(showData);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        // let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        let url = "https://jsonplaceholder.typicode.com/users";
-
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.city,
-                street: item.street,
-                zipcode: item.zipcode,
-                latitude: item.latitude,
-                longitude: item.longitude
-            }));
-            setfetchData(transformedData);
-            setLoading(false);
-            
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-            setLoading(false);
-        });
+        fetchingData()
     }, []);
+
 
     const columns = [
         {
@@ -60,14 +87,12 @@ export default function Userstable({title}){
             title: 'Student Id',
             width: 200,
             dataIndex: 'reg_id',
-            key: 'reg_id',
-            fixed: 'left',
+            key: 'reg_id'
         },{
             title: 'Points',
             width: 200,
             dataIndex: 'point',
-            key: 'point',
-            fixed: 'left',
+            key: 'point'
         },
         {
             title: 'Email',
@@ -76,27 +101,20 @@ export default function Userstable({title}){
             key: 'email',
         },
         {
-            title: 'Website',
-            dataIndex: 'website',
-            key: 'website',
-            width: 180,
+            title: 'Gender',
+            dataIndex: 'gender',
+            key: 'gender',
+            width: 150,
         },
         {
             title: 'City',
             dataIndex: 'city',
             key: 'city',
             width: 150,
-        },
-        {
-            title: 'Street',
-            dataIndex: 'street',
-            key: 'street',
-            width: 150,
-        },
-        {
-            title: 'Zip-code',
-            dataIndex: 'zipcode',
-            key: 'zipcode',
+        },{
+            title: 'Country',
+            dataIndex: 'country',
+            key: 'country',
             width: 150,
         },
         {
@@ -110,28 +128,25 @@ export default function Userstable({title}){
             dataIndex: 'status',
             key: 'status',
             width: 150,
+        }, 
+        {
+            title: 'Registration Time',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            width: 200,
         },
         {
             title: 'Online/Offline',
-            key: 'operation',
+            key: 'onlinestatus',
+            dataIndex: 'onlinestatus',
             fixed: 'right',
             width: 150,
-            render: (_, record) => (
-                <div className='flex justify-center'>
-                    <Link to={`/userlists/delete/${record.id}`} className='text-red-700'>Online</Link>
-                </div>
-            ),
         },
         {
             title: 'Last Online',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/userlists/delete/${record.id}`} className='text-red-700'>Last Seen Online</Link>
-                </div>
-            ),
+            dataIndex: 'lastonline',
+            key: 'lastonline',
+            width: 250,
         },
     ];
 
@@ -144,6 +159,7 @@ export default function Userstable({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
