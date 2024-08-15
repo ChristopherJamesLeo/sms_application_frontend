@@ -10,7 +10,7 @@ import $ from "jquery";
 // end img upload 
 
 
-const UserVerify = ({userid}) => {
+export default function UserVerify  ({userid}) {
     const [open, setOpen] = useState(false);
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -66,4 +66,3 @@ const UserVerify = ({userid}) => {
         </>
     );
 };
-export default UserVerify;

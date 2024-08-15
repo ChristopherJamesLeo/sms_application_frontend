@@ -18,6 +18,8 @@ export default function Userstable({title}){
     var success = (msg) => messageApi.open({ type: 'success', content: msg });
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
+
+    // start fetching data
     const fetchingData = async () => {
         try {
             const response = await api.get('/users', {
@@ -63,6 +65,9 @@ export default function Userstable({title}){
             setLoading(false);
         }
     };
+    // end fetching Data
+
+
 
     useEffect(() => {
         fetchingData()

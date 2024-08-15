@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CloseCircleOutlined ,CheckCircleOutlined } from '@ant-design/icons';
-import { Button , Divider , Switch , Col, DatePicker, Drawer, Form, Input, Row, Select, Space , Progress } from 'antd';
-
+import { Divider , Switch , Col, DatePicker, Drawer, Form, Input, Row, Select, Space , Progress , message} from 'antd';
+import api from '../api/api';
 import Usertimeline from '../timeline/Usertimeline';
 
 import UserDisable from '../models/UserDisable';
@@ -12,14 +12,11 @@ import UserPointManagement from './UserPointManagement';
 import AttendedRecord from '../models/AttendedRecord';
 import LeaveRecord from '../models/LeaveRecord';
 import UserNote from '../models/UserNote';
-import PointChangeRecord from '../models/AddPoints';
+import PointChangeRecord from '../models/userPointManagement/PointChangeRecord';
 
 
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 
-import axios, { Axios } from 'axios';
-
-const { Option } = Select;
 
 const conicColors = {
     '0%': '#ff0000',
@@ -54,7 +51,7 @@ const isVerify = (con , userid) => {
 }
 
 const isAdmin = (con , userid) => {
-    if(con){
+    if(con == 1 || con == 2 || con == 3){
         return (
             <>
                     <div className="flex justify-evenly">
@@ -71,15 +68,20 @@ const isAdmin = (con , userid) => {
 
 const Userlistdrawer = ({name,userid}) => {
 
-    const [condition, setCondition] = useState(true); 
-    const [permission, setAdmin] = useState(true);
+    var [condition, setCondition] = useState(true); 
+    var [permission, setAdmin] = useState(true);
 
-    const [open, setOpen] = useState(false);
-    const [data , setData] = useState({});
-    const [isLoading , setloading] = useState(true);
+    var [open, setOpen] = useState(false);
+    var [data , setData] = useState({});
+    var [isLoading , setloading] = useState(true);
 
-    const [disabled, setDisabled] = useState(true);
-    const [ isLock , setLock] = useState(true);
+    var [disabled, setDisabled] = useState(true);
+    var [ isLock , setLock] = useState(true);
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     function hadleLock(){
         toggle();
@@ -109,27 +111,89 @@ const Userlistdrawer = ({name,userid}) => {
       setLock(false);
     };
 
+    // start active switch
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4; 
+        // console.log("status id is", statusId);
+        
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+
+        console.log(values);
+        
+        try {
+            const response = await api.put(`/users/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setloading(false);
+        }
+    };
+    // end active switch
+
+    const formHandler = async (id) => {
+        try {
+            const response = await api.get(`/users/${id}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                if (response.data) {
+                    // console.log(response.data.data);
+                    const data = response.data.data;
+                    // console.log(data.user);
+                    setData(data);
+                    setDisabled(data.status_id === 3 ? false : true)
+                    isAdmin(data.user.role_id);
+                    setCondition(data.user.is_verify);
+                    setloading(false);
+                }
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
+    };
+    // console.log(data);
 
     const showDrawer = () => {
         setOpen(true);
-        // console.log(userid);
-        if(userid){
-            let url = `https://jsonplaceholder.typicode.com/users/${userid}`;
-            axios.get(url).then( response => {
-                // console.log(response.data);
-                setData(response.data);
-                // console.log(data);
-                setloading(false);
-            }).catch(function(response){
-                console.log("error occur",response.data);
-            })
-        }
+        formHandler(userid)
         
     };
 
     const onClose = () => {
         setOpen(false);
     };
+
     return (
 
         <>
@@ -142,7 +206,7 @@ const Userlistdrawer = ({name,userid}) => {
                                             }>{name}</span>
             <Drawer
                 // title={`Name : ${data.address ? data.address.street : "Loading..."}`}
-                title={`Name : ${data.name ? data.name : "Loading..."}`}
+                title={`Name : ${data.user ? data.user.name : "Loading..."}`}
                 width={1000}
                 onClose={onClose}
                 loading = {Boolean(isLoading)}
@@ -154,14 +218,16 @@ const Userlistdrawer = ({name,userid}) => {
                 }}
                 extra={
                 <Space >
-                    <span className='block mr-3'>Verified { condition ? <CheckCircleOutlined className='text-green-700' /> : <CloseCircleOutlined className='text-red-700'/> }</span>
+                    <span className='block mr-3'>Verified { condition ? <CheckCircleOutlined className='text-green-700'  /> : <CloseCircleOutlined className='text-red-700'/> }</span>
                     {lockfun(isLock)}
-                    
-                    <Switch disabled={disabled} defaultChecked />
-                    
+                    {
+                        data.user ?  <Switch disabled={disabled} defaultChecked={data.user.status_id === 3} 
+                        onChange={(checked) => onChange(checked, data.user.status_id)}  /> : "loading"
+                    }
                 </Space>
                 }
             >
+                {contextHolder}
                 <div className='drawer_content_container'>
                     {/* start user info */}
                     <div className="mb-3 flex justify-between">
@@ -172,12 +238,12 @@ const Userlistdrawer = ({name,userid}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3 '>Personal Info</h3>
-                            <li>Student ID -</li>
-                            <li>Real Name -</li>
-                            <li>NRC - </li>
-                            <li>DOB -</li>
-                            <li>Country -</li>
-                            <li>City -</li>
+                            <li>{`Student Id : ${data.user ? data.user.regnumber : "Loading..."}`}</li>
+                            <li>{`Real Name : ${data.user ? data.user.name : "Loading..."}`}</li>
+                            <li>{`NRC : ${data.user ? data.user.name : "Loading..."}`} </li>
+                            <li>{`Gender : ${data.gender ? data.gender.name : "Loading..."}`}</li>
+                            <li>{`Country : ${data.country ? data.country.name : "Loading..."}`}</li>
+                            <li>{`City: ${data.city ? data.city.name : "Loading..."}`}</li>
                         </ul>
                         <ul className='' style={
                             {
@@ -185,12 +251,11 @@ const Userlistdrawer = ({name,userid}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3'>Contact Info</h3>
-                            <li>Address-</li>
-                            <li>Phone -</li>
-                            <li>Email -</li>
-                            <li>Contact Detail -</li>
-                            <li>Emergency Content -</li>
-                            <li>Invitation Code -</li>
+                            <li>{`Address : ${data.user ? data.user.name : "Loading..."}`}</li>
+                            <li>{`Email : ${data.user ? data.user.email : "Loading..."}`}</li>
+                            <li>{`Contact Detail : ${data.user ? data.user.name : "Loading..."}`} </li>
+                            <li>{`Emergency Content : ${data.user ? data.user.emergency_number : "Loading..."}`}</li>
+                            <li>{`Invitation Code : ${data.user ? data.user.name : "Loading..."}`}</li>
                         </ul>
                     </div>
                     {/* end user info */}
@@ -229,8 +294,9 @@ const Userlistdrawer = ({name,userid}) => {
 
                                 <AttendedRecord userid={userid}/>
                                 <LeaveRecord userid={userid}/>
-                                <PointChangeRecord userid={userid}/>
-                                { isVerify( condition , userid) } {/* is user verify , insert (true) on parameter */}
+                                <UserVerify userid={userid}/>
+                                <PointChangeRecord  userid={userid} />
+                                { isVerify( condition , userid) } 
                                 
                             </Space>
                             

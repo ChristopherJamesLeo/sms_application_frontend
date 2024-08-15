@@ -17,6 +17,7 @@ export default function Countries({title}){
     var success = (msg) => messageApi.open({ type: 'success', content: msg });
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
+    // start active switch
     const onChange = async (checked, idx) => {
         // console.log(idx);
         let statusId = checked ? 3 : 4; 

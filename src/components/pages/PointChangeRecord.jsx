@@ -6,7 +6,7 @@ import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
-import AddPoints from '../models/AddPoints';
+import AddPoint from '../models/AddPoint';
 import UserSearch from "../inputs/UserSearch";
 
 export default function PointChangeRecord({title}){
@@ -97,7 +97,7 @@ export default function PointChangeRecord({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddPoints/>
+                    <AddPoint/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>

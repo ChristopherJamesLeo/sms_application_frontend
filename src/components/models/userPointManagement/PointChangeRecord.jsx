@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Modal , Col, ConfigProvider, Form, Input, Row, Popconfirm, Space , message , InputNumber} from 'antd';
-import UserManualVerification from './UserManualVerification';
-import axios from 'axios';
-import $ from "jquery";
 
 
 // start img upload
@@ -12,7 +9,7 @@ import $ from "jquery";
 const text = 'Are You Sure To Add This Amount ?';
 const description = 'Click "YES" button';
 
-const AddPoints = ({userid}) => {
+export default function PointChangeRecord ({userid})  {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
 
@@ -66,14 +63,14 @@ const AddPoints = ({userid}) => {
                 }}
             >
                 <Button type="primary" onClick={() => setOpen(true)}>
-                    Point Add
+                    Point Change Record
                 </Button>
             </ConfigProvider>
             {/* error message */}
                 {contextHolder}
             {/* error message */}
             <Modal
-                title="Add Point"
+                title="Point Change Record"
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => {
@@ -151,4 +148,3 @@ const AddPoints = ({userid}) => {
         </>
     );
 };
-export default AddPoints;
