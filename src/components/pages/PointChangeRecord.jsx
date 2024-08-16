@@ -1,40 +1,68 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table , message } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
+import api from '../api/api';
 
-import Userlistdrawer from '../drawer/UserDrawer';
-import AddPoint from '../models/AddPoint';
+import AddPoint,{EditPoint} from '../models/AddPoint';
 import UserSearch from "../inputs/UserSearch";
 
 export default function PointChangeRecord({title}){
     const [data, setfetchData] = useState([]);
+    const [totalpoint, setTotalPoint] = useState(null);
     const [isLoading, setLoading] = useState(true);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+        // start fetching data
+        const fetchingData = async () => {
+            try {
+                console.log("hi")
+                const response = await api.get('/points', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+                });
+                console.log(response.data)
+                if (response.data) {
+                    console.log(response.data)
+                    let showData = response.data.pointchange.map((item, index) => ({
+                        key: item.id,
+                        no: index + 1,
+                        id: item.id,
+                        point: item.points,
+                        admit_by: item.user.name,
+                        created_at: item.created_at,
+                        updated_at: item.updated_at,
+                        action : <EditPoint idx = {item.id} point = {item.points} fetchData = {fetchingData}  />
+                        
+                    }));
+                    setTotalPoint(response.data.totalpoint);
+    
+                    setfetchData(showData);
+                    setLoading(false)
+                } else {
+                    error("Data fetching failed.");
+                }
+            } catch (err) {
+
+                if (err.response) {
+                    error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+                } else if (err.request) {
+                    error("No response received from server.");
+                } else {
+                    error("Error in setting up request.");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        // end fetching Data
 
     useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
-            setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        fetchingData();
     }, []);
 
     const columns = [
@@ -46,43 +74,35 @@ export default function PointChangeRecord({title}){
             fixed: 'left',
         },
         {
-            title: 'Platform Name',
+            title: 'Point',
             width: 200,
-            dataIndex: 'social_name_id',
-            key: 'social_name_id',
-            fixed: 'left',
-        },
-        {
-            title: 'Links',
-            width: 250,
-            dataIndex: 'links',
-            key: 'links',
+            dataIndex: 'point',
+            key: 'point',
         },
         {
             title: 'Admit By',
-            dataIndex: 'user_id',
-            key: 'user_id',
-            width: 150,
+            width: 250,
+            dataIndex: 'admit_by',
+            key: 'admit_by',
         },
         {
-            title: 'Status',
-            dataIndex: 'status_id',
-            key: 'status_id',
-            width: 150,
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 200,
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 200,
         },
         {
             title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
-        },
+            dataIndex: 'action',
+            key: 'action',
+            width: 200,
+        }
     ];
 
     let tableWidth = 0 ;
@@ -94,10 +114,11 @@ export default function PointChangeRecord({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddPoint/>
+                    <AddPoint fetchdata = {fetchingData} />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
@@ -106,7 +127,7 @@ export default function PointChangeRecord({title}){
             <div className='mb-4 flex justify-between gap-x-5'>
                 <div className=' flex-1 p-5 rounded text-center bg-blue-100'>
                     <h3 className='text-lg mb-2'>Total Point</h3>
-                    <span className='text-xl'>100000</span>
+                    <span className='text-xl'>{totalpoint}</span>
                 </div>
                 <div className=' flex-1 p-5 rounded text-center bg-green-100'>
                     <h3 className='text-lg mb-2'>Current Point</h3>

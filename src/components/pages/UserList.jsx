@@ -36,18 +36,17 @@ export default function Userstable({title}){
                     reg_id: item.regnumber,
                     point: null,
                     email: item.email,
-                    gender: null,
+                    gender: item.gender.name,
                     city: null,
-                    country: null,
+                    country: item.country.name,
                     role: item.role.name,
-                    status: item.status.name,
                     createdAt : item.created_at,
-                    onlinestatus : item.active === "online" ? <Tag color="green">Online</Tag> : <Tag color="red">Offline</Tag>,
+                    onlinestatus :<div><Tag >{item.status.name}</Tag><Tag color={`${item.is_online ? "green" : "red"}`}>{item.active.name}</Tag></div>  ,
                     lastonline : item.updated_at,
                     
                 }));
                 // console.log(showData);
-
+                setLoading(false)
                 setfetchData(showData);
                 
             } else {
@@ -129,23 +128,17 @@ export default function Userstable({title}){
             width: 150,
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            width: 150,
-        }, 
-        {
             title: 'Registration Time',
             dataIndex: 'createdAt',
             key: 'createdAt',
             width: 200,
         },
         {
-            title: 'Online/Offline',
+            title: 'Status',
             key: 'onlinestatus',
             dataIndex: 'onlinestatus',
             fixed: 'right',
-            width: 150,
+            width: 250,
         },
         {
             title: 'Last Online',

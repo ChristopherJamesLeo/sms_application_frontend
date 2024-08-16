@@ -68,6 +68,7 @@ const isAdmin = (con , userid) => {
 
 const Userlistdrawer = ({name,userid}) => {
 
+    // console.log(userid);
     var [condition, setCondition] = useState(true); 
     var [permission, setAdmin] = useState(true);
 
@@ -114,12 +115,12 @@ const Userlistdrawer = ({name,userid}) => {
     // start active switch
     const onChange = async (checked, idx) => {
         // console.log(idx);
-        let statusId = checked ? 3 : 4; 
+        let statusId = checked ? 12 : 13; 
         // console.log("status id is", statusId);
         
         let values = {
-            id: idx,
-            status_id: statusId
+            "id": idx,
+            "status_id": statusId
         };
 
         console.log(values);
@@ -129,9 +130,9 @@ const Userlistdrawer = ({name,userid}) => {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
-                success("Edit successful");
+                success("User Change Status Successful");
             } else {
-                error("Edit failed.");
+                error("User Change Status failed.");
             }
     
         } catch (err) {
@@ -159,7 +160,7 @@ const Userlistdrawer = ({name,userid}) => {
                     const data = response.data.data;
                     // console.log(data.user);
                     setData(data);
-                    setDisabled(data.status_id === 3 ? false : true)
+                    setDisabled(data.status_id === 12 ? false : true)
                     isAdmin(data.user.role_id);
                     setCondition(data.user.is_verify);
                     setloading(false);
@@ -221,8 +222,8 @@ const Userlistdrawer = ({name,userid}) => {
                     <span className='block mr-3'>Verified { condition ? <CheckCircleOutlined className='text-green-700'  /> : <CloseCircleOutlined className='text-red-700'/> }</span>
                     {lockfun(isLock)}
                     {
-                        data.user ?  <Switch disabled={disabled} defaultChecked={data.user.status_id === 3} 
-                        onChange={(checked) => onChange(checked, data.user.status_id)}  /> : "loading"
+                        data.user ?  <Switch disabled={disabled} defaultChecked={data.user.status_id === 12} 
+                        onChange={(checked) => onChange(checked, data.user.id)}  /> : "loading"
                     }
                 </Space>
                 }
@@ -308,7 +309,7 @@ const Userlistdrawer = ({name,userid}) => {
                     {/* end grade */}
                     <Divider/>
                     
-                    <UserPointManagement />
+                    <UserPointManagement userdata = {data} userid = {userid} formHandler = {formHandler}/>
 
                     <Divider/>
 
