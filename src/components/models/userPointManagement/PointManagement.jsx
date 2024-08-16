@@ -35,25 +35,27 @@ export default function TopUp ({userid,setUserPoint})  {
         
     }
     let formHandler= async (values) => {
-        console.log(idx);
+        // console.log(idx);
+        values.user_id = idx;
+        console.log(values);
         try {
             // console.log(idx);
-            const response = await api.put(`/userpoints/topup/${idx}`, values, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
-            });
-            if (response.data) {
-                if (response.data) {
-                    console.log(response.data.userpoint);
-                    console.log(response.data.message)
-                    setUserPoint(response.data.userpoint)
-                    setOpen(false);
-                    form.resetFields();
-                    success(response.data.message);
+            // const response = await api.put(`/userpoints/topup/${idx}`, values, {
+            //     headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            // });
+            // if (response.data) {
+            //     if (response.data) {
+            //         console.log(response.data.userpoint);
+            //         console.log(response.data.message)
+            //         setUserPoint(response.data.userpoint)
+            //         setOpen(false);
+            //         form.resetFields();
+            //         success(response.data.message);
 
-                }
-            } else {
-                error("Edit failed.");
-            }
+            //     }
+            // } else {
+            //     error("Edit failed.");
+            // }
     
         } catch (err) {
             if (err.response) {
@@ -105,7 +107,6 @@ export default function TopUp ({userid,setUserPoint})  {
                     <Col span={24}>
                         <Form.Item
                             name="topup"
-                            // label="Top Up Point"
                             rules={[
                             {
                                 required: true,

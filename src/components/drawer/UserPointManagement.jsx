@@ -48,8 +48,10 @@ export default function UserPointManagement({userdata,userid,formHandler}){
             
         }
         let formHandler= async (values) => {
-            console.log(values);
+            
+            values.user_id = idx;
             console.log(idx);
+            console.log(values);
             try {
                 console.log(idx);
                 const response = await api.put(`/userpoints/topup/${idx}`, values, {
