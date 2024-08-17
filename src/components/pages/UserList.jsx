@@ -34,7 +34,7 @@ export default function Userstable({title}){
                     id: item.id,
                     name: <Userlistdrawer name={item.name} userid={item.id}/>,
                     reg_id: item.regnumber,
-                    point: null,
+                    point: item.userpoint?item.userpoint.topup : "0",
                     email: item.email,
                     gender: item.gender.name,
                     city: null,
@@ -168,7 +168,7 @@ export default function Userstable({title}){
                     <UserSearch/>
                 </div>
             </div>
-            
+
             <Table
                 dataSource={data}
                 columns={columns}

@@ -11,7 +11,9 @@ import UserSearch from "../inputs/UserSearch";
 
 export default function PointChangeRecord({title}){
     const [data, setfetchData] = useState([]);
+    const [currentpoint, setCurrentPoint] = useState(null);
     const [totalpoint, setTotalPoint] = useState(null);
+    const [usingpoint, setUsingPoint] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -40,6 +42,8 @@ export default function PointChangeRecord({title}){
                         
                     }));
                     setTotalPoint(response.data.totalpoint);
+                    setCurrentPoint(response.data.currentpoint);
+                    setUsingPoint(response.data.usingpoint);
     
                     setfetchData(showData);
                     setLoading(false)
@@ -131,11 +135,11 @@ export default function PointChangeRecord({title}){
                 </div>
                 <div className=' flex-1 p-5 rounded text-center bg-green-100'>
                     <h3 className='text-lg mb-2'>Current Point</h3>
-                    <span className='text-xl'>201942</span>
+                    <span className='text-xl'>{currentpoint}</span>
                 </div>
                 <div className=' flex-1 p-5 rounded text-center bg-pink-100'>
                     <h3 className='text-lg mb-2'>Using Point</h3>
-                    <span className='text-xl'>1293829</span>
+                    <span className='text-xl'>{usingpoint}</span>
                 </div>
             </div>
             <Table

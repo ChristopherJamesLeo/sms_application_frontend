@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber , Upload} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import $ from "jquery";
+import api from '../api/api';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
 
@@ -15,6 +14,11 @@ const AddCourse = () => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [infoBox , setInfoBox] = useState(false);
+    var [categories,setCategories] = useState([]);
+    var [courselevels,setCourseLevels] = useState([]);
+    var [days,setDays] = useState([]);
+    var [trainers,setTrainers] = useState([]);
+    var [types,setTypes] = useState([]);
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -31,16 +35,52 @@ const AddCourse = () => {
         })
     };
 
+    const getCourseData = async () => {
+        setOpen(true);
+        try {
+            const response = await api.get('/courses/create', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                if (response.data) {
+                    let data = response.data;
+                    setCategories(data.categories);
+                    setCourseLevels(data.courselevels);
+                    setDays(data.days);
+                    setTrainers(data.trainers);
+                    setTypes(data.types);
+                }else {
+                    return false;
+                }
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
+    };
+
+    console.log(categories,courselevels,days,trainers,types);
+
+    function openModel(){
+        getCourseData();
+    }
+
     // start check box array
-    const options = [
-        { label: 'Sunday', value: '1' },
-        { label: 'Monday', value: '2' },
-        { label: 'Thursday', value: '3' },
-        { label: 'Wednesday', value: '4' },
-        { label: 'Tuesday', value: '5' },
-        { label: 'Friday', value: '6' },
-        { label: 'Saturday', value: '7' },
-    ];
+    const options = days.map(function(day,id){
+        return {label : day.name , value : day.id}
+    });
     // end check box array
 
     // start quill
@@ -74,47 +114,71 @@ const AddCourse = () => {
     
         // end image preview
 
-
+        var [submittable, setSubmittable] = React.useState(false);
     // start submit button
-    // const SubmitButton = ({ form, children }) => {
+    const SubmitButton = ({ form, children }) => {
 
-    //     const [submittable, setSubmittable] = React.useState(false);
-      
-    //     // Watch all values
-    //     const values = Form.useWatch([], form);
-    //     React.useEffect(() => {
-    //       form
-    //         .validateFields({
-    //           validateOnly: true,
-    //         })
-    //         .then(() => setSubmittable(true))
-    //         .catch(() => setSubmittable(false));
-    //     }, [form, values]);
-    //     return (
-    //       <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
-    //         {children}
-    //       </Button>
-    //     );
-    // };
+        // Watch all values
+        const values = Form.useWatch([], form);
+        React.useEffect(() => {
+          form
+            .validateFields({
+              validateOnly: true,
+            })
+            .then(() => setSubmittable(true))
+            .catch(() => setSubmittable(false));
+        }, [form, values]);
+        return (
+          <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
+            {children}
+          </Button>
+        );
+    };
 
     // end submit btn
 
-    // start form submit
-    function formHandler(values){
-        values.description = quillValue;
-        // console.log("hello form");
-        
-        // const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
-       
-        // axios.post(url,value).then(function(response){
-        //     console.log(response.data);
-        //     setOpen(false);
-        //     success();
 
-        // }).catch(error => {
-           
-        //     error();
-        // });
+
+    // start form submit
+    async function formHandler(values){
+        // console.log(values.date)
+        const [startTime, endTime] = values.time;
+        const [startDate, endDate] = values.date;
+        values.starttime = startTime.format("HH:mm:ss");
+        values.endtime = endTime.format("HH:mm:ss");
+        values.startdate = startDate.format("DD-MM-YYYY");
+        values.enddate = endDate.format("DD-MM-YYYY");
+        values.syllaby = quillValue;
+        console.log(values);
+        try {
+            const response = await api.post('/courses', values , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                if (response.data) {
+                    let data = response.data;
+                    console.log(data);
+                }else {
+                    return false;
+                }
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
+
     }
     // end form submit
     
@@ -160,7 +224,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={8}>
                         <Form.Item
-                            name="location"
+                            name="googleMap"
                             label="Location"
                             defaultValue = "Bago"
                             rules={[
@@ -179,7 +243,7 @@ const AddCourse = () => {
         }else if(type == 1){
             return (
                 <Row gutter={16} className='online_class'>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Form.Item
                             name="zoomId"
                             label="Zoom Id"
@@ -194,11 +258,26 @@ const AddCourse = () => {
                             <Input placeholder="Please Enter Zoom ID" />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Form.Item
                             name="passcode"
                             label="Passcode"
-                            defaultValue = "American"
+                            defaultValue = ""
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Passcode',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Passcode" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item
+                            name="videoCount"
+                            label="Video Count"
+                            defaultValue = ""
                             rules={[
                             {
                                 required: true,
@@ -215,10 +294,11 @@ const AddCourse = () => {
     }
 
 
+
     return (
         <>
         <ConfigProvider >
-            <Button type="primary" onClick={() => setOpen(true)}>
+            <Button type="primary" onClick={openModel}>
                 Add Course
             </Button>
         </ConfigProvider>
@@ -263,10 +343,13 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Traier">
-                            <Option value="1">James</Option>
-                            <Option value="2">Christopher</Option>
-                            <Option value="3">Leo</Option>
-                            <Option value="4">Aung</Option>
+                                {
+                                    trainers.map(function(trainer,id){
+                                        return(
+                                            <Option value={trainer.id}>{trainer.name}</Option>
+                                        );
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
@@ -282,10 +365,13 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Course">
-                            <Option value="1">Web Development Foundation</Option>
-                            <Option value="2">PHP</Option>
-                            <Option value="3">Javascript</Option>
-                            <Option value="4">Mysql</Option>
+                                {
+                                    categories.map(function(categorie,id){
+                                        return(
+                                            <Option value={categorie.id}>{categorie.name}</Option>
+                                        );
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
@@ -301,15 +387,19 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select placeholder="Please choose the Level">
-                                <Option value="1">Level 1</Option>
-                                <Option value="2">Level 2</Option>
-                                <Option value="3">Level 3</Option>
+                                {
+                                    courselevels.map(function(courselevel,id){
+                                        return(
+                                            <Option value={courselevel.id}>{courselevel.name}</Option>
+                                        );
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item
-                            name="classtype_id"
+                            name="coursetype_id"
                             label="Type"
                             rules={[
                             {
@@ -319,8 +409,13 @@ const AddCourse = () => {
                             ]}
                         >
                             <Select onChange={classTypeHandler} placeholder="Please choose the Type">
-                                <Option value="1">Onlie</Option>
-                                <Option value="2">Offline</Option>
+                                {
+                                    types.map(function(type,id){
+                                        return(
+                                            <Option value={type.id}>{type.name}</Option>
+                                        );
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
@@ -341,7 +436,6 @@ const AddCourse = () => {
                                     width: "100%",
                                     }
                                 }
-                                defaultValue='50000'
                                 min="0"
                                 max="5000000"
                                 step="1000"
@@ -351,7 +445,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={6}>
                         <Form.Item
-                            name="payment_point"
+                            name="paymentPoint"
                             label="Payment Point"
                             rules={[
                             {
@@ -366,7 +460,6 @@ const AddCourse = () => {
                                     width: "100%",
                                     }
                                 }
-                                defaultValue='0'
                                 min="0"
                                 max="5000000"
                                 step="1000"
@@ -376,7 +469,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={6}>
                         <Form.Item
-                            name="bonous_point"
+                            name="bonousPoint"
                             label="Bonous Point"
                             rules={[
                             {
@@ -401,7 +494,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={6}>
                         <Form.Item
-                            name="atteneded_point"
+                            name="attenededPoint"
                             label="Attended Point"
                             rules={[
                             {
@@ -426,7 +519,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={6}>
                         <Form.Item
-                            name="leave_point"
+                            name="leavePoint"
                             label="Leave Point"
                             rules={[
                             {
@@ -559,7 +652,7 @@ const AddCourse = () => {
                     </Row>
                 <div className='flex justify-end'>
                     <Space>
-                        <Button type="primary" htmlType="submit">Submit</Button>
+                        <SubmitButton form={form}>Submit</SubmitButton>
                         <Button htmlType="reset" onClick={
                             ()=>{
                                 setPreviewUrl(null);
