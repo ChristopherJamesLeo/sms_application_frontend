@@ -8,6 +8,8 @@ import Userpromotemodel from '../models/UserPromote';
 import Userlistdrawer from './UserDrawer';
 import Postcomments from './Postcommets';
 import EnrollDrawer from './EnrollDrawer';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 import {
     ClockCircleOutlined,
     LockOutlined,
@@ -36,42 +38,21 @@ const getGrade = (percent) =>{
     };
 }
 
-function classType(typeId){
-    if(typeId === 1){
-        return (
-            <ul className='ml-4'>
-                <li className='my-2'>Zoom Id - 1235 3122</li>
-                <li className='my-2'>Passcode- American</li>
-            </ul>
-        )
-    }else if(typeId === 2){
-        return (
-            <ul className='ml-4'>
-                <li className='my-2'>Address - 1235 3122</li>
-                <li className='my-2'>Room No- 310C</li>
-                <li className='my-2'>Location.- Lat- 12864827, Lgn - 2837283</li>
-            </ul>
-        )
-    }
-}
 
-function paymentType(typeId,paymentType){
-    if(typeId === 1){
-        return (
-           <span>{paymentType}</span>
-        )
-    }else if(typeId === 2){
-        return (
-            <span>{paymentType}</span>
-         )
+const Coursedrawer = ({days,coursedata,name}) => {
+
+    // console.log(coursedata,days)
+    if(!coursedata && !days){
+        return false;
     }
-}
-const Coursedrawer = ({name,postid}) => {
+
+    var trainerName = coursedata.trainer.name;
+    var trainerId = coursedata.trainer.id;
 
     
     const [open, setOpen] = useState(false);
     const [data , setData] = useState({});
-    const [isLoading , setloading] = useState(true);
+    const [isLoading , setloading] = useState(false);
 
     const [disabled, setDisabled] = useState(true);
     const [ isLock , setLock] = useState(true);
@@ -98,6 +79,27 @@ const Coursedrawer = ({name,postid}) => {
         }
     }
 
+    function classType(typeId){
+        if(typeId === 1){
+            return (
+                <ul className='ml-4'>
+                    <li className='my-2'>Zoom Id - {`${coursedata.courseContact.zoomId }`}</li>
+                    <li className='my-2'>Passcode- {`${coursedata.courseContact.passcode}`}</li>
+                    <li className='my-2'>Video Count- {`${coursedata.courseContact.videoCount}`}</li>
+                </ul>
+            )
+        }else if(typeId === 2){
+            return (
+                <ul className='ml-4'>
+                    <li className='my-2'>Address - {`${coursedata.courseContact.address}`}</li>
+                    <li className='my-2'>Room No-  {`${coursedata.courseContact.roomNo}`}</li>
+                    <li className='my-2'>Location.-  {`${coursedata.courseContact.googleMap}`}</li>
+                </ul>
+            )
+        }
+    }
+
+
 
     const toggle = () => {
       setDisabled(!disabled);
@@ -107,24 +109,44 @@ const Coursedrawer = ({name,postid}) => {
 
     const showDrawer = () => {
         setOpen(true);
-        // console.log(userid);
-        if(postid){
-            let url = `https://jsonplaceholder.typicode.com/users/${postid}`;
-            axios.get(url).then( response => {
-                // console.log(response.data);
-                setData(response.data);
-                // console.log(data);
-                setloading(false);
-            }).catch(function(response){
-                console.log("error occur",response.data);
-            })
-        }
         
     };
 
     const onClose = () => {
         setOpen(false);
     };
+
+    // let getDays =  days.map(function(day,idx){
+    //     for (const key in day) {
+    //         // console.log(day.name);
+    //         // console.log(day.id);
+
+    //         for(const coursedaykey in coursedata.courseDays){
+    //             let courseDayId = coursedata.courseDays[coursedaykey].day_id;
+    //             if(day.id == courseDayId){
+    //                 // console.log(day.name);
+    //                 return day.name;
+    //             }
+                
+    //         }
+    //     }
+    
+    // })
+    // console.log(getDays);
+    let getDays = [];
+    days.forEach(function(day,idx){
+        // console.log(day.name);
+        for(let i = 0 ; i < coursedata.courseDays.length; i++){
+            // console.log(coursedata.courseDays[i].id)
+            if(day.id == coursedata.courseDays[i].day_id){
+                getDays.push(day.name);
+            }
+        }
+        
+    })
+
+    console.log(getDays);
+
     return (
 
         <>
@@ -137,8 +159,8 @@ const Coursedrawer = ({name,postid}) => {
                                             }>{name}</span>
             <Drawer
                 // title={`Name : ${data.address ? data.address.street : "Loading..."}`}
-                title={`Name : ${data.name ? data.name : "Loading..."}`}
-                width={720}
+                title={`Name : ${ name ? name : "Loading..."}`}
+                width={1000}
                 onClose={onClose}
                 loading = {Boolean(isLoading)}
                 open={open}
@@ -181,81 +203,79 @@ const Coursedrawer = ({name,postid}) => {
                         
                         <ul className='' style={
                             {
-                                width: "45%"
+                                width: "25%"
                             }
                         }>
                             <h3 className='text-lg mb-3 '>Course Info</h3>
-                            <li className='my-2'>Trainer -  <Userlistdrawer name={"Trainer Name"} userid = {1} /></li>
+                            <li className='my-2'>Trainer -  <Userlistdrawer coursedata={coursedata} name={trainerName} userid = {trainerId} /></li>
                             <li className='my-2'>
-                                <div>Type - Online / Offline</div>
+                                <div>Type - {coursedata.courseType.name }</div>
                                 {
-                                    classType(2)
+                                    classType(coursedata.courseType.id)
                                 }
                             </li>
 
-                            <li className='my-2'>Fee - 30000 MMK  - { paymentType(1,"Mobile Banking") } </li>
+                            <li className='my-2'>Fee - {coursedata.fee } MMK </li>
                             
                         </ul>
                         <ul className='' style={
                             {
-                                width: "45%"
+                                width: "25%"
                             }
                         }>
                             <h3 className='text-lg mb-3'>Class Schedule</h3>
-                            <li className='my-2'>Categories - Web Development</li>
-                            <li className='my-2'>Title - Web Developemnt Batch 1</li>
-                            <li className='my-2'>Start Date -</li>
-                            <li className='my-2'>End Date -</li>
-                            <li className='my-2'>Days-</li>
-                            <li className='my-2'>Time -</li>
+                            <li className='my-2'>Categories - { coursedata.category.name}</li>
+                            <li className='my-2'>Title - {coursedata.name}</li>
+                            <li className='my-2'>Start Date - {coursedata.startdate}</li>
+                            <li className='my-2'>End Date - { coursedata.enddate}</li>
+                            
+                            <li className='my-2'>Time - {coursedata.starttime } to {coursedata.endtime }</li>
                         </ul>
+                        <ul className='' style={
+                            {
+                                width: "25%"
+                            }
+                        }>
+                            <h3 className='text-lg mb-3'>Point Management</h3>
+                            <li className='my-2'>Point - { coursedata.paymentPoint} </li>
+                            <li className='my-2'>Bonous - {coursedata.bonousPoint} </li>
+                            <li className='my-2'>Attended Point- {coursedata.attendedPoint} </li>
+                            <li className='my-2'>Leave Point - { coursedata.leavePoint} </li>
+                        </ul>
+                        <ul className='' style={
+                            {
+                                width: "25%"
+                            }
+                        }>
+                            <h3 className='text-lg mb-3'>Days</h3>
+                                {
+                                    getDays.map(function(getDay){
+                                        return (
+                                            <>
+                                                <li className='my-2'>{getDay} &nbsp;</li>
+                                            </>
+                                        )
+                                    })
+                                }
+                        </ul>
+
+
+                        
                     </div>
                     {/* end Course info */}
                     <hr className='my-2'/>
                     {/* start Syllabus */}
                     <div>
-                        <h3 className="text-lg">Topic</h3>
-                        <span>Current Topic</span>
-
-                        <hr className='my-2'/>
 
                         <h3 className="text-lg">Learning Objective</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum itaque eligendi est saepe ad, perferendis impedit soluta doloremque possimus rem laboriosam nihil fugiat deserunt, voluptatum cum magnam iste odio quas.
-                        </p>
-                        <hr className='my-2'/>
-
-                        <h3 className='text-lg'>Outline</h3>
-                        <ul>
-                            <li>Outline 1</li>
-                            <li>Outline 2</li>
-                            <li>Outline 3</li>
-                            <li>Outline 4</li>
-                        </ul>
-
+                        <div>
+                            <ReactQuill value={coursedata.syllabus.syllaby} readOnly={true} theme="bubble" />
+                        </div>
                     </div>
                     
                     {/* end Syllabus*/}
 
-                    <Divider/>
-                    <div>
-                        <h3 className="text-lg">Note </h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat quibusdam laboriosam eaque, maxime distinctio error similique quasi quisquam non harum, pariatur praesentium. Nulla velit illo expedita blanditiis odit molestias soluta!
-                        </p>
-                    </div>
-                    <Divider/>
                     {/* start Enrll */}
-                    
-
-                    {/* start account deletion */}
-                    <div className="flex justify-evenly">
-                        {/* <Button type="primary">Promote</Button> */}
-                        <Userpromotemodel/>
-                        <Userdeletemodel/>
-                        
-                    </div>
-                    {/* end account deletion */}
 
 
 

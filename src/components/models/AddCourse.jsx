@@ -10,7 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 // end img upload 
 
 
-const AddCourse = () => {
+const AddCourse = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [infoBox , setInfoBox] = useState(false);
@@ -156,8 +156,9 @@ const AddCourse = () => {
             });
             if (response.data) {
                 if (response.data) {
-                    let data = response.data;
-                    console.log(data);
+                    // let data = response.data;
+                    fetchData()
+                    success("Course Create Successfu");
                 }else {
                     return false;
                 }
@@ -226,7 +227,6 @@ const AddCourse = () => {
                         <Form.Item
                             name="googleMap"
                             label="Location"
-                            defaultValue = "Bago"
                             rules={[
                             {
                                 required: true,
@@ -247,7 +247,6 @@ const AddCourse = () => {
                         <Form.Item
                             name="zoomId"
                             label="Zoom Id"
-                            defaultValue = "3334 4242 9283"
                             rules={[
                             {
                                 required: true,
@@ -262,7 +261,6 @@ const AddCourse = () => {
                         <Form.Item
                             name="passcode"
                             label="Passcode"
-                            defaultValue = ""
                             rules={[
                             {
                                 required: true,
@@ -277,7 +275,6 @@ const AddCourse = () => {
                         <Form.Item
                             name="videoCount"
                             label="Video Count"
-                            defaultValue = ""
                             rules={[
                             {
                                 required: true,
@@ -484,7 +481,6 @@ const AddCourse = () => {
                                     width: "100%",
                                     }
                                 }
-                                defaultValue='0'
                                 min="0"
                                 max="5000000"
                                 step="1000"
@@ -494,7 +490,7 @@ const AddCourse = () => {
                     </Col>
                     <Col span={6}>
                         <Form.Item
-                            name="attenededPoint"
+                            name="attendedPoint"
                             label="Attended Point"
                             rules={[
                             {
@@ -509,7 +505,6 @@ const AddCourse = () => {
                                     width: "100%",
                                     }
                                 }
-                                defaultValue='0'
                                 min="0"
                                 max="5000000"
                                 step="1000"
@@ -534,7 +529,6 @@ const AddCourse = () => {
                                     width: "100%",
                                     }
                                 }
-                                defaultValue='0'
                                 min="0"
                                 max="5000000"
                                 step="1000"

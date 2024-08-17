@@ -68,7 +68,7 @@ const isAdmin = (con , userid) => {
 
 const Userlistdrawer = ({name,userid}) => {
 
-    // console.log(userid);
+    console.log(name,userid);
     var [condition, setCondition] = useState(true); 
     var [permission, setAdmin] = useState(true);
 

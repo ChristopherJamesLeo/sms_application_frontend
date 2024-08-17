@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table , message , Tag} from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
+import api from '../api/api';
 
 import Coursedrawer from '../drawer/Coursedrawer';
 import Postcomments from '../drawer/Postcommets';
@@ -14,40 +15,60 @@ export default function Courses({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const [messageApi, contextHolder] = message.useMessage();
 
-        let url = "https://jsonplaceholder.typicode.com/users";
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
-        // let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/courses";
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-
-                // start demo
-                    // key: item.id,
-                    // no: index + 1,
-                    // id: item.id, 
-                    // name: <Coursedrawer name={item.name} postid={item.id}/>,
-                    // trainer: item.trainer_id,
-                    // categories: item.category_id,
-                    // level: item.level_id,
-                    // type: item.classtype_id,
-                    // fee: item.fee,
-                    // zoomId: item.zoomId,
-                    // passcode: item.passcode,
-                    // roomNo: item.roomNo,
-                    // address: item.address,
-                    // location: item.location,
-                    // date: Array.isArray(item.date) ? item.date.map((date, idx) => <span key={idx}>{date} </span>) : "loading...",
-                    // time:  Array.isArray(item.time) ? item.time.map((time, idx) => <span key={idx}>{time} </span>) : "loading...",
-                    // days:  Array.isArray(item.days) ? item.days.map((day, idx) => <span key={idx}>{day}</span>) : "loading...",
-                // end demo
-            }));
-            setfetchData(transformedData);
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            const response = await api.get('/courses', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                let data = response.data.courses;
+                let showData = data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    name: <Coursedrawer days={response.data.days} coursedata = {item} name={item.name} />,
+                    categorie: item.category.name,
+                    regId: item.regId,
+                    user_id: item.user.name,
+                    trainer: item.trainer.name,
+                    type_id: item.courseType.name,
+                    level_id: item.level.name,
+                    status_id: item.status.name,
+                    fee: item.fee,
+                    created_at: item.created_at,
+                    updated_at: item.updated_at,
+                }));
+                console.log(showData);
+                setLoading(false)
+                setfetchData(showData);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end fetching Data
+
+    useEffect(() => {
+        fetchingData();
     }, []);
 
     // start demo 
@@ -105,66 +126,10 @@ export default function Courses({title}){
             dataIndex: 'status_id',
             key: 'status_id',
         },{
-            title: 'Payment Type',
-            width: 200,
-            dataIndex: 'paymenttype_id',
-            key: 'paymenttype_id',
-        },{
             title: 'Fee',
             width: 200,
             dataIndex: 'fee',
             key: 'fee',
-        },{
-            title: 'Video Count',
-            width: 200,
-            dataIndex: 'video_count',
-            key: 'video_count',
-        },
-        {
-            title: 'Paid Point',
-            width: 200,
-            dataIndex: 'paid_point',
-            key: 'paid_point',
-        },{
-            title: 'Bonous Point',
-            width: 200,
-            dataIndex: 'bonous_point',
-            key: 'bonous_point',
-        },{
-            title: 'Student Count',
-            width: 200,
-            dataIndex: 'student_count',
-            key: 'student_count',
-        },{
-            title: 'Cover Photo',
-            width: 200,
-            dataIndex: 'image',
-            key: 'image',
-        },{
-            title: 'State Date',
-            width: 200,
-            dataIndex: 'start_date',
-            key: 'start_date',
-        },{
-            title: 'End Date',
-            width: 200,
-            dataIndex: 'end_date',
-            key: 'end_date',
-        },{
-            title: 'Start Time',
-            width: 200,
-            dataIndex: 'start_time',
-            key: 'start_time',
-        },{
-            title: 'End Time',
-            width: 200,
-            dataIndex: 'end_time',
-            key: 'end_time',
-        },{
-            title: 'Days',
-            width: 200,
-            dataIndex: 'days',
-            key: 'days',
         },{
             title: 'Created At',
             width: 200,
@@ -176,19 +141,6 @@ export default function Courses({title}){
             dataIndex: 'updated_at',
             key: 'updated_at',
         },
-        // {
-        //     title: 'Action',
-        //     key: 'operation',
-        //     fixed: 'right',
-        //     width: 150,
-        //     render: (_, record) => (
-        //         <div className='flex gap-x-3'>
-        //             <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-        //             <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-        //             <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-        //         </div>
-        //     ),
-        // },
     ]
     // end demo 
     let tableWidth = 0 ;
@@ -200,10 +152,11 @@ export default function Courses({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-2 flex gap-x-2'>
-                    <AddCourse />
+                    <AddCourse fetchData={fetchingData} />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
