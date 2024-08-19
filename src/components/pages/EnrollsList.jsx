@@ -8,8 +8,9 @@ import api from '../api/api';
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import Coursedrawer from '../drawer/Coursedrawer';
-import AddEnroll from "../models/AddEnroll";
+import AddEnroll,{EditEnroll} from "../models/AddEnroll";
 import UserSearch from "../inputs/UserSearch";
+
 
 export default function Enrolls({title}){
     const [data, setfetchData] = useState([]);
@@ -41,15 +42,16 @@ export default function Enrolls({title}){
                     user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
                     course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
                     
-                    payment_type : item.paymentType.name,
-                    payment_method : item.paymentMethod? item.paymentMethod.name : "Point Pay",
                     generate_id : item.transactionId,
                     image : item.image? item.image : null,
+                    payment_type : item.paymentType.name,
+                    payment_method : item.paymentMethod? item.paymentMethod.name : "Point Pay",
                     stage_id : item.stage.name,
                     status_id : item.status.name,
                     admit_by : item.admitBy.name,
                     created_at: item.created_at,
                     updated_at: item.updated_at,
+                    action : <EditEnroll enrollId = {item.id} fetchAllData = {fetchingData} />
                     
                 }));
                 setLoading(false)
@@ -98,6 +100,12 @@ export default function Enrolls({title}){
             key: 'course_id',
         },
         {
+            title: 'Transaction Id',
+            dataIndex: 'generate_id',
+            key: 'generate_id',
+            width: 150,
+        },
+        {
             title: 'Payment Type',
             dataIndex: 'payment_type',
             key: 'payment_type',
@@ -107,12 +115,6 @@ export default function Enrolls({title}){
             title: 'Payment Method',
             dataIndex: 'payment_method',
             key: 'payment_method',
-            width: 150,
-        },
-        {
-            title: 'Transaction Id',
-            dataIndex: 'generate_id',
-            key: 'generate_id',
             width: 150,
         },{
             title: 'Image',
@@ -149,16 +151,9 @@ export default function Enrolls({title}){
         },
         {
             title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+            dataIndex: 'action',
+            key: 'action',
+            width: 200,
         },
     ];
 

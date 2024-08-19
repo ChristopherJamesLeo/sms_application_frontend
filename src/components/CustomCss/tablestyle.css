@@ -54,3 +54,13 @@
   height: 100%;
 
 }
+
+ul.list_container li {
+  padding: 5px 10px;
+  margin: 1px 0px;
+
+}
+
+ul.list_container li:nth-of-type(odd){
+  background-color: rgba(128, 128, 128, 0.084);
+}

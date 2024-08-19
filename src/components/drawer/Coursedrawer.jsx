@@ -145,6 +145,44 @@ const Coursedrawer = ({courseId, name}) => {
     }
     // end fetch single data
 
+
+    // end
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4; 
+        // console.log("status id is", statusId);
+        
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+
+        console.log(values);
+        
+        try {
+            const response = await api.put(`/courses/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setloading(false);
+        }
+    };
+    // end active switch
+
     const showDrawer = () => {
         setOpen(true);
         fetchingData(courseId);
@@ -277,13 +315,25 @@ const Coursedrawer = ({courseId, name}) => {
                         }>
                             <h3 className='text-lg mb-3'>Days</h3>
                                 {
-                                    getDays.map(function(getDay){
+                                    // console.log(
+                                        
+                                    // )
+                                    getDays.map(function(getDay,idx){
+                                        // return coursedata.courseDays[idx].day_id;
                                         return (
                                             <>
-                                                <li className='my-2'>{getDay} &nbsp;</li>
+                                                <li className='my-2 flex justify-between'>
+
+                                                    <span>{getDay} </span>
+                                                    <Switch 
+                                                    size='small'
+                                                    defaultChecked={coursedata.courseDays[idx].status_id === 3} 
+                                                    onChange={(checked) => onChange(checked, coursedata.courseDays[idx].id)} />
+                                                </li>
                                             </>
                                         )
                                     })
+                                    
                                 }
                         </ul>
 

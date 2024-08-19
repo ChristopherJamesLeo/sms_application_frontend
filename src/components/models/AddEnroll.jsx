@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , Image , Divider} from 'antd';
+import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , Image , ConfigProvider} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import Userlistdrawer from '../drawer/UserDrawer';
+import Coursedrawer from '../drawer/Coursedrawer';
 import api from '../api/api';
 
 const AddEnroll = ({fetchData}) => {
@@ -342,3 +344,278 @@ const AddEnroll = ({fetchData}) => {
 };
 
 export default AddEnroll;
+
+
+export function EditEnroll ({enrollId,fetchAllData}) {
+    console.log(enrollId);
+    const [form] = Form.useForm();
+    const [data, setData] = useState({});
+    const [open, setOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetch single Data 
+    async function fetchingData(id){
+        let enrollId = id;
+        try {
+            // console.log(enrollId);
+            const response = await api.get(`/enrolls/${enrollId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            // console.log(response)
+            if (response.data) {
+                
+                console.log(response.data)
+                let data = response.data;
+                setData(data);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            // setloading(false);
+        }
+    }
+    // end fetch single data
+
+    function modalHandler(){
+        setOpen(true)
+        fetchingData(enrollId)
+    }
+
+    
+
+    // start data
+    let [dateTime,setDateTime] = useState(null);
+    const onOk = (value,dateString) => {
+        // console.log('onOk: ', dateString);
+        setDateTime(dateString);
+    };
+    // end date
+
+    const onReset = () => {
+        form.resetFields();
+        // setPreviewUrl(null);
+    };
+
+    function formHandler(values){
+        console.log(values);
+
+    }
+  return (
+    <>
+        <Button type="primary" size='small' style={
+            {
+                borderRadius : "0px",
+                backgroundColor : "yellowgreen"
+            }
+        } onClick={modalHandler}>
+            View
+        </Button>
+        {contextHolder}
+        <Modal
+            title="Verify Enroll"
+            centered
+            open={open}
+            onOk={() => setOpen(false)}
+            onCancel={() => {
+                setOpen(false);
+                form.resetFields();
+                // setPreviewUrl(null);
+            }}
+            footer={null}
+            width={1000}
+        >
+            <Row gutter={16}>
+                <Col span={12}>
+                    <Image
+                            width={"100%"}
+                            height={"100%"}
+                            style={
+                                {
+                                    objectFit: "cover"
+                                }
+                            }
+                            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                        />
+                </Col>
+                <Col span={12}>
+                    <ul className='list_container'>
+                        <li><span>Student Name : </span>  <Userlistdrawer name={data.user ? data.user.name : false} userid = {data.user ? data.user.id : false} /></li>
+                        <li><span>Student ID : </span>{data.user ? data.user.regnumber : null}</li>
+                        <li><span>Course Title : </span><Coursedrawer courseId = {data.course ? data.course.id : false } name={data.course ? data.course.name : false} /></li>
+                        <li><span>Transaction : </span>{data.transactionId ? data.transactionId : null}</li>
+                        <li><span>Payment Method : </span>{data.paymentMethod ? data.paymentMethod.name : 'Point Pay'}</li>
+                        <li><span>Payment Type : </span>{data.paymentType ? data.paymentType.name : null}</li>
+                        <hr className='my-5'/>
+                        <li>Stage : {data.stage ? data.stage.name : null}</li>
+                        <li>Register at : {data.created_at ? data.created_at : null}</li>
+                        <li>Verify By : {data.admitBy ? data.admitBy.name : null}</li>
+                        <li>Verified at : {data.updated_at ? data.updated_at : null}</li>
+                        <hr className='my-5'/>
+                        <span>Remark</span>
+                        <li>{data.remark ? data.remark : null}</li>
+                    </ul>
+                </Col>
+                <Col span={24} className='flex justify-end'>
+                    <VerifyButton EnrollId={data.id} stageId = {data.stage ? data.stage.id : false} fetchData = {fetchingData} fetchAll = {fetchAllData}/>
+                </Col>
+            </Row>
+        </Modal>
+    </>
+  );
+};
+
+
+
+export function VerifyButton({ EnrollId , stageId , fetchData , fetchAll}) {
+    const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const [stages, setStages] = useState([]);
+
+
+
+    const onReset = () => form.resetFields();
+    const formConfirm = () => form.submit();
+
+    // start model data
+    async function modelHandler(){
+        setOpen(true)
+        try {
+            const response = await api.get(`/enroll/stages`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                // console.log(response.data.data);
+                setStages(response.data.data);
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    }
+    // end modal data
+
+    const formHandler = async (values) => {
+        // console.log(values);
+        values.id = EnrollId;
+
+        
+        try {
+            // console.log(EnrollId);
+            // console.log(values);
+            const response = await api.put(`/enrolls/${EnrollId}`, values , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                // console.log(response.data);
+                form.resetFields();
+                setOpen(false);
+                success("Data Update Successful");
+                fetchData(EnrollId);
+                fetchAll();
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    };
+
+    if(!stages){
+        return false;
+    }
+
+
+    return (
+        <>
+            <ConfigProvider theme={{ token: { colorPrimary: '#1677ff' } }}>
+                <Button type="primary" className='mt-5' onClick={modelHandler}>Verify</Button>
+            </ConfigProvider>
+            {contextHolder}
+            <Modal
+                title="Verify Enroll"
+                open={open}
+                onCancel={() => { setOpen(false); onReset(); }}
+                width={500}
+                footer={null}
+            >
+                <Form layout="vertical" hideRequiredMark
+                    onFinish={formHandler}
+                    form={form}
+                    initialValues={{ stage_id : stageId }}
+                >
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="stage_id"
+                                label="Stage"
+                                rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose stage',
+                                },
+                                ]}
+                            >
+                                <Select placeholder="Please choose the stage">
+                                    {
+                                        stages.map(function(stage,id){
+                                            // console.log(stage);
+                                            return(
+                                                <Option key={stage.id} value={stage.id}>{stage.name}</Option>
+                                            );
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Space>
+                        <Button type="primary" htmlType="button" onClick={formConfirm}>Submit</Button>
+                        <Button htmlType="button" onClick={onReset}>Reset</Button>
+                    </Space>
+                </Form>
+            </Modal>
+        </>
+    );
+};
