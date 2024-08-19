@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
 import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , Image , Divider} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../api/api';
 
-const AddEnroll = () => {
+const AddEnroll = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-        messageApi.open({
-          type: 'success',
-          content: 'User Add Successful',
-        });
-    };
-    const error = () => {
-        messageApi.open({
-          type: 'error',
-          content: 'User Add Fail',
-        });
-    };
+    var [userId,setUserId] = useState(null);
+    var [courses,setCourses] = useState([]);
+    var [paymentMethods,setPaymentMethods] = useState([]);
+    var [paymentTypes,setPaymentTypes] = useState([]);
+
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     // start image preview
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -38,6 +34,43 @@ const AddEnroll = () => {
 
     // end image preview
 
+    // start open model
+    async function modelHandler(){
+        
+        try {
+            const response = await api.get(`/enrolls/create` , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            
+            if(response){
+                // console.log(response.data.userdata);
+                let formdata = response.data;
+                setOpen(true);
+                console.log(formdata);
+                setCourses(formdata.courses);
+                setPaymentMethods(formdata.paymentMethods);
+                setPaymentTypes(formdata.paymentTypes);
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    }
+
+    // end open model
+
+
+    // start payment type
     const [paymentType, setPaymentType] = useState(false);
 
     function paymentHandle(value){
@@ -46,7 +79,7 @@ const AddEnroll = () => {
     }
 
     function paymentTypeRender(value){
-        if(value == "1"){
+        if(value == "1" || value == "2"){
             return (
                 <Row gutter={16}>
                     <Col span={24}>
@@ -83,19 +116,27 @@ const AddEnroll = () => {
             return false;
         }
     }
+    // end payment type
 
+    // start payment method
     function showPaymentMethod(value){
-        if(value == "1"){
+        if(value == "1" || value == "2"){
             return (
                 <Col span={24}>
                     <Form.Item
-                        name="payment_method"
+                        name="payment_method_id"
                         label="Payment Method"
                         rules={[{ required: true, message: 'Please Payment Method' }]}
                     >
                         <Select placeholder="Choose Payment Method">
-                            <Option value="1">KBZ pay</Option>
-                            <Option value="2">Wave Pay</Option>
+                            {
+                                paymentMethods.map(function(paymentMethod,dix){
+                                    // console.log(method);
+                                    return(
+                                        <Option value={`${paymentMethod.id}`}>{paymentMethod.name}</Option>
+                                    )
+                                })
+                            }
                         </Select>
                     </Form.Item>
                 </Col>
@@ -106,51 +147,108 @@ const AddEnroll = () => {
         }
     }
 
-    // start verify reg number
-    let [regNumber , setRegNumber] = useState(null);
+    // end payment method
 
-    function userRegHangler(value){
-        setRegNumber(value.target.value);
+    // start verify reg number
+    let [userdata, setUserData] = useState({});
+
+    async function userRegHangler(value){
+        // console.log(value.target.value);
+        var getRegId = value.target.value;
+        // console.log(getRegId);
+        try {
+            const response = await api.get(`/enrolls/checkuser/${getRegId}` , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            
+            if(response){
+                console.log(response.data.userdata);
+                let userdata = response.data.userdata;
+                setUserId(userdata.id);
+                setUserData(userdata);
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+
     }
     
     function showUserInfo(value){
         
         if(value != null){
+           
             return (
                 <>
-                    <div className='mb-3'> <span> Name - {value}  </span> & <span>NRC - </span> & <span> Student Point - </span> </div>
+                    <div className='mb-3'> <span> Name - {value.name}  </span> & <span>Student Id - {value.regnumber}</span> </div>
                 </>
             )
         }else {
-            return false;
+            return false;;
         }
         
     }
     // end verify reg number 
 
+    // start form reset
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
         setPaymentType(null);
-        setRegNumber(null)
     };
 
-    const formHandler = (values) => {
+    // end form reset
+
+    // start form submit
+    const formHandler = async (values) => {
+        
+        values.user_id = userId;
         console.log(values);
-        // const url = "https://66a6acfe23b29e17a1a342ff.mockapi.io/sms/user/image";
-        // const url = "";
-        // axios.post(url, values)
-        //     .then(response => {
-        //         console.log('Data successfully posted:', response.data);
-        //         onReset();
-        //         setOpen(false);
-        //         success();
-        //     }).catch(error());
+        try {
+            console.log(values);
+
+            const response = await api.post('/enrolls', values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                onReset();
+                setOpen(false);
+                fetchData();
+                success('Enroll Add Successful');
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
     };
+    // end form submit
+
 
     return (
         <>
-            <Button type="primary" onClick={() => setOpen(true)}>
+            <Button type="primary" onClick={modelHandler}>
                 Add Enroll
             </Button>
             {contextHolder}
@@ -163,17 +261,16 @@ const AddEnroll = () => {
                     form.resetFields();
                     setPreviewUrl(null);
                     setPaymentType(null);
-                    setRegNumber(null);
                 }}
                 footer={null}
                 width={500}
             >
-                {showUserInfo(regNumber)}
+                {showUserInfo(userdata)}
                 <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="reg_number"
+                                name="regId"
                                 label="Student Id"
                                 rules={[{ required: true, message: 'Please enter user name' }]}
                             >
@@ -187,20 +284,30 @@ const AddEnroll = () => {
                                 rules={[{ required: true, message: 'Please enter email' }]}
                             >
                                 <Select placeholder="Choose Class" >
-                                    <Option value="1">Mobile Banking</Option>
-                                    <Option value="2">Point</Option>
+                                    {
+                                        courses.map(function(course,idx){
+                                            return(
+                                                <Option value={course.id}>{course.name}</Option>
+                                            )
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={24}>
                             <Form.Item
-                                name="payment_type"
+                                name="payment_type_id"
                                 label="Payment Type"
                                 rules={[{ required: true, message: 'Please Payment Type' }]}
                             >
                                 <Select placeholder="Choose Payment Type" onChange={paymentHandle}>
-                                    <Option value="1">Mobile Banking</Option>
-                                    <Option value="2">Point</Option>
+                                {
+                                        paymentTypes.map(function(paymentType,idx){
+                                            return(
+                                                <Option value={paymentType.id}>{paymentType.name}</Option>
+                                            )
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -211,7 +318,7 @@ const AddEnroll = () => {
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="description"
+                                name="remark"
                                 label="Description"
                                 rules={[{ required: true, message: 'Please enter description' }]}
                             >

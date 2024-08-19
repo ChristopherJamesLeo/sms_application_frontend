@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button , Divider , Switch , Image , Col, DatePicker, Drawer, Form, Input, Row, Select, Space , Progress } from 'antd';
+import { Button  , Switch , Image , Col, Drawer, Form, Input, Row, Select, Space , message , ConfigProvider , Modal} from 'antd';
+import api from '../api/api';
 import Usertimeline from '../timeline/Usertimeline';
 import Userdeletemodel from '../models/UserDisable';
 import Userpromotemodel from '../models/UserPromote';
@@ -13,9 +14,11 @@ import 'react-quill/dist/quill.snow.css';
 import {
     ClockCircleOutlined,
     LockOutlined,
-    UnlockOutlined
+    UnlockOutlined,
+    GlobalOutlined
   } from '@ant-design/icons';
 import axios, { Axios } from 'axios';
+import TextArea from 'antd/es/input/TextArea';
 const { Option } = Select;
 
 const conicColors = {
@@ -39,23 +42,25 @@ const getGrade = (percent) =>{
 }
 
 
-const Coursedrawer = ({days,coursedata,name}) => {
+const Coursedrawer = ({courseId, name}) => {
 
     // console.log(coursedata,days)
-    if(!coursedata && !days){
-        return false;
-    }
-
-    var trainerName = coursedata.trainer.name;
-    var trainerId = coursedata.trainer.id;
-
+    console.log(courseId);
     
-    const [open, setOpen] = useState(false);
-    const [data , setData] = useState({});
-    const [isLoading , setloading] = useState(false);
+    var [open, setOpen] = useState(false);
+    var [data , setData] = useState({});
+    var [isLoading , setloading] = useState(true);
+    var [days,setDays] = useState([]);
+    var [coursedata,setCourseData] = useState({});
+
 
     const [disabled, setDisabled] = useState(true);
     const [ isLock , setLock] = useState(true);
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     function hadleLock(){
         toggle();
@@ -83,17 +88,17 @@ const Coursedrawer = ({days,coursedata,name}) => {
         if(typeId === 1){
             return (
                 <ul className='ml-4'>
-                    <li className='my-2'>Zoom Id - {`${coursedata.courseContact.zoomId }`}</li>
-                    <li className='my-2'>Passcode- {`${coursedata.courseContact.passcode}`}</li>
-                    <li className='my-2'>Video Count- {`${coursedata.courseContact.videoCount}`}</li>
+                    <li className='my-2'>Zoom Id - {`${coursedata.courseContact ? coursedata.courseContact.zoomId : null}`}</li>
+                    <li className='my-2'>Passcode- {`${coursedata.courseContact ? coursedata.courseContact.passcode : null}`}</li>
+                    <li className='my-2'>Video Count- {`${coursedata.courseContact ? coursedata.courseContact.videoCount : null}`}</li>
                 </ul>
             )
         }else if(typeId === 2){
             return (
                 <ul className='ml-4'>
-                    <li className='my-2'>Address - {`${coursedata.courseContact.address}`}</li>
-                    <li className='my-2'>Room No-  {`${coursedata.courseContact.roomNo}`}</li>
-                    <li className='my-2'>Location.-  {`${coursedata.courseContact.googleMap}`}</li>
+                    <li className='my-2'>Address - {`${coursedata.courseContact ? coursedata.courseContact.address : null}`}</li>
+                    <li className='my-2'>Room No-  {`${coursedata.courseContact ? coursedata.courseContact.roomNo : null}`}</li>
+                    <li className='my-2'>Location.-  {`${coursedata.courseContact ? coursedata.courseContact.googleMap : null}`}</li>
                 </ul>
             )
         }
@@ -106,9 +111,45 @@ const Coursedrawer = ({days,coursedata,name}) => {
       setLock(false);
     };
 
+    // start fetch single Data 
+    async function fetchingData(id){
+        let getCourseId = id;
+        try {
+            console.log(getCourseId);
+            const response = await api.get(`/courses/${getCourseId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response)
+            if (response.data) {
+                
+                console.log(response.data)
+                let data = response.data;
+                setCourseData(data.course);
+                setDays(data.days);
+                setloading(false)
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setloading(false);
+        }
+    }
+    // end fetch single data
 
     const showDrawer = () => {
         setOpen(true);
+        fetchingData(courseId);
+
+        
         
     };
 
@@ -116,22 +157,6 @@ const Coursedrawer = ({days,coursedata,name}) => {
         setOpen(false);
     };
 
-    // let getDays =  days.map(function(day,idx){
-    //     for (const key in day) {
-    //         // console.log(day.name);
-    //         // console.log(day.id);
-
-    //         for(const coursedaykey in coursedata.courseDays){
-    //             let courseDayId = coursedata.courseDays[coursedaykey].day_id;
-    //             if(day.id == courseDayId){
-    //                 // console.log(day.name);
-    //                 return day.name;
-    //             }
-                
-    //         }
-    //     }
-    
-    // })
     // console.log(getDays);
     let getDays = [];
     days.forEach(function(day,idx){
@@ -145,7 +170,6 @@ const Coursedrawer = ({days,coursedata,name}) => {
         
     })
 
-    console.log(getDays);
 
     return (
 
@@ -178,6 +202,7 @@ const Coursedrawer = ({days,coursedata,name}) => {
                 </Space>
                 }
             >
+                {contextHolder}
                 <div className='drawer_content_container'>
                     <div className='w-100 h-54 poster_container'>
                         <Image
@@ -193,11 +218,14 @@ const Coursedrawer = ({days,coursedata,name}) => {
                     </div>
                     {/* start Course info */}
                     <ul className="mb-4 flex gap-x-3">
-                        <li>Course View - 1</li>
-                        <li>Like - 2 </li>
-                        <li><EnrollDrawer postId={3} name={"Enrolls"}/>  - 3 </li>
-                        <li><Postcomments postId={2} name={"Comments"}/> - 3 </li>
+                        <li>Course View - 1</li> |
+                        <li>Like - 2 </li> |
+                        <li><EnrollDrawer postId={3} name={"Enrolls"}/>  - 3 </li> |
+                        <li><Postcomments postId={2} name={"Comments"}/> - 3 </li> |
+                        <li><GlobalOutlined /> {coursedata.visibility ? coursedata.visibility.name : null} </li>
+                        
                     </ul>
+                    {/* <CommentBox coursedata = {coursedata}/> */}
                         
                     <div className="mb-3 flex justify-between">
                         
@@ -207,15 +235,15 @@ const Coursedrawer = ({days,coursedata,name}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3 '>Course Info</h3>
-                            <li className='my-2'>Trainer -  <Userlistdrawer coursedata={coursedata} name={trainerName} userid = {trainerId} /></li>
+                            <li className='my-2'>Trainer -  <Userlistdrawer coursedata={coursedata} name={coursedata.trainer?coursedata.trainer.name : null} userid = {coursedata.trainer?coursedata.trainer.id : null} /></li>
                             <li className='my-2'>
-                                <div>Type - {coursedata.courseType.name }</div>
+                                <div>Type - {coursedata.courseType ? coursedata.courseType.name : null }</div>
                                 {
-                                    classType(coursedata.courseType.id)
+                                    classType(coursedata.courseType? coursedata.courseType.id : null)
                                 }
                             </li>
 
-                            <li className='my-2'>Fee - {coursedata.fee } MMK </li>
+                            <li className='my-2'>Fee - {coursedata ? coursedata.fee : null } MMK </li>
                             
                         </ul>
                         <ul className='' style={
@@ -224,12 +252,12 @@ const Coursedrawer = ({days,coursedata,name}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3'>Class Schedule</h3>
-                            <li className='my-2'>Categories - { coursedata.category.name}</li>
-                            <li className='my-2'>Title - {coursedata.name}</li>
-                            <li className='my-2'>Start Date - {coursedata.startdate}</li>
-                            <li className='my-2'>End Date - { coursedata.enddate}</li>
+                            <li className='my-2'>Categories - { coursedata.category ? coursedata.category.name : null}</li>
+                            <li className='my-2'>Title - {coursedata ? coursedata.name : null}</li>
+                            <li className='my-2'>Start Date - {coursedata ? coursedata.startdate : null}</li>
+                            <li className='my-2'>End Date - { coursedata ? coursedata.enddate : null}</li>
                             
-                            <li className='my-2'>Time - {coursedata.starttime } to {coursedata.endtime }</li>
+                            <li className='my-2'>Time - {coursedata ? coursedata.starttime : null } to {coursedata ? coursedata.endtime : null }</li>
                         </ul>
                         <ul className='' style={
                             {
@@ -237,10 +265,10 @@ const Coursedrawer = ({days,coursedata,name}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3'>Point Management</h3>
-                            <li className='my-2'>Point - { coursedata.paymentPoint} </li>
-                            <li className='my-2'>Bonous - {coursedata.bonousPoint} </li>
-                            <li className='my-2'>Attended Point- {coursedata.attendedPoint} </li>
-                            <li className='my-2'>Leave Point - { coursedata.leavePoint} </li>
+                            <li className='my-2'>Point - { coursedata ? coursedata.paymentPoint : null} </li>
+                            <li className='my-2'>Bonous - {coursedata ? coursedata.bonousPoint : null} </li>
+                            <li className='my-2'>Attended Point- {coursedata ? coursedata.attendedPoint : null} </li>
+                            <li className='my-2'>Leave Point - { coursedata ? coursedata.leavePoint : null} </li>
                         </ul>
                         <ul className='' style={
                             {
@@ -269,15 +297,13 @@ const Coursedrawer = ({days,coursedata,name}) => {
 
                         <h3 className="text-lg">Learning Objective</h3>
                         <div>
-                            <ReactQuill value={coursedata.syllabus.syllaby} readOnly={true} theme="bubble" />
+                            <ReactQuill value={coursedata.syllabus ? coursedata.syllabus.syllaby : null} readOnly={true} theme="bubble" />
                         </div>
                     </div>
                     
                     {/* end Syllabus*/}
 
                     {/* start Enrll */}
-
-
 
                     
                 </div>
@@ -287,4 +313,102 @@ const Coursedrawer = ({days,coursedata,name}) => {
     );
 
 };
+
+
+const CommentBox = ({coursedata})=> {
+    if(!coursedata){
+        return false;
+    }
+
+    console.log(coursedata);
+
+    const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+
+
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const onReset = () => form.resetFields();
+    const formConfirm = () => form.submit();
+
+
+    const formHandler = async (values) => {
+        values.commentable_id =coursedata.id;
+
+        try {
+            console.log(values);
+            // const response = await api.post('/categories', values, {
+            //     headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            // });
+            // if (response.data) {
+            //     if (response.data) {
+            //         form.resetFields();
+            //         setOpen(false);
+                    
+            //         success(response.data.message);
+            //         fetchData();
+            //     }
+            // } else {
+            //     error("Edit failed.");
+            // }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
+    };
+
+    return (
+        <>
+            <ConfigProvider theme={{ token: { colorPrimary: '#1677ff' } }}>
+                <Button type="primary" onClick={() => setOpen(true)} style={
+                    {
+                        marginBottom: "15px"
+                    }
+                }>Add Comment</Button>
+            </ConfigProvider>
+            {contextHolder}
+            <Modal
+                title="Add Stage"
+                open={open}
+                onCancel={() => { setOpen(false); onReset(); }}
+                width={500}
+                footer={null}
+            >
+                <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="comment"
+                                label="Comment"
+                                rules={[{ required: true, message: 'Please enter Comment' }]}
+                            >
+                                <TextArea placeholder="Please enter categories" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Space>
+
+                        <Button type="primary" htmlType="button" onClick={formConfirm}>Submit</Button>
+                        <Button htmlType="button" onClick={onReset}>Reset</Button>
+                    </Space>
+                </Form>
+            </Modal>
+        </>
+    );
+}
+
+
+
 export default Coursedrawer;

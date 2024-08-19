@@ -76,6 +76,8 @@ const Userlistdrawer = ({name,userid}) => {
     var [data , setData] = useState({});
     var [isLoading , setloading] = useState(true);
 
+    var [userEnrolls, setUserEnrolls] = useState([]);
+
     var [disabled, setDisabled] = useState(true);
     var [ isLock , setLock] = useState(true);
 
@@ -157,10 +159,12 @@ const Userlistdrawer = ({name,userid}) => {
             if (response.data) {
                 if (response.data) {
                     // console.log(response.data.data);
-                    const data = response.data.data;
+                    const data = response.data;
                     // console.log(data.user);
+                    console.log(response.data);
                     setData(data);
                     setDisabled(data.status_id === 12 ? false : true)
+                    setUserEnrolls(data.enrolls)
                     isAdmin(data.user.role_id);
                     setCondition(data.user.is_verify);
                     setloading(false);
@@ -185,6 +189,7 @@ const Userlistdrawer = ({name,userid}) => {
     };
     // console.log(data);
 
+    console.log(userEnrolls)
     const showDrawer = () => {
         setOpen(true);
         formHandler(userid)
@@ -333,7 +338,7 @@ const Userlistdrawer = ({name,userid}) => {
                         <div className='p-3'>
                             
                             <div className='flex justify-evenly'>
-                                <Usertimeline />
+                                <Usertimeline userEnrolls = {userEnrolls ? userEnrolls : false} />
                             </div>
 
                         </div>
