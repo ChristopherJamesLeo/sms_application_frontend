@@ -223,10 +223,15 @@ const AddEnroll = ({fetchData}) => {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
+                console.log(response.data);
+                success(response.data.message);
+                if(response.data.status == "fail"){
+                    return false;
+                }
                 onReset();
                 setOpen(false);
                 fetchData();
-                success('Enroll Add Successful');
+                
             } else {
                 error("Edit failed.");
             }
