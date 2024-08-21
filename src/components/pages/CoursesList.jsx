@@ -9,6 +9,7 @@ import api from '../api/api';
 import Coursedrawer from '../drawer/Coursedrawer';
 import Postcomments from '../drawer/Postcommets';
 import AddCourse from '../models/AddCourse';
+import EditCourse from '../models/EditCourse';
 import UserSearch from "../inputs/UserSearch";
 
 export default function Courses({title}){
@@ -46,6 +47,7 @@ export default function Courses({title}){
                     fee: item.fee,
                     created_at: item.created_at,
                     updated_at: item.updated_at,
+                    action : <EditCourse courseId={item.id} fetchData={fetchingData}  />
                 }));
                 console.log(showData);
                 setLoading(false)
@@ -146,6 +148,11 @@ export default function Courses({title}){
             width: 200,
             dataIndex: 'updated_at',
             key: 'updated_at',
+        },{
+            title: 'Action',
+            width: 200,
+            dataIndex: 'action',
+            key: 'updatedaction_at',
         },
     ]
     // end demo 

@@ -307,6 +307,7 @@ const Coursedrawer = ({courseId, name}) => {
                             <li className='my-2'>Bonous - {coursedata ? coursedata.bonousPoint : null} </li>
                             <li className='my-2'>Attended Point- {coursedata ? coursedata.attendedPoint : null} </li>
                             <li className='my-2'>Leave Point - { coursedata ? coursedata.leavePoint : null} </li>
+                            <li className='my-2'>Video Point - { coursedata.courseContact ? coursedata.courseContact.videoPoint : null} </li>
                         </ul>
                         <ul className='' style={
                             {

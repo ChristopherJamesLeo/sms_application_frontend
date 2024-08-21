@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber , Upload} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import api from '../api/api';
@@ -11,7 +11,7 @@ import moment from "moment";
 // end img upload 
 
 
-const AddCourse = ({fetchData}) => {
+const EditCourse = ({courseId,fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [infoBox , setInfoBox] = useState(false);
@@ -20,8 +20,15 @@ const AddCourse = ({fetchData}) => {
     var [days,setDays] = useState([]);
     var [trainers,setTrainers] = useState([]);
     var [types,setTypes] = useState([]);
+    var [initialValue,setInitialValue] = useState({});
 
     const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        if (Object.keys(initialValue).length > 0) {
+            form.setFieldsValue(initialValue);
+        }
+    }, [initialValue, form]);
 
     const success = () => {
         messageApi.open({
@@ -39,17 +46,48 @@ const AddCourse = ({fetchData}) => {
     const getCourseData = async () => {
         setOpen(true);
         try {
-            const response = await api.get('/courses/create', {
+            const response = await api.get(`/courses/${courseId}/edit`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
                 if (response.data) {
                     let data = response.data;
+                    console.log(data);
+                    console.log([moment(data.course.starttime,"HH:mm:ss"),moment(data.course.endtime,"HH:mm:ss")]);
                     setCategories(data.categories);
                     setCourseLevels(data.courselevels);
                     setDays(data.days);
                     setTrainers(data.trainers);
                     setTypes(data.types);
+                    console.log(data.trainers ? data.trainers : null);
+                    let initialValue = {
+                        roomNo: data.coursecontact.roomNo ? data.coursecontact.roomNo : null,
+                        address:  data.coursecontact.address ? data.coursecontact.address : null,
+                        googleMap:  data.coursecontact.googleMap ? data.coursecontact.googleMap : null,
+                        zoomId: data.coursecontact.zoomId ? data.coursecontact.zoomId : null,
+                        passcode: data.coursecontact.passcode ? data.coursecontact.passcode : null,
+                        videoCount: data.coursecontact.videoCount ? data.coursecontact.videoCount : null,
+                        name: data.course.name,
+                        trainer_id: data.course.trainer_id,
+                        category_id: data.course.category_id,
+                        level_id: data.course.level_id,
+                        // coursetype_id: data.course.coursetype_id,
+                        // time : [moment(data.course.starttime,"HH:mm:ss"),moment(data.course.endtime,"HH:mm:ss")],
+                        // date : [moment(data.course.startdate,"YYYY/MM/DD"),moment(data.course.enddate,"YYYY/MM/DD")],
+                        fee: data.course.fee,
+                        paymentPoint: data.course.paymentPoint,
+                        bonousPoint: data.course.bonousPoint,
+                        attendedPoint: data.course.attendedPoint,
+                        leavePoint: data.course.leavePoint,
+                        days : data.coursedays.map(function(day){
+                            return day.day_id;
+                        }),
+                        quillValue: null,
+                        image: null,
+                    };
+                    setQuillValue(data.syllabus.syllaby)
+                    setInitialValue(initialValue);
+
                 }else {
                     return false;
                 }
@@ -72,7 +110,7 @@ const AddCourse = ({fetchData}) => {
         }
     };
 
-    console.log(categories,courselevels,days,trainers,types);
+    // console.log(categories,courselevels,days,trainers,types);
 
     function openModel(){
         getCourseData();
@@ -93,10 +131,12 @@ const AddCourse = ({fetchData}) => {
         
     }
 
-    function getQuilValue(){
-        console.log(quillValue);
-    }
+    // function getQuilValue(){
+    //     console.log(quillValue);
+    // }
     // end quill
+
+
 
     // start image preview
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -244,7 +284,7 @@ const AddCourse = ({fetchData}) => {
         }else if(type == 1){
             return (
                 <Row gutter={16} className='online_class'>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Form.Item
                             name="zoomId"
                             label="Zoom Id"
@@ -258,7 +298,7 @@ const AddCourse = ({fetchData}) => {
                             <Input placeholder="Please Enter Zoom ID" />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Form.Item
                             name="passcode"
                             label="Passcode"
@@ -272,28 +312,14 @@ const AddCourse = ({fetchData}) => {
                             <Input placeholder="Please Enter Passcode" />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Form.Item
                             name="videoCount"
                             label="Video Count"
                             rules={[
                             {
                                 required: true,
-                                message: 'Please enter video count',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please Enter video count" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item
-                            name="videoPoint"
-                            label="Video Point"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter Video Point',
+                                message: 'Please enter Passcode',
                             },
                             ]}
                         >
@@ -310,8 +336,8 @@ const AddCourse = ({fetchData}) => {
     return (
         <>
         <ConfigProvider >
-            <Button type="primary" onClick={openModel}>
-                Add Course
+            <Button size='small' type="primary" onClick={openModel}>
+                Edit Course
             </Button>
         </ConfigProvider>
             {contextHolder}
@@ -327,7 +353,7 @@ const AddCourse = ({fetchData}) => {
             width={1000}
             footer={null}
         >
-            <Form form={form} onFinish={formHandler} name="validateOnly" layout="vertical" autoComplete="off">
+            <Form form={form} onFinish={formHandler} name="validateOnly" initialValues={initialValue} layout="vertical" autoComplete="off">
                 <Row gutter={16}>
                     <Col span={24}>
                         <Form.Item
@@ -358,7 +384,7 @@ const AddCourse = ({fetchData}) => {
                                 {
                                     trainers.map(function(trainer,id){
                                         return(
-                                            <Option value={trainer.id}>{trainer.name}</Option>
+                                            <Option key={id} value={trainer.id}>{trainer.name}</Option>
                                         );
                                     })
                                 }
@@ -380,7 +406,7 @@ const AddCourse = ({fetchData}) => {
                                 {
                                     categories.map(function(categorie,id){
                                         return(
-                                            <Option value={categorie.id}>{categorie.name}</Option>
+                                            <Option key={id} value={categorie.id}>{categorie.name}</Option>
                                         );
                                     })
                                 }
@@ -402,7 +428,7 @@ const AddCourse = ({fetchData}) => {
                                 {
                                     courselevels.map(function(courselevel,id){
                                         return(
-                                            <Option value={courselevel.id}>{courselevel.name}</Option>
+                                            <Option key={id} value={courselevel.id}>{courselevel.name}</Option>
                                         );
                                     })
                                 }
@@ -424,7 +450,7 @@ const AddCourse = ({fetchData}) => {
                                 {
                                     types.map(function(type,id){
                                         return(
-                                            <Option value={type.id}>{type.name}</Option>
+                                            <Option key={id} value={type.id}>{type.name}</Option>
                                         );
                                     })
                                 }
@@ -675,4 +701,4 @@ const AddCourse = ({fetchData}) => {
         </>
     );
 };
-export default AddCourse;
+export default EditCourse;
