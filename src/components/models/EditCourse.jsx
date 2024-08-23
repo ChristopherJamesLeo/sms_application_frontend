@@ -67,6 +67,7 @@ const EditCourse = ({courseId,fetchData}) => {
                         zoomId: data.coursecontact.zoomId ? data.coursecontact.zoomId : null,
                         passcode: data.coursecontact.passcode ? data.coursecontact.passcode : null,
                         videoCount: data.coursecontact.videoCount ? data.coursecontact.videoCount : null,
+                        videoPoint: data.coursecontact.videoPoint ? data.coursecontact.videoPoint : null,
                         name: data.course.name,
                         trainer_id: data.course.trainer_id,
                         category_id: data.course.category_id,
@@ -183,23 +184,36 @@ const EditCourse = ({courseId,fetchData}) => {
     // start form submit
     async function formHandler(values){
         // console.log(values.date)
-        const [startTime, endTime] = values.time;
-        const [startDate, endDate] = values.date;
-        values.starttime = startTime.format("HH:mm:ss");
-        values.endtime = endTime.format("HH:mm:ss");
-        values.startdate = startDate.format("DD-MM-YYYY");
-        values.enddate = endDate.format("DD-MM-YYYY");
+        if(values.date){
+            const [startDate, endDate] = values.date;
+            values.startdate = startDate.format("DD-MM-YYYY");
+            values.enddate = endDate.format("DD-MM-YYYY");
+        }else {
+            values.startdate = null;
+            values.enddate = null;
+        }
+        if(values.time){
+            const [startTime, endTime] = values.time ;
+        
+            values.starttime = startTime.format("HH:mm:ss");
+            values.endtime = endTime.format("HH:mm:ss");
+        }else {
+            values.starttime = null;
+            values.endtime = null;
+        }
+
+        
         values.syllaby = quillValue;
-        console.log(values);
         try {
-            const response = await api.post('/courses', values , {
+            // console.log(values);
+            const response = await api.put(`/courses/${courseId}`, values , {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
                 if (response.data) {
                     // let data = response.data;
                     fetchData()
-                    success("Course Create Successfu");
+                    success("Course Update Successfu");
                 }else {
                     return false;
                 }
@@ -284,7 +298,7 @@ const EditCourse = ({courseId,fetchData}) => {
         }else if(type == 1){
             return (
                 <Row gutter={16} className='online_class'>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Form.Item
                             name="zoomId"
                             label="Zoom Id"
@@ -298,7 +312,7 @@ const EditCourse = ({courseId,fetchData}) => {
                             <Input placeholder="Please Enter Zoom ID" />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Form.Item
                             name="passcode"
                             label="Passcode"
@@ -312,7 +326,7 @@ const EditCourse = ({courseId,fetchData}) => {
                             <Input placeholder="Please Enter Passcode" />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Form.Item
                             name="videoCount"
                             label="Video Count"
@@ -320,6 +334,20 @@ const EditCourse = ({courseId,fetchData}) => {
                             {
                                 required: true,
                                 message: 'Please enter Passcode',
+                            },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Passcode" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item
+                            name="videoPoint"
+                            label="Video Point"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enter Video Point',
                             },
                             ]}
                         >
@@ -588,12 +616,6 @@ const EditCourse = ({courseId,fetchData}) => {
                         <Form.Item
                             name="date"
                             label="Date"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please choose the Date',
-                            },
-                            ]}
                         >
                             <DatePicker.RangePicker
                             style={{
@@ -607,12 +629,6 @@ const EditCourse = ({courseId,fetchData}) => {
                         <Form.Item
                             name="time"
                             label="Time"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'please enter Time',
-                            },
-                            ]}
                         >
                             <TimePicker.RangePicker style={{
                                 width: '100%',

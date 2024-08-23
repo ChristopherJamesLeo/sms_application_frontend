@@ -49,7 +49,7 @@ const AddEnroll = ({fetchData}) => {
                 let formdata = response.data;
                 setOpen(true);
                 console.log(formdata);
-                setCourses(formdata.courses);
+                // setCourses(formdata.courses);
                 setPaymentMethods(formdata.paymentMethods);
                 setPaymentTypes(formdata.paymentTypes);
             }
@@ -167,7 +167,9 @@ const AddEnroll = ({fetchData}) => {
                 console.log(response.data.userdata);
                 let userdata = response.data.userdata;
                 setUserId(userdata.id);
+                setCourses(response.data.courses);
                 setUserData(userdata);
+                couserselect(response.data.courses)
             }
     
         } catch (err) {
@@ -200,6 +202,22 @@ const AddEnroll = ({fetchData}) => {
         }
         
     }
+
+    function couserselect(values){
+       
+        return (
+            <Select placeholder="Choose Class" >
+                {
+                    !values ? false : values.map(function(course){
+                        return (
+                            <Option key={course.id} value={`${course.id}`}>{course.name}</Option>
+                        )
+                    })
+                } 
+            </Select>
+        )
+
+    }
     // end verify reg number 
 
     // start form reset
@@ -207,6 +225,8 @@ const AddEnroll = ({fetchData}) => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
         setPaymentType(null);
+        setCourses(null);
+        setUserData({})
     };
 
     // end form reset
@@ -224,13 +244,17 @@ const AddEnroll = ({fetchData}) => {
             });
             if (response.data) {
                 console.log(response.data);
-                success(response.data.message);
+                
                 if(response.data.status == "fail"){
+                    error(response.data.message);
                     return false;
+                }else {
+                    success(response.data.message);
+                    onReset();
+                    setOpen(false);
+                    fetchData();
                 }
-                onReset();
-                setOpen(false);
-                fetchData();
+                
                 
             } else {
                 error("Edit failed.");
@@ -268,6 +292,9 @@ const AddEnroll = ({fetchData}) => {
                     form.resetFields();
                     setPreviewUrl(null);
                     setPaymentType(null);
+                    setUserId(null);
+                    setCourses(null);
+                    setUserData({});
                 }}
                 footer={null}
                 width={500}
@@ -290,15 +317,7 @@ const AddEnroll = ({fetchData}) => {
                                 label="Course"
                                 rules={[{ required: true, message: 'Please enter email' }]}
                             >
-                                <Select placeholder="Choose Class" >
-                                    {
-                                        courses.map(function(course,idx){
-                                            return(
-                                                <Option value={course.id}>{course.name}</Option>
-                                            )
-                                        })
-                                    }
-                                </Select>
+                                {couserselect(courses)}
                             </Form.Item>
                         </Col>
                         <Col span={24}>

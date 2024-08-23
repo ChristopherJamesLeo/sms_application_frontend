@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import { Button, Modal , Col, DatePicker, Form, Input, Row, Select, Space , message} from 'antd';
 import axios from 'axios';
 import $ from "jquery";
-const AddAttended = () => {
+import api from '../api/api';
+const AddAttended = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
+    var [userId,setUserId] = useState(null);
+    var [courses, setCourses] = useState([]);
 
     const success = () => {
         messageApi.open({
@@ -22,33 +25,91 @@ const AddAttended = () => {
         })
     };
 
-    // start verify reg number
-    let [regNumber , setRegNumber] = useState(null);
+    // create fecth data 
+    async function modelHandler(){
+        setOpen(true);
 
-    function userRegHangler(value){
-        setRegNumber(value.target.value);
+    }
+
+    // end create fetch data
+
+
+    // start verify reg number
+    let [userdata, setUserData] = useState({});
+
+    async function userRegHangler(value){
+        // console.log(value.target.value);
+        var getRegId = value.target.value;
+        console.log(getRegId);
+        try {
+            // console.log(getRegId)
+            const response = await api.get(`/attendant/checkuser/${getRegId}` , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            
+            if(response){
+                console.log(response.data);
+                // console.log(response.data.userdata);
+                let userdata = response.data.userdata;
+                setUserId(userdata.id);
+                setUserData(userdata);
+                setCourses(response.data.userenrolls)
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+
     }
     
+    console.log(courses);
     function showUserInfo(value){
         
         if(value != null){
+           
             return (
                 <>
-                    <div className='mb-3'> <span> Name - {value}  </span> & <span>NRC - </span> & <span> Student Point - </span> </div>
+                    <div className='mb-3'> <span> Name - {value.name}  </span> & <span>Student Id - {value.regnumber}</span> </div>
                 </>
             )
         }else {
-            return false;
+            return false;;
         }
         
+    }
+
+    function couserselect(values){
+        return (
+            <Select placeholder="Choose Class" >
+                {
+                    values.map(function(course){
+                        return (
+                            <Option key={course.id} value={`${course.id}`}>{course.name}</Option>
+                        )
+                    })
+                } 
+            </Select>
+        )
+
     }
     // end verify reg number 
 
     // start data
     let [dateTime,setDateTime] = useState(null);
     const onOk = (value,dateString) => {
-        // console.log('onOk: ', dateString);
+        console.log('onOk: ', dateString);
         setDateTime(dateString);
+        console.log(dateTime);
     };
     // end date
 
@@ -56,25 +117,48 @@ const AddAttended = () => {
         form.resetFields();
     };
 
-    function formHandler(values){
-        values.datetime = dateTime;
+    async function formHandler(values){
+        values.user_id = userId;
+        values.date = dateTime;
         console.log(values);
 
-        // const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        // axios.post(url, values)
-        // .then(response => {
-        //     console.log('Data successfully posted:', response.data);
-        //     onReset();
-        //     setOpen(false);
-        //     success();
-        // }).catch(error => {
-           
-        //     error();
-        // });
+        try {
+            console.log(values);
+
+            const response = await api.post('/attendants', values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                console.log(response.data);
+                success(response.data.message);
+                if(response.data.status == "fail"){
+                    return false;
+                }
+                onReset();
+                setOpen(false);
+                fetchData();
+                
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
     }
   return (
     <>
-        <Button type="primary" onClick={() => setOpen(true)}>
+        <Button type="primary" onClick={modelHandler}>
             Add Attended
         </Button>
         {contextHolder}
@@ -83,26 +167,25 @@ const AddAttended = () => {
             centered
             open={open}
             onOk={() => setOpen(false)}
-            onCancel={() => setOpen(false)}
+            onCancel={() => {
+                setOpen(false);
+                form.resetFields();
+                setUserData(null);
+            }}
             footer={null}
             width={500}
         >
-            {showUserInfo(regNumber)}
+            {showUserInfo(userdata)}
              <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                 <Row gutter={16}>
                     <Col span={24}>
-                        <Form.Item
-                            name="name"
-                            label="Name"
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enter user name',
-                            },
-                            ]}
-                        >
-                            <Input placeholder="Please enter user name" onBlur={userRegHangler} />
-                        </Form.Item>
+                            <Form.Item
+                                name="regId"
+                                label="Student Id"
+                                rules={[{ required: true, message: 'Please enter user name' }]}
+                            >
+                                <Input placeholder="Please enter user name" onBlur={userRegHangler}/>
+                            </Form.Item>
                     </Col>
                     <Col span={24}>
                         <Form.Item
@@ -110,10 +193,8 @@ const AddAttended = () => {
                             label="Course"
                             rules={[{ required: true, message: 'Please enter email' }]}
                         >
-                            <Select placeholder="Choose Class" >
-                                <Option value="1">Web development</Option>
-                                <Option value="2">Linux</Option>
-                            </Select>
+                            {couserselect(courses)}
+                            
                         </Form.Item>
                     </Col>
                    
@@ -121,7 +202,7 @@ const AddAttended = () => {
                 <Row gutter={16}>
                     <Col span={24}>
                         <Form.Item
-                            name="datetime"
+                            name="dateTime"
                             label="Date"
                             rules={[
                             {
@@ -144,7 +225,7 @@ const AddAttended = () => {
                     </Col>
                     <Col span={24}>
                         <Form.Item
-                            name="attcode"
+                            name="attendant_code"
                             label="Attended Code"
                             rules={[
                             {

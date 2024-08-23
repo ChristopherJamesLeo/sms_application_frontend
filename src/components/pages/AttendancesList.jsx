@@ -1,40 +1,75 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message } from 'antd';
 import "./../CustomCss/tablestyle.css";
+import api from '../api/api';
 
 import Userlistdrawer from '../drawer/UserDrawer';
+import Coursedrawer from '../drawer/Coursedrawer';
+import AddAttended from '../models/AddAttended';
 import UserSearch from "../inputs/UserSearch";
-import AddAttended from "../models/AddAttended";
 
-export default function Attendances({title}){
+
+export default function PointEnrolls({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            console.log("hello");
+
+            const response = await api.get('/attendants', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                let data = response.data;
+                let showData = data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
+                    course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
+                    attendant_code : item.attcode,
+                    datetime : item.date,
+                    status_id : item.status.name,
+                    admit_by : item.admit_by.name,
+                    created_at : item.created_at,
+                    updated_at : item.updated_at
+
+                    
+                }));
+                setLoading(false)
+                setfetchData(showData);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end fetching Data
+
+    useEffect(() => {
+        fetchingData();
     }, []);
 
     const columns = [
@@ -46,28 +81,33 @@ export default function Attendances({title}){
             fixed: 'left',
         },
         {
-            title: 'Student Id',
+            title: 'Full Name',
             width: 200,
             dataIndex: 'user_id',
             key: 'user_id',
             fixed: 'left',
         },
         {
-            title: 'Class',
+            title: 'Course',
             width: 250,
             dataIndex: 'course_id',
             key: 'course_id',
         },
         {
-            title: 'Attendend Code',
-            dataIndex: 'attended_code',
-            key: 'attended_code',
-            width: 180,
+            title: 'Attended Code',
+            dataIndex: 'attendant_code',
+            key: 'attendant_code',
+            width: 150,
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+            title: 'Date and Time',
+            dataIndex: 'datetime',
+            key: 'datetime',
+            width: 180,
+        },{
+            title: 'Status',
+            dataIndex: 'status_id',
+            key: 'status_id',
             width: 150,
         },
         {
@@ -77,24 +117,17 @@ export default function Attendances({title}){
             width: 150,
         },
         {
-            title: 'Status',
-            dataIndex: 'status_id',
-            key: 'status_id',
-            width: 150,
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 200,
+        },{
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 200,
         },
-        {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
-        },
+
     ];
 
     let tableWidth = 0 ;
@@ -106,10 +139,11 @@ export default function Attendances({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddAttended/>
+                    <AddAttended fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
