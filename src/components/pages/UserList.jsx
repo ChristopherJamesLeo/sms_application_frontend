@@ -32,7 +32,7 @@ export default function Userstable({title}){
                     key: item.id,
                     no: index + 1,
                     id: item.id,
-                    name: <Userlistdrawer name={item.name} userid={item.id}/>,
+                    name: <Userlistdrawer fetchData={fetchingData} name={item.name} userid={item.id}/>,
                     reg_id: item.regnumber,
                     point: item.userpoint?item.userpoint.topup : "0",
                     email: item.email,
@@ -161,7 +161,7 @@ export default function Userstable({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    <Adduser />
+                    <Adduser fetchData = {fetchingData}/>
                     {/* <UserExport/> */}
                 </div>
                 <div className='flex justify-end'>
@@ -173,7 +173,7 @@ export default function Userstable({title}){
                 dataSource={data}
                 columns={columns}
                 loading={Boolean(isLoading)}
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>

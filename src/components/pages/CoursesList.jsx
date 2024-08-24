@@ -35,7 +35,7 @@ export default function Courses({title}){
                     key: item.id,
                     no: index + 1,
                     id: item.id,
-                    name: <Coursedrawer courseId = {item.id} name={item.name} />,
+                    name: <Coursedrawer fetchData={fetchingData} courseId = {item.id} name={item.name} />,
                     categorie: item.category.name,
                     regId: item.regId,
                     user_id: item.user.name,

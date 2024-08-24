@@ -1,47 +1,97 @@
 
 
 import React, { useState } from 'react';
-import { Button, Modal , Col, DatePicker, Form, Input, Row, Select, Space , message , Upload , Image , InputNumber} from 'antd';
+import { Button, Modal , Col, DatePicker, Form, Input, Row, Select, Space , message , Upload , Image , ConfigProvider} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import $ from "jquery";
-const AddLeave = () => {
+import api from '../api/api';
+import $, { ready } from "jquery";
+const AddLeave = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-        messageApi.open({
-          type: 'success',
-          content: 'User Add Successful',
-        });
-    };
-    const error = () => {
-        messageApi.open({
-          type: 'error',
-          content: 'User Add Fail',
-        })
-    };
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
 
     // start verify reg number
-    let [regNumber , setRegNumber] = useState(null);
+    let [userId, setUserId] = useState(null);
+    let [userdata, setUserData] = useState({});
+    let [courses, setCourses] = useState([]);
 
-    function userRegHangler(value){
-        setRegNumber(value.target.value);
+    async function userRegHangler(value){
+        // console.log("hello");
+        // console.log(value.target.value);
+        var getRegId = value.target.value;
+        // console.log(getRegId);
+        try {
+            // console.log(getRegId)
+            const response = await api.get(`/leave/checkuser/${getRegId}` , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            
+            if(response){
+                console.log(response.data);
+                // console.log(response.data.userdata);
+                let userdata = response.data.userdata;
+                // console.log(userdata);
+                if(response.data.status == "fail"){
+                    return false;
+                }
+                setUserId(userdata.id);
+                setUserData(userdata);
+                setCourses(response.data.userenrolls)
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+
     }
+
+    // let [regNumber , setRegNumber] = useState(null);
+
     
     function showUserInfo(value){
         
         if(value != null){
+           
             return (
                 <>
-                    <div className='mb-3'> <span> Name - {value}  </span> & <span>NRC - </span> & <span> Student Point - </span> </div>
+                    <div className='mb-3'> <span> Name - {value.name}  </span> & <span>Student Id - {value.regnumber}</span> </div>
                 </>
             )
         }else {
-            return false;
+            return false;;
         }
         
+    }
+
+    // console.log(courses);
+    function couserselect(values){
+        return (
+            <Select placeholder="Choose Class" >
+                {
+                    values.map(function(course){
+                        return (
+                            <Option key={course.id} value={`${course.id}`}>{course.name}</Option>
+                        )
+                    })
+                } 
+            </Select>
+        )
+
     }
     // end verify reg number 
 
@@ -75,25 +125,51 @@ const AddLeave = () => {
         setPreviewUrl(null);
     };
 
-    function formHandler(values){
+    async function formHandler(values){
         values.datetime = dateTime;
+        values.id = userId;
+        values.user_id = userId;
         console.log(values);
 
-        // const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        // axios.post(url, values)
-        // .then(response => {
-        //     console.log('Data successfully posted:', response.data);
-        //     onReset();
-        //     setOpen(false);
-        //     success();
-        // }).catch(error => {
-           
-        //     error();
-        // });
+        try {
+            console.log(values);
+
+            const response = await api.post('/leaves', values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                console.log(response.data);
+                console.log(response.data.message);
+                success(response.data.message);
+                
+                onReset();
+                setUserData({});
+                setCourses([]);
+                setOpen(false);
+                
+                fetchData();
+                
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
     }
   return (
     <>
-        <Button type="primary" onClick={() => setOpen(true)}>
+        <Button type="primary" onClick={()=> setOpen(true) }>
             Add Leave
         </Button>
         {contextHolder}
@@ -106,23 +182,25 @@ const AddLeave = () => {
                 setOpen(false);
                 form.resetFields();
                 setPreviewUrl(null);
+                setUserData({});
+                setCourses([]);
             }}
             footer={null}
             width={800}
         >
-            {showUserInfo(regNumber)}
+            {showUserInfo(userdata)}
              <Form layout="vertical" hideRequiredMark onFinish={formHandler} form={form}>
                 <Row gutter={16}>
                     <Col span={12}>
                         <Row gutter={16}>
                             <Col span={24}>
                                 <Form.Item
-                                    name="name"
-                                    label="Name"
+                                    name="regnumber"
+                                    label="Student Id"
                                     rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter user name',
+                                        message: 'Please enter Student ID',
                                     },
                                     ]}
                                 >
@@ -135,10 +213,7 @@ const AddLeave = () => {
                                     label="Course"
                                     rules={[{ required: true, message: 'Please enter email' }]}
                                 >
-                                    <Select placeholder="Choose Class" >
-                                        <Option value="1">Web development</Option>
-                                        <Option value="2">Linux</Option>
-                                    </Select>
+                                    {couserselect(courses)}
                                 </Form.Item>
                             </Col>
                             <Col span={24}>
@@ -166,11 +241,11 @@ const AddLeave = () => {
                             </Col>
                             <Col span={24}>
                                 <Form.Item
-                                    name="description"
-                                    label="Description"
-                                    rules={[{ required: true, message: 'Please enter description' }]}
+                                    name="remark"
+                                    label="Remark"
+                                    rules={[{ required: true, message: 'Please enter Remark' }]}
                                 >
-                                    <Input.TextArea rows={4} placeholder="Please enter description" />
+                                    <Input.TextArea rows={4} placeholder="Please enter Remark" />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -181,7 +256,6 @@ const AddLeave = () => {
                             <Col span={24}>
                                 <Form.Item
                                     name="image"
-                                    label="User Image"
                                 >
                                     <Upload 
                                         beforeUpload={beforeUpload}
@@ -217,3 +291,143 @@ const AddLeave = () => {
   );
 };
 export default AddLeave;
+
+export function VerifyButton({leaveId,stageId,fetchData}){
+
+    const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const [stages, setStages] = useState([]);
+
+
+
+    const onReset = () => form.resetFields();
+    const formConfirm = () => form.submit();
+
+    // start model data
+    async function modelHandler(){
+        setOpen(true)
+        try {
+            const response = await api.get(`/leave/stages`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                // console.log(response.data.data);
+                setStages(response.data);
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    }
+    // end modal data
+
+    const formHandler = async (values) => {
+        // console.log(values);
+        // values.id = ;
+
+        try {
+            // console.log(leaveId);
+            // console.log(values);
+
+            const response = await api.put(`/leaves/${leaveId}`, values , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                // console.log(response.data);
+                form.resetFields();
+                setOpen(false);
+                success(response.data.message);
+                fetchData();
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    };
+
+    if(!stages){
+        return false;
+    }
+
+
+    return (
+        <>
+            <ConfigProvider theme={{ token: { colorPrimary: '#1677ff' } }}>
+                <Button  type="primary" onClick={modelHandler} size='small'>Verify</Button>
+            </ConfigProvider>
+            {contextHolder}
+            <Modal
+                title="Verify Enroll"
+                open={open}
+                onCancel={() => { setOpen(false); onReset(); }}
+                width={500}
+                footer={null}
+            >
+                <Form layout="vertical" hideRequiredMark
+                    onFinish={formHandler}
+                    form={form}
+                    initialValues={{ stage_id : stageId }}
+                >
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="stage_id"
+                                label="Stage"
+                                rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose stage',
+                                },
+                                ]}
+                            >
+                                <Select placeholder="Please choose the stage">
+                                    {
+                                        stages.map(function(stage,id){
+                                            // console.log(stage);
+                                            return(
+                                                <Option key={stage.id} value={stage.id}>{stage.name}</Option>
+                                            );
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Space>
+                        <Button type="primary" htmlType="button" onClick={formConfirm}>Submit</Button>
+                        <Button htmlType="button" onClick={onReset}>Reset</Button>
+                    </Space>
+                </Form>
+            </Modal>
+        </>
+    );
+}
+

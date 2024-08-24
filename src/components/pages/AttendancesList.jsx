@@ -10,7 +10,7 @@ import AddAttended from '../models/AddAttended';
 import UserSearch from "../inputs/UserSearch";
 
 
-export default function PointEnrolls({title}){
+export default function AttendantLists({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -153,7 +153,7 @@ export default function PointEnrolls({title}){
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>

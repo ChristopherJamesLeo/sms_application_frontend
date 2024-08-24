@@ -3,7 +3,7 @@ import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Image } 
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const AddStaff = () => {
+const AddStaff = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
@@ -45,6 +45,7 @@ const AddStaff = () => {
 
     const formHandler = (values) => {
         console.log(values);
+        fetchData();
         // const url = "https://66a6acfe23b29e17a1a342ff.mockapi.io/sms/user/image";
         // const url = "";
         // axios.post(url, values)

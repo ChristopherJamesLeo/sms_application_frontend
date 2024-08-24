@@ -718,3 +718,147 @@ const EditCourse = ({courseId,fetchData}) => {
     );
 };
 export default EditCourse;
+
+export function ChangeVisibility({visibility,visibilityId,courseId,fetchData,fetchAllData}) {
+    const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const [statuses, setStatuses] = useState([]);
+
+
+
+    const onReset = () => form.resetFields();
+    const formConfirm = () => form.submit();
+
+    // start model data
+    async function modelHandler(){
+        setOpen(true)
+        try {
+            const response = await api.get(`/course/visibility`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                console.log(response.data);
+                setStatuses(response.data.data);
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    }
+    // end modal data
+
+    const formHandler = async (values) => {
+        // console.log(values);
+        values.id = courseId;
+
+        
+        try {
+            console.log(values);
+            const response = await api.put(`/course/visibility/${courseId}`, values , {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                // console.log(response.data);
+                form.resetFields();
+                setOpen(false);
+                success("Data Update Successful");
+                fetchData(courseId);
+                fetchAllData()
+                // fetchAll();
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } 
+    };
+    console.log(statuses);
+    if(!statuses){
+        return false;
+    }
+
+
+    return (
+        <>
+            <ConfigProvider theme={{ token: { colorPrimary: '#1677ff' } }}>
+                <span onClick={modelHandler} className='cursor-pointer ' style={
+                    {
+                        color: "blue"
+                    }
+                } >{visibility}</span>
+            </ConfigProvider>
+            {contextHolder}
+            <Modal
+                title="Verify Enroll"
+                open={open}
+                onCancel={() => { setOpen(false); onReset(); }}
+                width={500}
+                footer={null}
+            >
+                <Form layout="vertical" hideRequiredMark
+                    onFinish={formHandler}
+                    form={form}
+                    initialValues={{ visibility_id : visibilityId }}
+                >
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="visibility_id"
+                                label="Visibility"
+                                rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose visibility',
+                                },
+                                ]}
+                            >
+                                <Select placeholder="Please choose the visibility">
+                                    {
+                                        statuses.map(function(status,id){
+                                            // console.log(stage);
+                                            return(
+                                                <Option key={status.id} value={status.id}>{status.name}</Option>
+                                            );
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Space>
+                        <Button type="primary" htmlType="button" onClick={formConfirm}>Submit</Button>
+                        <Button htmlType="button" onClick={onReset}>Reset</Button>
+                    </Space>
+                </Form>
+            </Modal>
+        </>
+    );
+};

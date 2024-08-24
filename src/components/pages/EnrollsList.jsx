@@ -180,7 +180,7 @@ export default function Enrolls({title}){
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>

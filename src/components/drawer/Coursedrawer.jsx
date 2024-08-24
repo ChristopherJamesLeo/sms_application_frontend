@@ -6,6 +6,7 @@ import api from '../api/api';
 import Usertimeline from '../timeline/Usertimeline';
 import Userdeletemodel from '../models/UserDisable';
 import Userpromotemodel from '../models/UserPromote';
+import { ChangeVisibility } from '../models/EditCourse';
 import Userlistdrawer from './UserDrawer';
 import Postcomments from './Postcommets';
 import EnrollDrawer from './EnrollDrawer';
@@ -42,7 +43,7 @@ const getGrade = (percent) =>{
 }
 
 
-const Coursedrawer = ({courseId, name}) => {
+const Coursedrawer = ({fetchData,courseId, name}) => {
 
     // console.log(coursedata,days)
     console.log(courseId);
@@ -146,15 +147,15 @@ const Coursedrawer = ({courseId, name}) => {
     // end fetch single data
 
 
-    // end
+    // start active switch
     const onChange = async (checked, idx) => {
-        // console.log(idx);
+        console.log(idx);
         let statusId = checked ? 3 : 4; 
         // console.log("status id is", statusId);
         
         let values = {
-            id: idx,
-            status_id: statusId
+            "id": idx,
+            "status_id": statusId
         };
 
         console.log(values);
@@ -164,9 +165,11 @@ const Coursedrawer = ({courseId, name}) => {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
-                success("Edit successful");
+                fetchData()
+                success("User Change Status Successful");
+
             } else {
-                error("Edit failed.");
+                error("User Change Status failed.");
             }
     
         } catch (err) {
@@ -234,8 +237,11 @@ const Coursedrawer = ({courseId, name}) => {
                 extra={
                 <Space>
                     {lockfun(isLock)}
-                    
-                    <Switch disabled={disabled} defaultChecked />
+                   
+                    {
+                        coursedata.status ?  <Switch disabled={disabled} defaultChecked={coursedata.status.id === 3} 
+                        onChange={(checked) => onChange(checked, coursedata.id)}  /> : "loading..."
+                    }
                     
                 </Space>
                 }
@@ -260,7 +266,13 @@ const Coursedrawer = ({courseId, name}) => {
                         <li>Like - 2 </li> |
                         <li><EnrollDrawer postId={3} name={"Enrolls"}/>  - 3 </li> |
                         <li><Postcomments postId={2} name={"Comments"}/> - 3 </li> |
-                        <li><GlobalOutlined /> {coursedata.visibility ? coursedata.visibility.name : null} </li>
+                        <li><GlobalOutlined /> <ChangeVisibility 
+                        visibility={coursedata.visibility ? coursedata.visibility.name : false} 
+                        visibilityId = {coursedata.visibility ? coursedata.visibility.id : false}
+                        courseId = {coursedata.id}
+                        fetchData = {fetchingData} 
+                        fetchAllData = {fetchData}
+                         /> </li>
                         
                     </ul>
                     {/* <CommentBox coursedata = {coursedata}/> */}

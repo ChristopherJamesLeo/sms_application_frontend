@@ -1,40 +1,80 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message } from 'antd';
 import "./../CustomCss/tablestyle.css";
+import api from '../api/api';
 
 import Userlistdrawer from '../drawer/UserDrawer';
+import Coursedrawer from '../drawer/Coursedrawer';
+import AddLeave from './../models/AddLeave' ;
 import UserSearch from "../inputs/UserSearch";
-import AddLeave from "../models/AddLeave";
+import {VerifyButton} from "./../models/AddLeave";
 
-export default function Leaverecords({title}){
+
+export default function LeaveRecordsList({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            console.log("hello");
+
+            const response = await api.get('/leaves', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                let data = response.data;
+                console.log(data);
+                let showData = data.map((item, index) => ({
+                    
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+
+                    user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
+                    course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
+                    remark : item.remark,
+                    datetime : item.datetime,
+                    stage_id : item.stage.name,
+                    admit_by : item.admit_by.name,
+                    created_at : item.created_at,
+                    updated_at : item.updated_at,
+                    action : <VerifyButton leaveId ={item?item.id:false} stageId = {item?item.stage.id:false} fetchData={fetchingData} />
+                    
+                }));
+                console.log(showData);
+                setLoading(false)
+                setfetchData(showData);
+                
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end fetching Data
+
+    useEffect(() => {
+        fetchingData();
     }, []);
 
     const columns = [
@@ -46,55 +86,62 @@ export default function Leaverecords({title}){
             fixed: 'left',
         },
         {
-            title: 'Student Id',
+            title: 'Full Name',
             width: 200,
             dataIndex: 'user_id',
             key: 'user_id',
             fixed: 'left',
         },
         {
-            title: 'Class',
+            title: 'Course',
             width: 250,
             dataIndex: 'course_id',
             key: 'course_id',
         },
         {
+            title: 'Date and Time',
+            dataIndex: 'datetime',
+            key: 'datetime',
+            width: 180,
+        }, {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
             width: 180,
-        },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+        },{
+            title: 'Remark',
+            dataIndex: 'remark',
+            key: 'remark',
+            width: 150,
+        },{
+            title: 'Stage',
+            dataIndex: 'stage_id',
+            key: 'status_id',
             width: 150,
         },
         {
-            title: 'Admit By',
+            title: 'Approve By',
             dataIndex: 'admit_by',
             key: 'admit_by',
             width: 150,
         },
         {
-            title: 'Status',
-            dataIndex: 'status_id',
-            key: 'status_id',
-            width: 150,
-        },
-        {
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 200,
+        },{
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 200,
+        },{
             title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+            dataIndex: 'action',
+            key: 'action',
+            width: 200,
         },
+
     ];
 
     let tableWidth = 0 ;
@@ -106,10 +153,11 @@ export default function Leaverecords({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
-            <div className="my-4 ">
+            <div className="my-4">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddLeave/>
+                    <AddLeave fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
@@ -119,7 +167,7 @@ export default function Leaverecords({title}){
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>

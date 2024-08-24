@@ -178,7 +178,7 @@ export default function FeeEnrolls({title}){
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>

@@ -15,6 +15,7 @@ import UserNote from '../models/UserNote';
 import PointChangeRecord from '../models/userPointManagement/PointChangeRecord';
 
 
+
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 
 
@@ -66,7 +67,7 @@ const isAdmin = (con , userid) => {
     }
 }
 
-const Userlistdrawer = ({name,userid}) => {
+const Userlistdrawer = ({fetchData,name,userid}) => {
 
     console.log(name,userid);
     var [condition, setCondition] = useState(true); 
@@ -132,7 +133,9 @@ const Userlistdrawer = ({name,userid}) => {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
+                fetchData()
                 success("User Change Status Successful");
+
             } else {
                 error("User Change Status failed.");
             }
