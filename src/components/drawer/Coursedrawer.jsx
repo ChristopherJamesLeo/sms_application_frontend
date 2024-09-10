@@ -185,6 +185,44 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
         }
     };
     // end active switch
+    // start day status
+    const dayStatusChange = async (checked, idx) => {
+        console.log(idx);
+        let statusId = checked ? 3 : 4;
+        // console.log("status id is", statusId);
+
+        let values = {
+            "id": idx,
+            "status_id": statusId
+        };
+
+        console.log(values);
+
+        try {
+            const response = await api.put(`/courses/day/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                fetchData()
+                success("User Change Status Successful");
+
+            } else {
+                error("User Change Status failed.");
+            }
+
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setloading(false);
+        }
+    };
+    // end day status
 
     const showDrawer = () => {
         setOpen(true);
@@ -341,7 +379,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                                                     <Switch 
                                                     size='small'
                                                     defaultChecked={coursedata.courseDays[idx].status_id === 3} 
-                                                    onChange={(checked) => onChange(checked, coursedata.courseDays[idx].id)} />
+                                                    onChange={(checked) => dayStatusChange(checked, coursedata.courseDays[idx].id)} />
                                                 </li>
                                             </>
                                         )
