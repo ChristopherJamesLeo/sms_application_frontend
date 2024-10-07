@@ -26,7 +26,6 @@ import Allsearch from '../inputs/Allsearch';
 
 import Userstable from '../pages/UserList';
 import StaffLists from '../pages/StaffLists';
-import BanLists from '../pages/BanLists';
 
 import Overview from '../pages/Overview';
 
@@ -71,6 +70,7 @@ import Paymentmethods from '../settings/PaymentMethods';
 import Operationplatform from '../settings/OperationPlatforms';
 import Surveyplatform from '../settings/SurveyPlatforms';
 import Gpagrades from '../settings/GpaGrades';
+import IpBanList from '../pages/IpBanList';
 
 import Login from '../authantication/Login';
 
@@ -150,10 +150,6 @@ const MainLayout = () => {
           {
             key: '332',
             label: <Link to="/stafflists"  >Staff List</Link>,
-          },
-          {
-            key: '333',
-            label: <Link to="/banlists"  >Ban List</Link>,
           }
         ],
       },{
@@ -302,6 +298,10 @@ const MainLayout = () => {
           {
             key: '11',
             label: <Link to="/deviceinfos">Device Infos</Link>,
+          },
+          {
+            key: '213',
+            label: <Link to="/ipbanlists">IP Ban List</Link>,
           },
           {
             key: '12',
@@ -734,7 +734,6 @@ const MainLayout = () => {
                 
                 <Route path='/userlists' element={<Userstable title="User Lists" />}/>
                 <Route path='/stafflists' element={<StaffLists title="Staff Lists" />}/>
-                <Route path='/banlists' element={<BanLists title="Ban Lists" />}/>
 
                 <Route path='/orderlists' element={<BuyOrders title="Order Lists" />}/>
                 <Route path='/appeallists' element={<BuyAppeals title="Appeal Lists" />}/>
@@ -760,6 +759,7 @@ const MainLayout = () => {
                 <Route path='/realnames' element={<Realnames title="Users Real Name" />}/>
                 <Route path='/deviceinfos' element={<Deviceinfos title="User Device Info" />}/>
                 <Route path='/verificationlogs' element={<Verificationlogs title="Verification Logs" />}/>
+                <Route path="/ipbanlists" element={<IpBanList title={"IP Ban List"} />} />
 
                 <Route path='/invitations' element={<Invitations title="Invitation List" />}/>
 

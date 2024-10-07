@@ -64,8 +64,8 @@ export default function LeaveRecordsList({title}){
             key: item.id,
             no: index + 1,
             id: item.id,
-
-            user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
+            user_id :  item.user.name,
+            reg_number :  <Userlistdrawer userid = {item.user.id}  name={item.user.regnumber} />,
             course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
             remark : item.remark,
             datetime : item.datetime,
@@ -99,6 +99,12 @@ export default function LeaveRecordsList({title}){
             width: 200,
             dataIndex: 'user_id',
             key: 'user_id',
+            fixed: 'left',
+        },{
+            title: 'Reg Number',
+            width: 200,
+            dataIndex: 'reg_number',
+            key: 'reg_number',
             fixed: 'left',
         },
         {

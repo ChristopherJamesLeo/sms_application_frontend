@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import { login } from './Auth';
 import "./style.css";
+import api from '../api/api';
 
 export default function Login({ setData }) {
     const [messageApi, contextHolder] = message.useMessage();
@@ -14,6 +15,21 @@ export default function Login({ setData }) {
 
     const onFinish = async (values) => {
         try {
+            let UserDeviceInfo = await api.get("https://api.ipregistry.co/?key=ira_5I8TlQf8yTHoiPnbPnOKmvwbllGS582LImul");
+                    if(UserDeviceInfo){
+                        console.log(UserDeviceInfo);
+                            values.ip = UserDeviceInfo.data.ip,
+                            values.country = UserDeviceInfo.data.location.country.name,
+                            values.city = UserDeviceInfo.data.location.city,
+                            values.timezone  = UserDeviceInfo.data.time_zone.id,
+                            values.browser  = UserDeviceInfo.data.user_agent.name,
+                            values.brand  = UserDeviceInfo.data.user_agent.device.brand,
+                            values.type  = UserDeviceInfo.data.user_agent.device.type,
+                            values.os = UserDeviceInfo.data.user_agent.os.name,
+                            values.connection  = UserDeviceInfo.data.connection.organization
+                    }
+                    console.log(values);
+            
             const response = await login(values);
             const data = response.data;
             if (data) {
@@ -23,6 +39,7 @@ export default function Login({ setData }) {
 
                 if (data.user && data.remember_token) {
                     setData(data.user);
+                    
                     navigate("/");
                     showMessage('success', "Login successful");
                 } else {

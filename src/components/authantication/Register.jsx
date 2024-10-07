@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 import { Button, Form, Input , message} from 'antd';
 import "./style.css";
-
-
 import { register } from './Auth';
+import api from '../api/api';
 
 
 export default function Register({setData}){
@@ -17,7 +16,8 @@ export default function Register({setData}){
 
     const navigate = useNavigate();
     
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
+
             
         localStorage.setItem('userData', JSON.stringify(values));
         logInFormSubmit(values);
@@ -31,8 +31,22 @@ export default function Register({setData}){
 
     
 
-    function logInFormSubmit(values){
+    async function logInFormSubmit(values){
+        
         try {
+            let UserDeviceInfo = await api.get("https://api.ipregistry.co/?key=ira_5I8TlQf8yTHoiPnbPnOKmvwbllGS582LImul");
+            if(UserDeviceInfo){
+                console.log(UserDeviceInfo);
+                    values.ip = UserDeviceInfo.data.ip,
+                    values.country = UserDeviceInfo.data.location.country.name,
+                    values.city = UserDeviceInfo.data.location.city,
+                    values.timezone  = UserDeviceInfo.data.time_zone.id,
+                    values.browser  = UserDeviceInfo.data.user_agent.name,
+                    values.brand  = UserDeviceInfo.data.user_agent.device.brand,
+                    values.type  = UserDeviceInfo.data.user_agent.device.type,
+                    values.os = UserDeviceInfo.data.user_agent.os.name,
+                    values.connection  = UserDeviceInfo.data.connection.organization
+            }
             register(values).then((response)=>{
                 return response.data
             }).then((data)=>{
@@ -45,6 +59,7 @@ export default function Register({setData}){
                         localStorage.setItem('api_token',data.token);
                         localStorage.setItem('remember_token',data.remember_token);
                         navigate("/");
+                        
                         success("Register Successful");
                     }
                 }else {

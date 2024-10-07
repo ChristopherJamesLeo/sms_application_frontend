@@ -41,7 +41,7 @@ const AddActivity = () => {
     }
   return (
     <>
-        <Button type="primary" onClick={() => setOpen(true)}>
+        <Button type="primary" s onClick={() => setOpen(true)}>
             Add Activities
         </Button>
         {contextHolder}

@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message } from 'antd';
+import api from '../api/api';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
@@ -12,28 +12,77 @@ export default function Deviceinfos({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+    const [messageApi, contextHolder] = message.useMessage();
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            console.log("hello");
+
+            const response = await api.get('/useroperations', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data);
+                updateDate(response.data);
+                // setCourses(response.data.courses);
+                // setStages(response.data.stages);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end fetching Data
+
+    // update data 
+    function updateDate(getdatas){
+        console.log(getdatas);
+        let data = getdatas;
+        let showData = data.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            user_id : <Userlistdrawer userid = {item.user.id}  name={item.user.regnumber} />,
+            ipaddress : item.ip,
+            city : item.city,
+            country : item.country,
+            timezone : item.timezone,
+            browser : item.browser,
+            brand : item.brand,
+            type : item.type,
+            os : item.os,
+            insert_type : item.insert_type,
+            connection : item.connection,
+            status : item.status.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at
+
+            
+        }));
+        setLoading(false)
+        setfetchData(showData);
+        console.log(data);
+    }
+
+    // end update data
+
+    useEffect(() => {
+        fetchingData();
     }, []);
 
     const columns = [
@@ -46,98 +95,81 @@ export default function Deviceinfos({title}){
         },
         {
             title: 'Student Id',
-            width: 200,
+            width: 100,
             dataIndex: 'user_id',
             key: 'user_id',
             fixed: 'left',
         },
         {
             title: 'IP address',
-            width: 250,
+            width: 100,
             dataIndex: 'ipaddress',
             key: 'ipaddress',
+        },{
+            title: 'insert_type',
+            dataIndex: 'insert_type',
+            key: 'insert_type',
+            width: 150,
         },
-       {
-            title: 'User Agent Name',
-            dataIndex: 'user_agent_name',
-            key: 'user_agent_name',
+       {    
+            title: 'Country',
+            dataIndex: 'country',
+            key: 'country',
             width: 150,
         },
         {
-            title: 'Device Brand',
-            dataIndex: 'device_brand',
-            key: 'device_brand',
+            title: 'City',
+            dataIndex: 'city',
+            key: 'city',
+            width: 150,
+        },
+        {
+            title: 'timezone',
+            dataIndex: 'timezone',
+            key: 'timezone',
             width: 150,
         },{
-            title: 'Device Type',
-            dataIndex: 'device_type',
-            key: 'device_type',
+            title: 'browser',
+            dataIndex: 'browser',
+            key: 'browser',
             width: 150,
         },
         {
-            title: 'Device Os',
-            dataIndex: 'device_os',
-            key: 'device_os',
+            title: 'brand',
+            dataIndex: 'brand',
+            key: 'brand',
             width: 150,
         },{
-            title: 'OS Name',
-            dataIndex: 'os_name',
-            key: 'os_name',
+            title: 'type',
+            dataIndex: 'type',
+            key: 'type',
             width: 150,
         },
         {
-            title: 'Os Version',
-            dataIndex: 'os_version',
-            key: 'os_version',
+            title: 'Os',
+            dataIndex: 'os',
+            key: 'os',
             width: 150,
-        }, {
-            title: 'Time Zone',
-            dataIndex: 'current_time',
-            key: 'current_time',
-            width: 180,
-        },
-        {
-            title: 'Time ID',
-            dataIndex: 'time_zone',
-            key: 'time_zone',
+        },{
+            title: 'connection',
+            dataIndex: 'connection',
+            key: 'connection',
+            width: 300,
+        },{
+            title: 'status',
+            dataIndex: 'status',
+            key: 'status',
             width: 150,
-        },
-        {
-            title: 'Language',
-            dataIndex: 'langauage',
-            key: 'strelangauageet',
-            width: 150,
-        },
-        {
-            title: 'Flag Icon',
-            dataIndex: 'flag',
-            key: 'flag',
-            width: 150,
-        },
-        {
-            title: 'Latitude',
-            dataIndex: 'latitude',
-            key: 'latitude',
-            width: 150,
-        },
-        {
-            title: 'Longitude',
-            dataIndex: 'longitude',
-            key: 'longitude',
-            width: 150,
-        },
-        {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+        },{
+            title: 'created at',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 200,
+        },{
+            title: 'updated at',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 200,
         },
     ];
 
@@ -152,7 +184,7 @@ export default function Deviceinfos({title}){
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 flex justify-end">
-                
+                {contextHolder}
                 <UserSearch/>
             </div>
             <Table

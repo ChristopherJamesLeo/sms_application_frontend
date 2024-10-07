@@ -7,16 +7,15 @@ import api from '../api/api';
 import Userlistdrawer from '../drawer/UserDrawer';
 import Coursedrawer from '../drawer/Coursedrawer';
 import AddAttended from '../models/AddAttended';
-// import UserSearch from "../inputs/UserSearch";
 import AttendantExport from '../export/AttendantExport';
-import AttendantImport from '../import/AttendantImport';
 
 
 
 export default function AttendantLists({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
-
+    const [courses,setCourses] = useState([]);
+    const [stages,setStages] = useState([]);
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -34,26 +33,9 @@ export default function AttendantLists({title}){
             });
             console.log(response.data)
             if (response.data) {
-                console.log(response.data)
-                let data = response.data;
-                let showData = data.map((item, index) => ({
-                    key: item.id,
-                    no: index + 1,
-                    id: item.id,
-                    user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
-                    course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
-                    attendant_code : item.attcode,
-                    datetime : item.date,
-                    status_id : item.status.name,
-                    admit_by : item.admit_by.name,
-                    created_at : item.created_at,
-                    updated_at : item.updated_at
-
-                    
-                }));
-                setLoading(false)
-                setfetchData(showData);
-                
+                updateDate(response.data.attendants);
+                setCourses(response.data.courses);
+                setStages(response.data.stages);
             } else {
                 error("Data fetching failed.");
             }
@@ -70,6 +52,32 @@ export default function AttendantLists({title}){
         }
     };
     // end fetching Data
+
+    // update data 
+    function updateDate(attendantdata){
+        // console.log(attendantdata);
+        let data = attendantdata;
+        let showData = data.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            user_id : item.user.name,
+            regnumber : <Userlistdrawer userid = {item.user.id}  name={item.user.regnumber} />,
+            course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
+            attendant_code : item.attcode,
+            datetime : item.date,
+            status_id : item.status.name,
+            admit_by : item.admit_by.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at
+
+            
+        }));
+        setLoading(false)
+        setfetchData(showData);
+    }
+
+    // end update data
 
     useEffect(() => {
         fetchingData();
@@ -88,6 +96,12 @@ export default function AttendantLists({title}){
             width: 200,
             dataIndex: 'user_id',
             key: 'user_id',
+            fixed: 'left',
+        },{
+            title: 'Reg Number',
+            width: 200,
+            dataIndex: 'regnumber',
+            key: 'regnumber',
             fixed: 'left',
         },
         {
@@ -149,7 +163,7 @@ export default function AttendantLists({title}){
                     <AddAttended fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end space-x-2'>
-                    <AttendantExport/>
+                    <AttendantExport courses={courses} stages={stages} updateDate={updateDate}/>
                     {/* <AttendantImport/> */}
                 </div>
             </div>

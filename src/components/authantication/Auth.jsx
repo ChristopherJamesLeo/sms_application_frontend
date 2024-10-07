@@ -12,6 +12,7 @@ export const login = async (value) => {
 export const register = async (value) => {
     try {
         return await api.post("/register", value);
+        
     } catch (error) {
         return false;
     }

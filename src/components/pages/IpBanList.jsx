@@ -9,7 +9,7 @@ import "./../CustomCss/tablestyle.css";
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
-export default function Verificationlogs({title}){
+export default function IpBanList({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -28,7 +28,7 @@ export default function Verificationlogs({title}){
         try {
 
 
-            const response = await api.get('/otps', {
+            const response = await api.get('/ipbanlists', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             console.log(response.data)
@@ -60,11 +60,10 @@ export default function Verificationlogs({title}){
             no: index + 1,
             id: item.id,
             user_id : item.user.regnumber,
-            otp : item.otp,
-            email : item.user.email,
-            ipaddress: item.deviceIp,
-            status_id : item.status ? item.status.name : null,
-            expire_at : item.expired_at,
+            ipaddress: item.ip,
+            remark: item.remark,
+            status_id : item.status.name,
+            admit_id : item.admit.name,
             created_at : item.created_at,
             
         }));
@@ -92,22 +91,16 @@ export default function Verificationlogs({title}){
             dataIndex: 'user_id',
             key: 'user_id',
             fixed: 'left',
-        },
-        {
-            title: 'OTP Code',
-            width: 100,
-            dataIndex: 'otp',
-            key: 'otp',
-        }, {
-            title: 'Email',
-            width: 300,
-            dataIndex: 'email',
-            key: 'email',
         },{
             title: 'IP Address',
             width: 250,
             dataIndex: 'ipaddress',
             key: 'ipaddress',
+        },{
+            title: 'Remark',
+            width: 250,
+            dataIndex: 'remark',
+            key: 'remark',
         },{
             title: 'Status',
             width: 250,
@@ -115,11 +108,12 @@ export default function Verificationlogs({title}){
             key: 'status_id',
         },
         {
-            title: 'Expire at',
+            title: 'Admit',
             width: 250,
-            dataIndex: 'expire_at',
-            key: 'expire_at',
-        },{
+            dataIndex: 'admit_id',
+            key: 'admit_id',
+        },
+        {
             title: 'Created At',
             dataIndex: 'created_at',
             key: 'created_at',

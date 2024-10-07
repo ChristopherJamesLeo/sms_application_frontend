@@ -1,8 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table , message } from 'antd';
 import axios, { Axios } from 'axios';
+import api from '../api/api';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
@@ -12,29 +13,73 @@ import UserSearch from "../inputs/UserSearch";
 export default function Announcements({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [courses,setCourses] = useState([]);
+    const [stages,setStages] = useState([]);
+
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            console.log("hello");
+
+            const response = await api.get('/announcements', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                let data = response.data;
+                updateDate(data.announcements);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    // end fetching Data
+
+    //  
+    function updateDate(leaveData){
+        let showData = leaveData.map((item, index) => ({
+                    
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            title :  item.title,
+            admit_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
+            reg_id :  item.generate_id,
+            description : item.description,
+            image : item.image,
+            visibility : item.visibility.name,
+            status_id : item.status.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at,
+          
+            
+        }));
+        console.log(showData);
+        setLoading(false)
+        setfetchData(showData);
+    }
+    // 
 
     useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
-            setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        fetchingData();
     }, []);
 
     const columns = [
@@ -54,15 +99,15 @@ export default function Announcements({title}){
         },
         {
             title: 'Post By',
-            width: 250,
-            dataIndex: 'user_id',
-            key: 'user_id',
+            width: 150,
+            dataIndex: 'admit_id',
+            key: 'admit_id',
         },
         {
             title: 'Announcement ID',
             width: 250,
-            dataIndex: 'generate_id',
-            key: 'generate_id',
+            dataIndex: 'reg_id',
+            key: 'reg_id',
         },
         {
             title: 'Description',
@@ -109,12 +154,12 @@ export default function Announcements({title}){
         tableWidth += column.width;
     })
 
-
     return (
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-2 flex gap-x-2'>
+                    {contextHolder}
                     <AddAnnouncement />
                 </div>
                 <div className='flex justify-end'>
