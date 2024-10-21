@@ -46,7 +46,7 @@ const getGrade = (percent) =>{
 const Coursedrawer = ({fetchData,courseId, name}) => {
 
     // console.log(coursedata,days)
-    console.log(courseId);
+    // console.log(courseId);
     
     var [open, setOpen] = useState(false);
     var [isLoading , setloading] = useState(true);

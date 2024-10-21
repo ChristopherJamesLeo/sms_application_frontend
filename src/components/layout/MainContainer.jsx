@@ -29,9 +29,9 @@ import StaffLists from '../pages/StaffLists';
 
 import Overview from '../pages/Overview';
 
-import BuyAppeals from '../pages/BuyAppeals';
-import BuyOrders from '../pages/BuyOrders';
-import BuyPackages from '../pages/BuyPackages';
+import Appeals from '../pages/Appeals';
+import Orders from '../pages/Orders';
+import SuccessOrders from '../pages/SuccessOrders';
 
 import Courses from '../pages/CoursesList';
 
@@ -50,9 +50,12 @@ import Deviceinfos from '../pages/DeviceInfosList';
 import Verificationlogs from '../pages/VerificationLogsList';
 import Invitations from '../pages/InvitationLists';
 import Courseservices from '../pages/CourseServices';
-import Services from '../pages/ServiceLists';
-import Surveyrecords from '../pages/SurveyRecordsList';
+import ServiceLists from '../pages/ServiceLists';
+import SurveyPlatform from '../pages/SurveyPlatformLists';
+import PointPackages from '../pages/PointPackages';
 import PointChangeRecord from '../pages/PointChangeRecord';
+
+
 import Theme from '../settings/Theme';
 import Statues from '../settings/Statuses';
 import Stages from '../settings/Stages';
@@ -64,7 +67,6 @@ import Genders from '../settings/Genders';
 import Coursetypes from '../settings/CourseTypes';
 import CourseLevel from '../settings/CourseLevel';
 import Paymentstype from '../settings/PaymentTypes';
-import Packages from '../settings/Packages';
 
 import Paymentmethods from '../settings/PaymentMethods';
 import Operationplatform from '../settings/OperationPlatforms';
@@ -73,6 +75,7 @@ import Gpagrades from '../settings/GpaGrades';
 import IpBanList from '../pages/IpBanList';
 
 import Login from '../authantication/Login';
+import ServiceTypes from '../settings/ServiceTypes';
 
 const { Header, Sider, Content } = Layout;
 
@@ -87,8 +90,19 @@ const CustomLabel = forwardRef(({ children, ...props }, ref) => {
 });
 
 
+// if(navigator.geolocation){
+//   navigator.geolocation.getCurrentPosition(function(position){
+//     console.log(position);
+//   })
+// }
 
+// if(navigator.onLine){
+//   console.log("is online");
+// }else {
+//   console.log("is offline")
+// }
 
+// console.log(navigator);
 
 
 const MainLayout = () => {
@@ -172,7 +186,7 @@ const MainLayout = () => {
           },
           {
             key: '1112',
-            label: <Link to="/buypackagelists"  >Packages Orders</Link>,
+            label: <Link to="/successorders"  >Success Orders</Link>,
           }
         ],
       },
@@ -367,6 +381,11 @@ const MainLayout = () => {
         icon: <TransactionOutlined />,
         children: [
           {
+            key: '27612',
+            label: <Link to="/pointpackages">Packages</Link>,
+          },
+        
+          {
             key: '27632',
             label: <Link to="/pointchangerecords">Points Change Records</Link>,
           }
@@ -427,10 +446,6 @@ const MainLayout = () => {
           }
           ,
           {
-            key: '6213',
-            label: <Link to="/packages"  >Packages</Link>,
-          },
-          {
             key: '29',
             label: <Link to="/paymentmethods">Payment Method</Link>,
           },
@@ -441,6 +456,10 @@ const MainLayout = () => {
           {
             key: '31',
             label: <Link to="/surveyplatforms">Survey Platform</Link>,
+          },
+          {
+            key: '210',
+            label: <Link to="/servicetypes">Service Types</Link>,
           },
           {
             key: '32',
@@ -735,9 +754,9 @@ const MainLayout = () => {
                 <Route path='/userlists' element={<Userstable title="User Lists" />}/>
                 <Route path='/stafflists' element={<StaffLists title="Staff Lists" />}/>
 
-                <Route path='/orderlists' element={<BuyOrders title="Order Lists" />}/>
-                <Route path='/appeallists' element={<BuyAppeals title="Appeal Lists" />}/>
-                <Route path='/buypackagelists' element={<BuyPackages title="Buy Package Lists" />}/>
+                <Route path='/orderlists' element={<Orders title="Order Lists" />}/>
+                <Route path='/appeallists' element={<Appeals title="Appeal Lists" />}/>
+                <Route path='/successorders' element={<SuccessOrders title="Success Orders" />}/>
                 
 
                 <Route path='/courses' element={<Courses title="All Courses" />}/>
@@ -764,10 +783,11 @@ const MainLayout = () => {
                 <Route path='/invitations' element={<Invitations title="Invitation List" />}/>
 
                 <Route path='/courseservices' element={<Courseservices title="Course Services Links" />}/>
-                <Route path='/servicelinks' element={<Services title="Customer Service" />}/>
+                <Route path='/servicelinks' element={<ServiceLists title="Customer Service" />}/>
 
-                <Route path='/surveyrecords' element={<Surveyrecords title="Survey Records" />}/>
+                <Route path='/surveyrecords' element={<SurveyPlatform title="Survey Records" />}/>
 
+                <Route path="pointpackages" element={<PointPackages title="Packages" />} />
                 <Route path='/pointchangerecords' element={<PointChangeRecord title="Point Change Records" />}/>
 
                 <Route path='/themes' element={<Theme title="Theme Setting" />}/>
@@ -782,9 +802,9 @@ const MainLayout = () => {
                 <Route path='/courselevel' element={<CourseLevel title="Course Level" />}/>
                 <Route path='/paymenttypes' element={<Paymentstype title="Payment Types" />}/>
                 <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
-                <Route path='/packages' element={<Packages title="Packages"/>}/>
                 <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
                 <Route path='/surveyplatforms' element={<Surveyplatform title="Survey Platforms" />}/>
+                <Route path='/servicetypes' element={<ServiceTypes title="Service Types" />}/>
                 <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
 
                 

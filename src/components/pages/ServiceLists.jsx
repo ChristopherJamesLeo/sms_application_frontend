@@ -1,40 +1,78 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table , message } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
-import AddService from '../models/AddService';
+import AddCourseService from '../models/AddCourseService';
 import UserSearch from "../inputs/UserSearch";
+import api from '../api/api';
 
-export default function Servicelists({title}){
+export default function ServiceLists({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+    const [messageApi, contextHolder] = message.useMessage();
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+
+
+            const response = await api.get('/service/customerservice', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                updateDate(response.data);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        }
+    };
+    // end fetching Data
+
+    //  
+    function updateDate(serviceData){
+        console.log(serviceData);
+        let showData = serviceData.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            name : item.course.name,
+            link : <a href={item.name} className="text-blue-500" target='_blank'>{item.name}</a>,
+            servicetype : item.servicetype.name,
+            user_id: item.user.name,
+            status_id : item.status.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at,
+            
+        }));
+        console.log(showData);
+        setLoading(false)
+        setfetchData(showData);
+    }
+    // 
+
+    useEffect(() => {
+        fetchingData();
     }, []);
 
     const columns = [
@@ -46,17 +84,23 @@ export default function Servicelists({title}){
             fixed: 'left',
         },
         {
-            title: 'Platform Name',
+            title: 'Course Title',
             width: 200,
-            dataIndex: 'social_name_id',
-            key: 'social_name_id',
+            dataIndex: 'name',
+            key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Links',
-            width: 250,
-            dataIndex: 'links',
-            key: 'links',
+            title: 'Link',
+            dataIndex: 'link',
+            key: 'link',
+            width: 150,
+        },
+        {
+            title: 'Type',
+            dataIndex: 'servicetype',
+            key: 'servicetype',
+            width: 150,
         },
         {
             title: 'Admit By',
@@ -71,17 +115,16 @@ export default function Servicelists({title}){
             width: 150,
         },
         {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
             width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 150,
         },
     ];
 
@@ -97,7 +140,8 @@ export default function Servicelists({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddService/>
+                    {contextHolder}
+                    <AddCourseService/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>

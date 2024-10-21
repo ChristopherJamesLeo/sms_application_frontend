@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , DatePicker} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../api/api';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 
-const AddRecordVideo = () => {
+const AddRecordVideo = ({courses,fetchingData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
+
+
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-        messageApi.open({
-          type: 'success',
-          content: 'User Add Successful',
-        });
-    };
-    const error = () => {
-        messageApi.open({
-          type: 'error',
-          content: 'User Add Fail',
-        });
-    };
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     // start image preview
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -46,23 +40,56 @@ const AddRecordVideo = () => {
     };
     // end date
 
+    const [quillValue, setQuillValue] = useState('');
+
+
+    function QuillValue(content){
+        setQuillValue(content)
+        
+    }
+
     const onReset = () => {
         form.resetFields();
+        setQuillValue('');
         setPreviewUrl(null); // Clear the preview image
     };
 
-    const formHandler = (values) => {
+    const formHandler = async (values) => {
         values.datetime = dateTime;
+        values.remark = quillValue ? quillValue : "No Remark";
         console.log(values);
-        // const url = "https://66a6acfe23b29e17a1a342ff.mockapi.io/sms/user/image";
-        // const url = "";
-        // axios.post(url, values)
-        //     .then(response => {
-        //         console.log('Data successfully posted:', response.data);
-        //         onReset();
-        //         setOpen(false);
-        //         success();
-        //     }).catch(error());
+        try {
+            const response = await api.post('/videos', values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                if (response.data) {
+                    console.log(response.data);
+                    setOpen(false);
+                    form.resetFields();
+                    fetchingData()
+                    success(response.data.message);
+                }
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
+        // setOpen(false);
+        // form.resetFields();
+        
     };
 
     return (
@@ -93,8 +120,11 @@ const AddRecordVideo = () => {
                                 rules={[{ required: true, message: 'Please enter email' }]}
                             >
                                 <Select placeholder="Choose Class" >
-                                    <Option value="1">Web development</Option>
-                                    <Option value="2">Linux</Option>
+                                    {
+                                        courses.map(function(course,id){
+                                            return  <Select.Option value={course.id} key={course.id}>{course.name}</Select.Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -123,11 +153,39 @@ const AddRecordVideo = () => {
                                 />
                             </Form.Item>
                         </Col>
+                        <Col span={24}>
+                            <Form.Item>
+                                <ReactQuill
+                                    placeholder='Syllabus'
+                                    style={
+                                        {
+                                            marginBottom : "60px",
+                                            height: "200px"
+                                        }
+                                    }
+                                    value={quillValue}
+                                    modules={{
+                                        
+                                        toolbar: [
+                                        [{ header: '1' }, { header: '2' }, { font: [] }],
+                                        [{ size: [] }],
+                                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],[{ 'align': [] }],
+                                        [{ list: 'ordered' }, { list: 'bullet' }],
+                                        ['link', 'image'],
+                                        ['code-block'],
+                                        ['clean'],
+                                        ],
+                                    }}
+                                    onChange={QuillValue}
+                                />
+                            </Form.Item>
+                           
+                        </Col>
                     </Row>
                     <Row gutter={16}>
-                        <Col span={24}>
+                        {/* <Col span={24} className='mt-4'>
                             <Form.Item
-                                name="image"
+                                name="link"
                                 label="Select Video"
                             >
                                 <Upload 
@@ -143,6 +201,20 @@ const AddRecordVideo = () => {
                                     <video src={previewUrl} alt="Video preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} autoPlay/>
                                 </div>
                             )}
+                        </Col> */}
+                        <Col span={24} className='mt-4'>
+                            <Form.Item
+                                    name="link"
+                                    label="Link"
+                                    rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please enter Student ID',
+                                    },
+                                    ]}
+                                >
+                                    <Input placeholder="Please enter user name" />
+                                </Form.Item>
                         </Col>
                     </Row>
                     <Space>
@@ -160,3 +232,4 @@ const AddRecordVideo = () => {
 };
 
 export default AddRecordVideo;
+

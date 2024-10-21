@@ -59,7 +59,8 @@ export default function IpBanList({title}){
             key: item.id,
             no: index + 1,
             id: item.id,
-            user_id : item.user.regnumber,
+            user_id : <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
+            regnumber : item.user.regnumber,
             ipaddress: item.ip,
             remark: item.remark,
             status_id : item.status.name,
@@ -86,10 +87,16 @@ export default function IpBanList({title}){
             fixed: 'left',
         },
         {
-            title: 'Student Id',
+            title: 'Name',
             width: 150,
             dataIndex: 'user_id',
             key: 'user_id',
+            fixed: 'left',
+        },{
+            title: 'Student Id',
+            width: 150,
+            dataIndex: 'regnumber',
+            key: 'regnumber',
             fixed: 'left',
         },{
             title: 'IP Address',

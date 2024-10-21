@@ -51,39 +51,17 @@ export default function SurveyPlatform({title}){
     };
     // end active switch
 
+
+    // start fetching data
     const fetchingData = async () => {
         try {
             const response = await api.get('/surveyplatforms', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
-            console.log(response.data.data)
-            if (response.data && response.data.data) {
-                console.log(response.data.data)
-                let showData = response.data.data.map((item, index) => ({
-                    key: item.id,
-                    no: index + 1,
-                    id: item.id,
-                    name: item.name,
-                    status_id: (
-                        <Switch 
-                        defaultChecked={item.status.id === 3} 
-                        onChange={(checked) => onChange(checked, item.id)} />
-                    ),
-                    admit_by: item.user.name,
-                    created_at: item.created_at,
-                    updated_at: item.updated_at,
-                    action: 
-                        <EditSurveyPlatform 
-                            idx={item.id} 
-                            name={item.name} 
-                            fetchData={fetchingData} 
-                        />
-                    
-                }));
-                // console.log(showData);
-
-                setfetchData(showData);
-                
+            console.log(response.data)
+            if (response.data) {
+                console.log(response.data)
+                updateDate(response.data);
             } else {
                 error("Data fetching failed.");
             }
@@ -99,9 +77,34 @@ export default function SurveyPlatform({title}){
             setLoading(false);
         }
     };
+    // end fetching Data
+
+    //  
+    function updateDate(otpData){
+        console.log(otpData);
+        let showData = otpData.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            name : item.name,
+            status_id: (
+                <Switch 
+                defaultChecked={item.status.id === 3} 
+                onChange={(checked) => onChange(checked, item.id)} />
+            ),
+            admit_by : item.user.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at
+            
+        }));
+        console.log(showData);
+        setLoading(false)
+        setfetchData(showData);
+    }
+    // 
 
     useEffect(() => {
-        fetchingData()
+        fetchingData();
     }, []);
 
     const columns = [
@@ -140,14 +143,7 @@ export default function SurveyPlatform({title}){
             dataIndex: 'updated_at',
             key: 'updated_at',
             width: 180,
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            fixed: 'right',
-            dataIndex: "action",
-            width: 150,
-        },
+        }
     ];
     let tableWidth = 0 ;
     

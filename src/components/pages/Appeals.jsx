@@ -10,37 +10,10 @@ import UserSearch from "../inputs/UserSearch";
 
 import Userlistdrawer from '../drawer/UserDrawer';
 
-export default function BuyAppeals({title}){
+export default function Appeals({title}){
     const [data, setfetchData] = useState([]);
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
 
-    useEffect(() => {
-        // let url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        let url = "https://jsonplaceholder.typicode.com/users";
-
-
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                key: item.id,
-                no: index + 1,
-                id: item.id, 
-                name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                email: item.email,
-                website: item.website,
-                city: item.city,
-                street: item.street,
-                zipcode: item.zipcode,
-                latitude: item.latitude,
-                longitude: item.longitude
-            }));
-            setfetchData(transformedData);
-            setLoading(false);
-            
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-            setLoading(false);
-        });
-    }, []);
 
     const columns = [
         {

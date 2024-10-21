@@ -1,18 +1,22 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message , Tag , Switch} from 'antd';
 import "./../CustomCss/tablestyle.css";
-
-import Userlistdrawer from '../drawer/UserDrawer';
-import AddCourseService from '../models/AddCourseService';
+import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
-export default function Courseservices({title}){
+import Userlistdrawer from '../drawer/UserDrawer';
+import UserExport from '../export/UserExport';
+
+export default function Orders({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
+
+    const [courses,setCourses] = useState([]);
+    const [stages,setStages] = useState([]);
+
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -25,7 +29,7 @@ export default function Courseservices({title}){
         try {
 
 
-            const response = await api.get('/service/courseservice', {
+            const response = await api.get('/packageorders', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             console.log(response.data)
@@ -50,20 +54,22 @@ export default function Courseservices({title}){
     // end fetching Data
 
     //  
-    function updateDate(serviceData){
-        console.log(serviceData);
-        let showData = serviceData.map((item, index) => ({
+    function updateDate(orderData){
+        console.log(orderData);
+        let showData = orderData.map((item, index) => ({
             key: item.id,
             no: index + 1,
             id: item.id,
-            name : item.course.name,
-            link : <a href={item.name} className="text-blue-500" target='_blank'>{item.name}</a>,
-            servicetype : item.servicetype.name,
-            user_id: item.user.name,
-            status_id : item.status.name,
+            user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.regnumber} />, 
+            transaction_id: item.transaction_id,
+            packagename : item.package.name,
+            point : item.package.point,
+            stage : item.stage.name,
+            image : item.image,
+            remark : item.description,
+            admit_by :  item.admit ? item.admit.name : null,
             created_at : item.created_at,
-            updated_at : item.updated_at,
-            
+            updated_at : item.updated_at
         }));
         console.log(showData);
         setLoading(false)
@@ -75,6 +81,9 @@ export default function Courseservices({title}){
         fetchingData();
     }, []);
 
+
+    
+
     const columns = [
         {
             title: 'No',
@@ -84,48 +93,64 @@ export default function Courseservices({title}){
             fixed: 'left',
         },
         {
-            title: 'Course Title',
+            title: 'Student Id',
             width: 200,
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'user_id',
+            key: 'user_id',
             fixed: 'left',
+        },{
+            title: 'Transaction ID',
+            width: 200,
+            dataIndex: 'transaction_id',
+            key: 'transaction_id'
+        },{
+            title: 'Package',
+            width: 200,
+            dataIndex: 'packagename',
+            key: 'packagename'
         },
         {
-            title: 'Link',
-            dataIndex: 'link',
-            key: 'link',
+            title: 'Point',
+            width: 250,
+            dataIndex: 'point',
+            key: 'point',
+        },
+        {
+            title: 'Stage',
+            dataIndex: 'stage',
+            key: 'stage',
             width: 150,
         },
         {
-            title: 'Type',
-            dataIndex: 'servicetype',
-            key: 'servicetype',
+            title: 'Image',
+            dataIndex: 'image',
+            key: 'image',
+            width: 150,
+        },
+        {
+            title: 'Remark',
+            dataIndex: 'remark',
+            key: 'remark',
             width: 150,
         },
         {
             title: 'Admit By',
-            dataIndex: 'user_id',
-            key: 'user_id',
-            width: 150,
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status_id',
-            key: 'status_id',
+            dataIndex: 'admit_by',
+            key: 'admit_by',
             width: 150,
         },
         {
             title: 'Created At',
             dataIndex: 'created_at',
             key: 'created_at',
-            width: 150,
+            width: 200,
         },
         {
             title: 'Updated At',
             dataIndex: 'updated_at',
             key: 'updated_at',
-            width: 150,
-        },
+            width: 200,
+        }
     ];
 
     let tableWidth = 0 ;
@@ -137,21 +162,24 @@ export default function Courseservices({title}){
 
     return (
         <div className="table-container">
+            {contextHolder}
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    {contextHolder}
-                    <AddCourseService/>
+                    <Adduser fetchData = {fetchingData}/>
+                    {/* <UserExport/> */}
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
+                    <UserExport/>
                 </div>
             </div>
+
             <Table
                 dataSource={data}
                 columns={columns}
-                loading={isLoading}
-                pagination={false}
+                loading={Boolean(isLoading)}
+                pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />
         </div>
