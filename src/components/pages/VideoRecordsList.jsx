@@ -10,6 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import AddRecordVideo   from '../models/AddRecordVideo';
 import EditRecordVideo,{DeleteRecordVideo} from '../models/EditRecordVideo';
+import RecordVideoExport from '../export/RecordVideoExport';
 import UserSearch from "../inputs/UserSearch";
 import Coursedrawer from '../drawer/Coursedrawer';
 
@@ -231,7 +232,7 @@ export default function Videorecords({title}){
                     <AddRecordVideo courses={courses} fetchingData={fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
-                    <UserSearch/>
+                    <RecordVideoExport courses={courses} updateData = {updateDate}/>
                 </div>
             </div>
             <Table

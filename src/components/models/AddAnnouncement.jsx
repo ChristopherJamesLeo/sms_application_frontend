@@ -1,31 +1,22 @@
 import React, { useState } from 'react';
-import { Button, Modal, Col, Form, Input, Row, Upload, Space, message } from 'antd';
+import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../api/api';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; 
+import 'react-quill/dist/quill.snow.css';
 
-
-const AddAnnouncement = () => {
+const AddAnnouncement = ({fetchingData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
+
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-        messageApi.open({
-          type: 'success',
-          content: 'User Add Successful',
-        });
-    };
-    const error = () => {
-        messageApi.open({
-          type: 'error',
-          content: 'User Add Fail',
-        });
-    };
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
-    // start image preview
+    // Image preview and file handling
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const beforeUpload = (file) => {
         // Read the selected file as a data URL for preview
@@ -35,43 +26,63 @@ const AddAnnouncement = () => {
         };
         reader.readAsDataURL(file);
 
-        // Prevent the file from being uploaded immediately
+        // Store the file for uploading later
+        setSelectedFile(file);
+
+        // Prevent immediate upload
         return false;
     };
 
-    // end image preview
-
-    // start quill
+    // Quill editor state
     const [quillValue, setQuillValue] = useState('');
 
-
-    function QuillValue(content){
-        setQuillValue(content)
-        
+    function QuillValue(content) {
+        setQuillValue(content);
     }
-
-    function getQuilValue(){
-        console.log(quillValue);
-    }
-    // end quill
 
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
+        setSelectedFile(null); // Clear the selected file
     };
 
-    const formHandler = (values) => {
-        values.description = quillValue;
-        console.log(values);
-        // const url = "https://66a6acfe23b29e17a1a342ff.mockapi.io/sms/user/image";
-        // const url = "";
-        // axios.post(url, values)
-        //     .then(response => {
-        //         console.log('Data successfully posted:', response.data);
-        //         onReset();
-        //         setOpen(false);
-        //         success();
-        //     }).catch(error());
+    const formHandler = async (values) => {
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('description', quillValue);
+        if (selectedFile) {
+            formData.append('image', selectedFile); 
+        }
+
+        try {
+            const response = await api.post('/announcements', formData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('api_token')}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response) {
+                success(response.data.message);
+                setOpen(false);
+                setQuillValue("");
+                form.resetFields();
+                fetchingData();
+                console.log(response.data.message);
+            }
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
     };
 
     return (
@@ -82,13 +93,11 @@ const AddAnnouncement = () => {
             {contextHolder}
             <Modal
                 title="Add Announcement"
-                
                 open={open}
                 onOk={() => setOpen(false)}
-                onCancel={() => { 
-                    setOpen(false)
-                    form.resetFields();
-                    setPreviewUrl(null);
+                onCancel={() => {
+                    setOpen(false);
+                    onReset();
                 }}
                 footer={null}
                 width={1000}
@@ -111,38 +120,34 @@ const AddAnnouncement = () => {
                             <Form.Item>
                                 <ReactQuill
                                     name="description"
-                                    placeholder='Syllabus'
-                                    style={
-                                        {
-                                            marginBottom : "60px",
-                                            height: "200px"
-                                        }
-                                    }
+                                    placeholder="Description"
+                                    style={{
+                                        marginBottom: '60px',
+                                        height: '200px',
+                                    }}
                                     value={quillValue}
                                     modules={{
-                                        
                                         toolbar: [
-                                        [{ header: '1' }, { header: '2' }, { font: [] }],
-                                        [{ size: [] }],
-                                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],[{ 'align': [] }],
-                                        [{ list: 'ordered' }, { list: 'bullet' }],
-                                        ['link', 'image'],
-                                        ['code-block'],
-                                        ['clean'],
+                                            [{ header: '1' }, { header: '2' }, { font: [] }],
+                                            [{ size: [] }],
+                                            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                            [{ align: [] }],
+                                            [{ list: 'ordered' }, { list: 'bullet' }],
+                                            ['link', 'image'],
+                                            ['code-block'],
+                                            ['clean'],
                                         ],
                                     }}
                                     onChange={QuillValue}
                                 />
-                             </Form.Item>
+                            </Form.Item>
                         </Col>
                     </Row>
+
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item
-                                name="image"
-                                label="Poster"
-                            >
-                                <Upload 
+                            <Form.Item name="image" label="Poster">
+                                <Upload
                                     beforeUpload={beforeUpload}
                                     maxCount={1}
                                     accept="image/png, image/jpeg, image/jpg"
@@ -151,12 +156,17 @@ const AddAnnouncement = () => {
                                 </Upload>
                             </Form.Item>
                             {previewUrl && (
-                                <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
-                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                                <div className="mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200">
+                                    <Image
+                                        src={previewUrl}
+                                        alt="Image preview"
+                                        style={{ maxWidth: '300px', maxHeight: '300px' }}
+                                    />
                                 </div>
                             )}
                         </Col>
                     </Row>
+
                     <Space>
                         <Button type="primary" htmlType="submit">
                             Submit

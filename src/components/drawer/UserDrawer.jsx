@@ -69,7 +69,7 @@ const isAdmin = (con , userid) => {
 
 const Userlistdrawer = ({fetchData,name,userid}) => {
 
-    console.log(name,userid);
+    // console.log(name,userid);
     var [condition, setCondition] = useState(true); 
     var [permission, setAdmin] = useState(true);
 
@@ -192,7 +192,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
     };
     // console.log(data);
 
-    console.log(userEnrolls)
+    // console.log(userEnrolls)
     const showDrawer = () => {
         setOpen(true);
         formHandler(userid)

@@ -1,13 +1,14 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
+import { Table , message , Tooltip , Switch} from 'antd';
 import axios, { Axios } from 'axios';
 import api from '../api/api';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import AddAnnouncement from '../models/AddAnnouncement';
+import EditAnnouncement , { DeleteAnnouncement } from '../models/EditAnnouncement';
 import UserSearch from "../inputs/UserSearch";
 
 export default function Announcements({title}){
@@ -23,17 +24,52 @@ export default function Announcements({title}){
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
 
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4; 
+        // console.log("status id is", statusId);
+        
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+        
+        try {
+            const response = await api.put(`/announcements/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    // end active switch
+
+
     // start fetching data
     const fetchingData = async () => {
         try {
-            console.log("hello");
+            // console.log("hello");
 
             const response = await api.get('/announcements', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
-            console.log(response.data)
+            // console.log(response.data)
             if (response.data) {
-                console.log(response.data)
+                // console.log(response.data)
                 let data = response.data;
                 updateDate(data.announcements);
             } else {
@@ -53,9 +89,21 @@ export default function Announcements({title}){
     };
     // end fetching Data
 
+    const [arrow, setArrow] = useState('Show');
+    const mergedArrow = useMemo(() => {
+      if (arrow === 'Hide') {
+        return false;
+      }
+      if (arrow === 'Show') {
+        return true;
+      }
+      return {
+        pointAtCenter: true,
+      };
+    }, [arrow]);
     //  
-    function updateDate(leaveData){
-        let showData = leaveData.map((item, index) => ({
+    function updateDate(announcementData){
+        let showData = announcementData.map((item, index) => ({
                     
             key: item.id,
             no: index + 1,
@@ -63,16 +111,29 @@ export default function Announcements({title}){
             title :  item.title,
             admit_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
             reg_id :  item.generate_id,
-            description : item.description,
+            description :  <Tooltip
+                                placement="left"
+                                title={<div dangerouslySetInnerHTML={{ __html: item.description }} />}
+                                arrow={mergedArrow}>
+                                <div dangerouslySetInnerHTML={{ __html: item.description.substring(0,20)}} />
+                            </Tooltip>,
             image : item.image,
             visibility : item.visibility.name,
-            status_id : item.status.name,
+            status_id : (
+                <Switch 
+                defaultChecked={item.status.id === 3} 
+                onChange={(checked) => onChange(checked, item.id)} />
+            ),
             created_at : item.created_at,
             updated_at : item.updated_at,
+            action: <div className='space-x-3'>
+                        <EditAnnouncement announcement={item} fetchingData = {fetchingData}/>
+                        <DeleteAnnouncement announcementId = {item.id} fetchingData = {fetchingData} />
+                    </div> 
           
             
         }));
-        console.log(showData);
+        // console.log(showData);
         setLoading(false)
         setfetchData(showData);
     }
@@ -105,7 +166,7 @@ export default function Announcements({title}){
         },
         {
             title: 'Announcement ID',
-            width: 250,
+            width: 120,
             dataIndex: 'reg_id',
             key: 'reg_id',
         },
@@ -134,17 +195,23 @@ export default function Announcements({title}){
             width: 150,
         },
         {
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'status_id',
+            width: 150,
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'status_id',
+            width: 150,
+        },
+        {
             title: 'Action',
-            key: 'operation',
+            dataIndex : "action",
+            key: 'action',
             fixed: 'right',
             width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
         },
     ];
 
@@ -160,7 +227,7 @@ export default function Announcements({title}){
             <div className="my-4 ">
                 <div className='mb-2 flex gap-x-2'>
                     {contextHolder}
-                    <AddAnnouncement />
+                    <AddAnnouncement fetchingData={fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
