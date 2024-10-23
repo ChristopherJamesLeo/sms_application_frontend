@@ -11,13 +11,15 @@
 }
 
 
-.ant-table-thead > tr > th {
+.ant-table-thead > tr > th.ant-table-cell {
   font-size: 13px; 
+  text-align: center;
 }
 
 
 .ant-table-tbody > tr > td {
   font-size: 12px; 
+  text-align: center;
 }
 
 

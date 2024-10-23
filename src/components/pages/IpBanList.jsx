@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
+import { Table , message , Badge , Tag} from 'antd';
 import api from '../api/api';
-import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
+import AddIpBan,{DeletIpBan} from '../models/AddIpBan';
 
 export default function IpBanList({title}){
     const [data, setfetchData] = useState([]);
@@ -53,19 +53,24 @@ export default function IpBanList({title}){
     // end fetching Data
 
     //  
-    function updateDate(otpData){
-        console.log(otpData);
-        let showData = otpData.map((item, index) => ({
+    function updateDate(IpBanData){
+        console.log(IpBanData);
+        let showData = IpBanData.map((item, index) => ({
             key: item.id,
             no: index + 1,
             id: item.id,
-            user_id : <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
-            regnumber : item.user.regnumber,
             ipaddress: item.ip,
             remark: item.remark,
-            status_id : item.status.name,
+            status_id : <Tag bordered={true} color="default">
+                <Badge status="error" className='me-3' />
+                {item.status.name}
+            </Tag>,
             admit_id : item.admit.name,
             created_at : item.created_at,
+            updated_at : item.updated_at,
+            action : <div>
+                <DeletIpBan ipId={item.id} fetchingData={fetchingData} />
+            </div>
             
         }));
         console.log(showData);
@@ -84,19 +89,6 @@ export default function IpBanList({title}){
             width: 60,
             dataIndex: 'no',
             key: 'no',
-            fixed: 'left',
-        },
-        {
-            title: 'Name',
-            width: 150,
-            dataIndex: 'user_id',
-            key: 'user_id',
-            fixed: 'left',
-        },{
-            title: 'Student Id',
-            width: 150,
-            dataIndex: 'regnumber',
-            key: 'regnumber',
             fixed: 'left',
         },{
             title: 'IP Address',
@@ -126,6 +118,17 @@ export default function IpBanList({title}){
             key: 'created_at',
             width: 180,
         }, 
+        {
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
+            width: 180,
+        }, 
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+        }, 
 
     ];
 
@@ -141,6 +144,7 @@ export default function IpBanList({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='flex gap-x-2'>
+                    <AddIpBan fetchingData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
                     {contextHolder}

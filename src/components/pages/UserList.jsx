@@ -174,9 +174,11 @@ export default function Userstable({title}){
             <Table
                 dataSource={data}
                 columns={columns}
+                bordered
                 loading={Boolean(isLoading)}
                 pagination={{ pageSize: 10 }}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
+                footer={() => 'Hello'}
             />
         </div>
     );

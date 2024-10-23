@@ -1,40 +1,118 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table  , message , Switch } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
+import api from '../api/api';
+import UserManualVerification,{ViewVerification} from '../models/UserManualVerification';
 
 export default function Realnames({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+    const [messageApi, contextHolder] = message.useMessage();
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    // start active switch
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4; 
+        // console.log("status id is", statusId);
+        
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+        
+        try {
+            const response = await api.put(`/user/userverification/changestatus/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
             setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
-    }, []);
+        }
+    };
+    // end active switch
+
+    // start fetching data
+    const fetchingData = async () => {
+        try {
+            // console.log("hello");
+
+            const response = await api.get('/user/userverification', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                updateDate(response.data);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    // end fetching Data
+    // update data 
+    function updateDate(userdata){
+        // console.log(videodata);
+        let data = userdata;
+        let showData = data.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            student_id: item.regnumber,
+            realname: item.verification ? item.verification.realname : null ,
+            card_number: item.verification ? item.verification.card_number : null ,
+            admit_by : item.admit_by ? item.admit_by.name : null ,
+
+            status_id : item.verification ? 
+                <Switch 
+                defaultChecked={item.verification.status_id === 3} 
+                onChange={(checked) => onChange(checked, item.verification.user_id)} />
+             : null,
+            action : <div className='space-x-3'>
+                    <UserManualVerification userId={item.id} title="Edit" size = "small" fetchingData={fetchingData} />
+                    <ViewVerification userId={item.id} title="View" size="small"  />
+                </div>
+        }));
+        setLoading(false)
+        setfetchData(showData);
+    }
+
+    useEffect(()=>{
+        fetchingData();
+    },[]);
+
+    // console.log(courses);
 
     const columns = [
         {
@@ -42,13 +120,6 @@ export default function Realnames({title}){
             width: 60,
             dataIndex: 'no',
             key: 'no',
-            fixed: 'left',
-        },
-        {
-            title: 'User Name',
-            width: 200,
-            dataIndex: 'user_id',
-            key: 'user_id',
             fixed: 'left',
         },
         {
@@ -61,13 +132,13 @@ export default function Realnames({title}){
         {
             title: 'Real Name',
             width: 250,
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'realname',
+            key: 'realname',
         },{
             title: 'NRC ID',
             width: 250,
-            dataIndex: 'nrc_id',
-            key: 'nrc_id',
+            dataIndex: 'card_number',
+            key: 'card_number',
         },
         {
             title: 'Admit By',
@@ -76,17 +147,18 @@ export default function Realnames({title}){
             width: 180,
         },
         {
+            title: 'Status',
+            dataIndex: 'status_id',
+            key: 'status_id',
+            width: 180,
+        },
+        {
             title: 'Action',
+            dataIndex: "action",
             key: 'operation',
+            
             fixed: 'right',
-            width: 150,
-            render: (_, record) => (
-                <div className='flex gap-x-3'>
-                    <Link to={`/view/${record.id}`} className='text-green-700'>View</Link>
-                    <Link to={`/edit/${record.id}`} className='text-blue-700'>Edit</Link>
-                    <Link to={`/delete/${record.id}`} className='text-red-700'>Delete</Link>
-                </div>
-            ),
+
         },
     ];
 
@@ -100,6 +172,7 @@ export default function Realnames({title}){
     return (
         <div className="table-container">
             <h2 className='table_title'>{title}</h2>
+            {contextHolder}
             <div className="my-4">
                 <div className='flex gap-x-2'>
                 </div>

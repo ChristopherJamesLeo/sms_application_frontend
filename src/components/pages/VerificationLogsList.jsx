@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
+import { Table , message , Badge , Tag} from 'antd';
 import api from '../api/api';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
@@ -63,7 +63,7 @@ export default function Verificationlogs({title}){
             otp : item.otp,
             email : item.user.email,
             ipaddress: item.deviceIp,
-            status_id : item.status ? item.status.name : null,
+            status_id : item.status ? <Tag color='default'>{item.status.name}</Tag>  : null,
             expire_at : item.expired_at,
             created_at : item.created_at,
             

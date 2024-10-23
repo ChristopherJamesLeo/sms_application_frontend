@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
+import { Table , message , Tag , Tooltip } from 'antd';
 import api from '../api/api';
 import "./../CustomCss/tablestyle.css";
 
@@ -49,6 +49,19 @@ export default function Deviceinfos({title}){
     };
     // end fetching Data
 
+    const [arrow, setArrow] = useState('Show');
+    const mergedArrow = useMemo(() => {
+      if (arrow === 'Hide') {
+        return false;
+      }
+      if (arrow === 'Show') {
+        return true;
+      }
+      return {
+        pointAtCenter: true,
+      };
+    }, [arrow]);
+
     // update data 
     function updateDate(getdatas){
         console.log(getdatas);
@@ -64,11 +77,13 @@ export default function Deviceinfos({title}){
             timezone : item.timezone,
             browser : item.browser,
             brand : item.brand,
-            type : item.type,
-            os : item.os,
-            insert_type : item.insert_type,
-            connection : item.connection,
-            status : item.status.name,
+            type : <Tag color='default'> {item.type} </Tag>,
+            os : <Tag color='default'> {item.os} </Tag>,
+            insert_type : <Tag color='default'> {item.insert_type} </Tag>,
+            connection : <Tooltip placement="right" title={item.connection} arrow={mergedArrow}>
+                            {item.connection.substring(0,30)+"..."}
+                        </Tooltip>,
+            status :  <Tag color='default'> {item.status.name} </Tag>,
             created_at : item.created_at,
             updated_at : item.updated_at
 
@@ -115,13 +130,13 @@ export default function Deviceinfos({title}){
             title: 'Country',
             dataIndex: 'country',
             key: 'country',
-            width: 150,
+            width: 250,
         },
         {
             title: 'City',
             dataIndex: 'city',
             key: 'city',
-            width: 150,
+            width: 250,
         },
         {
             title: 'timezone',
