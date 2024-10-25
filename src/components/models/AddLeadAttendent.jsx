@@ -5,11 +5,11 @@ import { Button, Modal , Col, DatePicker, Form, Input, Row, Select, Space , mess
 import axios from 'axios';
 import $ from "jquery";
 import api from '../api/api';
-const AddAttended = ({fetchData}) => {
+const AddLeadAttendent = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-
+    
     var [userId,setUserId] = useState(null);
     var [courses, setCourses] = useState([]);
 
@@ -35,7 +35,7 @@ const AddAttended = ({fetchData}) => {
         console.log(getRegId);
         try {
             // console.log(getRegId)
-            const response = await api.get(`/attendant/checkuser/${getRegId}` , {
+            const response = await api.get(`/leadattendants/checkuser/${getRegId}` , {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             
@@ -118,7 +118,7 @@ const AddAttended = ({fetchData}) => {
         try {
             console.log(values);
 
-            const response = await api.post('/attendants', values, {
+            const response = await api.post('/leadattendants', values, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
@@ -134,7 +134,7 @@ const AddAttended = ({fetchData}) => {
                 
                 
             } else {
-                error(response.data.message);
+                error("Edit failed.");
             }
     
         } catch (err) {
@@ -247,4 +247,4 @@ const AddAttended = ({fetchData}) => {
     </>
   );
 };
-export default AddAttended;
+export default AddLeadAttendent;

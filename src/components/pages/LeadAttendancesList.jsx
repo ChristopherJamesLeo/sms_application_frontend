@@ -1,21 +1,21 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Table , message } from 'antd';
-import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 import api from '../api/api';
 
 import Userlistdrawer from '../drawer/UserDrawer';
 import Coursedrawer from '../drawer/Coursedrawer';
-import AddEnroll,{EditEnroll} from "../models/AddEnroll";
-import UserSearch from "../inputs/UserSearch";
-import EnrollExport from '../export/EnrollExport';
+import AddLeadAttendent from '../models/AddLeadAttendent';
+import AttendantExport from '../export/AttendantExport';
 
-export default function Enrolls({title}){
+
+
+export default function LeadAttendancesList({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
-
+    const [courses,setCourses] = useState([]);
+    const [stages,setStages] = useState([]);
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -28,36 +28,14 @@ export default function Enrolls({title}){
         try {
             console.log("hello");
 
-            const response = await api.get('/enrolls', {
+            const response = await api.get('/leadattendants', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             console.log(response.data)
             if (response.data) {
-                console.log(response.data)
-                let data = response.data;
-                let showData = data.map((item, index) => ({
-                    key: item.id,
-                    no: index + 1,
-                    id: item.id,
-                    user_id :  <Userlistdrawer userid = {item.user.id}  name={item.user.name} />,
-                    role_id :  item.role.name,
-                    course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
-                    
-                    generate_id : item.transactionId,
-                    image : item.image? item.image : null,
-                    payment_type : item.paymentType.name,
-                    payment_method : item.paymentMethod? item.paymentMethod.name : "Point Pay",
-                    stage_id : item.stage.name,
-                    status_id : item.status.name,
-                    admit_by : item.admitBy.name,
-                    created_at: item.created_at,
-                    updated_at: item.updated_at,
-                    action : <EditEnroll enrollId = {item.id} fetchAllData = {fetchingData} />
-                    
-                }));
-                setLoading(false)
-                setfetchData(showData);
-                
+                updateDate(response.data.leadattendants);
+                setCourses(response.data.courses);
+                setStages(response.data.stages);
             } else {
                 error("Data fetching failed.");
             }
@@ -74,6 +52,32 @@ export default function Enrolls({title}){
         }
     };
     // end fetching Data
+
+    // update data 
+    function updateDate(leadattendant){
+        // console.log(attendantdata);
+        let data = leadattendant;
+        let showData = data.map((item, index) => ({
+            key: item.id,
+            no: index + 1,
+            id: item.id,
+            user_id : item.user.name,
+            regnumber : <Userlistdrawer userid = {item.user.id}  name={item.user.regnumber} />,
+            course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
+            attendant_code : item.attcode,
+            datetime : item.date,
+            status_id : item.status.name,
+            admit_by : item.admit_by.name,
+            created_at : item.created_at,
+            updated_at : item.updated_at
+
+            
+        }));
+        setLoading(false)
+        setfetchData(showData);
+    }
+
+    // end update data
 
     useEffect(() => {
         fetchingData();
@@ -93,12 +97,11 @@ export default function Enrolls({title}){
             dataIndex: 'user_id',
             key: 'user_id',
             fixed: 'left',
-        },
-        {
-            title: 'Role',
+        },{
+            title: 'Reg Number',
             width: 200,
-            dataIndex: 'role_id',
-            key: 'role_id',
+            dataIndex: 'regnumber',
+            key: 'regnumber',
             fixed: 'left',
         },
         {
@@ -108,32 +111,16 @@ export default function Enrolls({title}){
             key: 'course_id',
         },
         {
-            title: 'Transaction Id',
-            dataIndex: 'generate_id',
-            key: 'generate_id',
+            title: 'Attended Code',
+            dataIndex: 'attendant_code',
+            key: 'attendant_code',
             width: 150,
         },
         {
-            title: 'Payment Type',
-            dataIndex: 'payment_type',
-            key: 'payment_type',
+            title: 'Date and Time',
+            dataIndex: 'datetime',
+            key: 'datetime',
             width: 180,
-        },
-        {
-            title: 'Payment Method',
-            dataIndex: 'payment_method',
-            key: 'payment_method',
-            width: 150,
-        },{
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            width: 150,
-        },{
-            title: 'Stage',
-            dataIndex: 'stage_id',
-            key: 'stage_id',
-            width: 150,
         },{
             title: 'Status',
             dataIndex: 'status_id',
@@ -157,12 +144,7 @@ export default function Enrolls({title}){
             key: 'updated_at',
             width: 200,
         },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            width: 200,
-        },
+
     ];
 
     let tableWidth = 0 ;
@@ -178,11 +160,11 @@ export default function Enrolls({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4">
                 <div className='mb-3 flex gap-x-2'>
-                    <AddEnroll fetchData = {fetchingData}/>
+                    <AddLeadAttendent fetchData = {fetchingData}/>
                 </div>
-                <div className='flex justify-end'>
-                    <UserSearch/>
-                    <EnrollExport/>
+                <div className='flex justify-end space-x-2'>
+                    <AttendantExport courses={courses} stages={stages} updateDate={updateDate}/>
+                    {/* <AttendantImport/> */}
                 </div>
             </div>
             <Table

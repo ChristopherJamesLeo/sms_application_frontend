@@ -54,6 +54,7 @@ import ServiceLists from '../pages/ServiceLists';
 import SurveyPlatform from '../pages/SurveyPlatformLists';
 import PointPackages from '../pages/PointPackages';
 import PointChangeRecord from '../pages/PointChangeRecord';
+import LeadAttendancesList from '../pages/LeadAttendancesList';
 
 
 import Theme from '../settings/Theme';
@@ -240,6 +241,9 @@ const MainLayout = () => {
           {
             key: '5',
             label: <Link to="/attendances">Attendance List</Link>,
+          },{
+            key: '1242',
+            label: <Link to="/leadattendances">Lead Attendence List</Link>,
           },
           {
             key: '6',
@@ -642,7 +646,7 @@ const MainLayout = () => {
                         height: "50px"
                       }
                     } /> */}
-                    {/* <h2 className='text-2xl'>Ninth Programming</h2> */}
+                    <h2 className='text-2xl font-semibold'>Ninth Programming</h2>
                     <Button
                       type="text"
                       icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -766,6 +770,7 @@ const MainLayout = () => {
                 <Route path='/feeEnrolls' element={<FeeEnrolls title="Enroll With Fee" />}/>
 
                 <Route path='/attendances' element={<Attendances title="Student Attendences" />}/>
+                <Route path="/leadattendances" element={<LeadAttendancesList title={"Lead Attendances"}/>}/>
                 <Route path='/leaverecords' element={<Leaverecords title="Leave Records" />}/>
 
                 <Route path='/records' element={<Videorecords title="Video Records" />}/>

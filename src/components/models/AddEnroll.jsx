@@ -194,7 +194,11 @@ const AddEnroll = ({fetchData}) => {
            
             return (
                 <>
-                    <div className='mb-3'> <span> Name - {value.name}  </span> & <span>Student Id - {value.regnumber}</span> </div>
+                    <div className='mb-3 '> 
+                        <div className='bg-gray-100 p-1'> Name - {value.name}  </div> 
+                        <div  className='p-1'>Student Id - {value.regnumber}</div> 
+                        <div  className='bg-gray-100 p-1'>Role - {value.role ? value.role.name : null}</div>
+                    </div>
                 </>
             )
         }else {
@@ -235,6 +239,7 @@ const AddEnroll = ({fetchData}) => {
     const formHandler = async (values) => {
         
         values.user_id = userId;
+        values.role_id = userdata.role.id;
         console.log(values);
         try {
             console.log(values);
