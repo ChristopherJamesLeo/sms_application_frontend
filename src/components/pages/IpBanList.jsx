@@ -152,6 +152,7 @@ export default function IpBanList({title}){
                 </div>
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

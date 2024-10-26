@@ -172,6 +172,7 @@ export default function SurveyPlatform({title}){
                 </div>
             </div>
             <Table
+                bordered
                 dataSource={fetchData}
                 columns={columns}
                 loading={isLoading}

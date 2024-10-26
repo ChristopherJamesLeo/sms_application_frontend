@@ -186,6 +186,7 @@ export default function Enrolls({title}){
                 </div>
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

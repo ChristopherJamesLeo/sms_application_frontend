@@ -206,6 +206,7 @@ export default function PointPackages({title}){
             </div>
 
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={Boolean(isLoading)}

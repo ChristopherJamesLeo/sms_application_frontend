@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Switch , Drawer, Space } from 'antd';
+import {Switch, Drawer, Space, message , Tag} from 'antd';
 
 import {
     LockOutlined,
     UnlockOutlined
   } from '@ant-design/icons';
-import axios, { Axios } from 'axios';
 
 import Userlistdrawer from './UserDrawer';
+import api from "../api/api.jsx";
 
 
 const EnrollDrawer = ({name,postId}) => {
@@ -16,10 +15,15 @@ const EnrollDrawer = ({name,postId}) => {
     
     const [open, setOpen] = useState(false);
     const [data , setData] = useState([]);
-    const [isLoading , setloading] = useState(true);
+    const [isLoading , setLoading] = useState(true);
 
     const [disabled, setDisabled] = useState(true);
     const [ isLock , setLock] = useState(true);
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    var success = (msg) => messageApi.open({ type: 'success', content: msg });
+    var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
     function hadleLock(){
         toggle();
@@ -49,23 +53,84 @@ const EnrollDrawer = ({name,postId}) => {
       setLock(false);
     };
 
+    // start active switch
+    const onChange = async (checked, idx) => {
+        // console.log(idx);
+        let statusId = checked ? 3 : 4;
+        // console.log("status id is", statusId);
 
-    const showDrawer = () => {
+        let values = {
+            id: idx,
+            status_id: statusId
+        };
+
+        console.log(values);
+
+        try {
+            const response = await api.put(`/enroll/user/status/${idx}`, values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                success("Edit successful");
+            } else {
+                error("Edit failed.");
+            }
+
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    // end active switch
+
+
+
+    const showDrawer = async () => {
         setOpen(true);
-        // console.log(userid);
-        if(postId){
-            let url = `https://jsonplaceholder.typicode.com/users/`;
-            axios.get(url).then( response => {
-                // console.log(response.data);
-                setData(response.data);
-                console.log(data);
-                setloading(false);
-            }).catch(function(response){
-                console.log("error occur",response.data);
-            })
+        console.log(postId);
+
+        try {
+            // console.log("hello");
+
+            const response = await api.get(`/enroll/course/user/${postId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                setData(response.data)
+
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
         }
         
     };
+
+
+    function updateDate(userdata){
+
+        let showData = data.map((item, index) => ({
+
+        }));
+        setLoading(false)
+    }
 
     const onClose = () => {
         setOpen(false);
@@ -102,6 +167,7 @@ const EnrollDrawer = ({name,postId}) => {
                 }
             >   
                 <ul>
+                    {contextHolder}
                     {
                         
                         data.map(function(data){
@@ -109,12 +175,23 @@ const EnrollDrawer = ({name,postId}) => {
                                 <>
                                     <li >
                                         <div className='flex justify-between'>
-                                            <span>Name  <Userlistdrawer name={data.name} userid={data.id} />
-                                                </span>
-                                            <span>Status - Active</span>
+                                            <span>
+                                                <Userlistdrawer name={data.user.regnumber} userid={data.user.id} />
+                                            </span>
+                                            <div>
+                                                <Tag  color="default">{data.stage.name}</Tag>
+                                                <span>
+                                                    <Switch
+                                                    defaultChecked={data.status.id === 3}
+                                                    checkedChildren={"Enable"}
+                                                    unCheckedChildren={"Disable"}
+                                                    onChange={(checked) => onChange(checked, data.id)} />
+                                            </span>
+                                            </div>
+
                                         </div>
-                                        <div className='text-end'>
-                                            <span>12-20-24 18:6:00</span>
+                                        <div className='text-end mt-2'>
+                                            <span>{data.created_at} </span>
                                         </div>
                                         
                                     </li>

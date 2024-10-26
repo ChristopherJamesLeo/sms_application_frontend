@@ -176,6 +176,7 @@ export default function Orders({title}){
             </div>
 
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={Boolean(isLoading)}

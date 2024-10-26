@@ -51,7 +51,9 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
     var [open, setOpen] = useState(false);
     var [isLoading , setloading] = useState(true);
     var [days,setDays] = useState([]);
+    var [enrollCount,setEnrollCount] = useState(0);
     var [coursedata,setCourseData] = useState({});
+
 
 
     const [disabled, setDisabled] = useState(true);
@@ -126,6 +128,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                 let data = response.data;
                 setCourseData(data.course);
                 setDays(data.days);
+                setEnrollCount(data.enrollCount)
                 setloading(false)
                 
             } else {
@@ -300,9 +303,9 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                     </div>
                     {/* start Course info */}
                     <ul className="mb-4 flex gap-x-3">
-                        <li>Course View - 1</li> |
-                        <li>Like - 2 </li> |
-                        <li><EnrollDrawer postId={3} name={"Enrolls"}/>  - 3 </li> |
+                        {/*<li>Course View - 1</li> |*/}
+                        {/*<li>Like - 2 </li> |*/}
+                        <li><EnrollDrawer postId={coursedata? coursedata.id : null} name={"Enrolls"}/>  - {enrollCount} </li> |
                         <li><Postcomments postId={2} name={"Comments"}/> - 3 </li> |
                         <li><GlobalOutlined /> <ChangeVisibility 
                         visibility={coursedata.visibility ? coursedata.visibility.name : false} 

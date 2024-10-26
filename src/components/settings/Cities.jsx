@@ -1,17 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table  , message , Switch } from 'antd';
-import axios, { Axios } from 'axios';
+import { Table , message , Switch} from 'antd';
 import "./../CustomCss/tablestyle.css";
-
-import Userlistdrawer from '../drawer/UserDrawer';
-import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
-import UserManualVerification,{ViewVerification} from '../models/UserManualVerification';
 
-export default function Realnames({title}){
-    const [data, setfetchData] = useState([]);
+import UserSearch from "../inputs/UserSearch";
+
+import AddCity,{EditCity} from '../models/SettingModels/Cities.jsx';
+
+export default function Countries({title}){
+    var [fetchData, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -31,7 +29,7 @@ export default function Realnames({title}){
         };
         
         try {
-            const response = await api.put(`/user/userverification/changestatus/${idx}`, values, {
+            const response = await api.put(`/cities/status/${idx}`, values, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (response.data) {
@@ -54,17 +52,38 @@ export default function Realnames({title}){
     };
     // end active switch
 
-    // start fetching data
     const fetchingData = async () => {
         try {
-            // console.log("hello");
-
-            const response = await api.get('/user/userverification', {
+            const response = await api.get('/cities', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
-            console.log(response.data)
-            if (response.data) {
-                updateDate(response.data);
+            if (response.data && response.data) {
+                console.log(response.data)
+                let showData = response.data.map((item, index) => ({
+                    key: item.id,
+                    no: index + 1,
+                    id: item.id,
+                    name: item.name,
+                    status_id: (
+                        <Switch
+                        defaultChecked={item.status.id === 3}
+                        onChange={(checked) => onChange(checked, item.id)} />
+                    ),
+                    admit_by: item.user.name,
+                    created_at: item.created_at,
+                    updated_at: item.updated_at,
+                    action: 
+                        <EditCity
+                            idx={item.id} 
+                            name={item.name} 
+                            fetchData={fetchingData} 
+                        />
+                    
+                }));
+                console.log(showData);
+
+                setfetchData(showData);
+                
             } else {
                 error("Data fetching failed.");
             }
@@ -80,41 +99,10 @@ export default function Realnames({title}){
             setLoading(false);
         }
     };
-    // end fetching Data
-    // update data 
-    function updateDate(userdata){
-        // console.log(videodata);
-        let data = userdata;
-        let showData = data.map((item, index) => ({
-            key: item.id,
-            no: index + 1,
-            id: item.id,
-            student_id: item.regnumber,
-            realname: item.verification ? item.verification.realname : null ,
-            card_number: item.verification ? item.verification.card_number : null ,
-            admit_by : item.admit_by ? item.admit_by.name : null ,
 
-            status_id : item.verification ? 
-                <Switch 
-                defaultChecked={item.verification.status_id === 3}
-                checkedChildren={"Enable"}
-                unCheckedChildren={"Disable"}
-                onChange={(checked) => onChange(checked, item.verification.user_id)} />
-             : null,
-            action : <div className='space-x-3'>
-                    <UserManualVerification userId={item.id} title="Edit" size = "small" fetchingData={fetchingData} />
-                    <ViewVerification userId={item.id} title="View" size="small" fetchingData={fetchingData}   />
-                </div>
-        }));
-        setLoading(false)
-        setfetchData(showData);
-    }
-
-    useEffect(()=>{
-        fetchingData();
-    },[]);
-
-    // console.log(courses);
+    useEffect(() => {
+        fetchingData()
+    }, []);
 
     const columns = [
         {
@@ -125,45 +113,42 @@ export default function Realnames({title}){
             fixed: 'left',
         },
         {
-            title: 'Student Id',
+            title: 'Name',
             width: 200,
-            dataIndex: 'student_id',
-            key: 'student_id',
+            dataIndex: 'name',
+            key: 'name',
             fixed: 'left',
         },
         {
-            title: 'Real Name',
+            title: 'Status',
             width: 250,
-            dataIndex: 'realname',
-            key: 'realname',
-        },{
-            title: 'NRC ID',
-            width: 250,
-            dataIndex: 'card_number',
-            key: 'card_number',
+            dataIndex: 'status_id',
+            key: 'status_id',
         },
         {
             title: 'Admit By',
             dataIndex: 'admit_by',
             key: 'admit_by',
             width: 180,
-        },
-        {
-            title: 'Authentication',
-            dataIndex: 'status_id',
-            key: 'status_id',
+        },{
+            title: 'Created At',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 180,
+        },{
+            title: 'Updated At',
+            dataIndex: 'updated_at',
+            key: 'updated_at',
             width: 180,
         },
         {
             title: 'Action',
-            dataIndex: "action",
-            key: 'operation',
-            
+            key: 'action',
             fixed: 'right',
-
+            dataIndex: "action",
+            width: 150,
         },
     ];
-
     let tableWidth = 0 ;
     
     columns.forEach(function(column){
@@ -173,18 +158,18 @@ export default function Realnames({title}){
 
     return (
         <div className="table-container">
-            <h2 className='table_title'>{title}</h2>
             {contextHolder}
-            <div className="my-4">
-                <div className='flex gap-x-2'>
+            <h2 className='table_title'>{title}</h2>
+            <div className="my-4 ">
+                <div className=' mb-3 flex gap-x-2'>
+                    <AddCity fetchData = {fetchingData} />
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
                 </div>
             </div>
             <Table
-                bordered
-                dataSource={data}
+                dataSource={fetchData}
                 columns={columns}
                 loading={isLoading}
                 pagination={false}

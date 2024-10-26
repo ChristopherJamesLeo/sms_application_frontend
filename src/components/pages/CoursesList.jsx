@@ -180,6 +180,7 @@ export default function Courses({title}){
             </div>
             
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

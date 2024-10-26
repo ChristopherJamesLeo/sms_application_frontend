@@ -63,6 +63,7 @@ import Stages from '../settings/Stages';
 import Categories from '../settings/Categories';
 import Days from '../settings/Days';
 import Countries from '../settings/Countries';
+import Cities from '../settings/Cities';
 import Roles from '../settings/Roles';
 import Genders from '../settings/Genders';
 import Coursetypes from '../settings/CourseTypes';
@@ -427,6 +428,10 @@ const MainLayout = () => {
           {
             key: '24',
             label: <Link to="/coutries">Countries</Link>,
+          },
+          {
+            key: Math.round(Math.random() * 1000),
+            label: <Link to="/cities">Cities</Link>,
           },
           {
             key: '25',
@@ -801,6 +806,7 @@ const MainLayout = () => {
                 <Route path='/categories' element={<Categories title="Categories" />}/>
                 <Route path='/days' element={<Days title="Days" />}/>
                 <Route path='/coutries' element={<Countries title="Countries" />}/>
+                <Route path='/cities' element={<Cities title="Cities" />}/>
                 <Route path='/roles' element={<Roles title="Roles" />}/>
                 <Route path='/genders' element={<Genders title="Genders" />}/>
                 <Route path='/coursetypes' element={<Coursetypes title="Course Type" />}/>

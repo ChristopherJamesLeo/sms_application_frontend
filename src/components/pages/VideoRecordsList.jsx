@@ -236,6 +236,7 @@ export default function Videorecords({title}){
                 </div>
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

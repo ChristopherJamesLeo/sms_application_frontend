@@ -129,6 +129,7 @@ export default function Appeals({title}){
             </div>
             
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={Boolean(isLoading)}

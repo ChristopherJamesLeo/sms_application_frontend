@@ -177,6 +177,7 @@ export default function PointEnrolls({title}){
                 </div>
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

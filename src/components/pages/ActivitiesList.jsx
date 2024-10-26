@@ -14,27 +14,27 @@ export default function Announcements({title}){
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        let url = "https://jsonplaceholder.typicode.com/users";
+        // let url = "https://jsonplaceholder.typicode.com/users";
 
-        axios.get(url).then(response => {
-            const transformedData = response.data.map((item, index) => ({
-                // key: item.id,
-                // no: index + 1,
-                // id: item.id, 
-                // name: <Userlistdrawer name={item.name} userid={item.id}/>,
-                // email: item.email,
-                // website: item.website,
-                // city: item.address.city,
-                // street: item.address.street,
-                // zipcode: item.address.zipcode,
-                // latitude: item.address.geo.lat,
-                // longitude: item.address.geo.lng
-            }));
-            setfetchData(transformedData);
-            setLoading(false);
-        }).catch(error => {
-            console.error("There was an error fetching the data!", error);
-        });
+        // axios.get(url).then(response => {
+        //     const transformedData = response.data.map((item, index) => ({
+        //         // key: item.id,
+        //         // no: index + 1,
+        //         // id: item.id,
+        //         // name: <Userlistdrawer name={item.name} userid={item.id}/>,
+        //         // email: item.email,
+        //         // website: item.website,
+        //         // city: item.address.city,
+        //         // street: item.address.street,
+        //         // zipcode: item.address.zipcode,
+        //         // latitude: item.address.geo.lat,
+        //         // longitude: item.address.geo.lng
+        //     }));
+        //     setfetchData(transformedData);
+        //     setLoading(false);
+        // }).catch(error => {
+        //     console.error("There was an error fetching the data!", error);
+        // });
     }, []);
 
     const columns = [
@@ -105,9 +105,10 @@ export default function Announcements({title}){
                 
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
-                loading={isLoading}
+                // loading={isLoading}
                 pagination={false}
                 scroll={{ x: {tableWidth} , y : "68vh" }}
             />

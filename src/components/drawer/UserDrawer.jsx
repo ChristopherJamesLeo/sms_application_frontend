@@ -148,8 +148,6 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                 error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
             } else if (err.request) {
                 error("No response received from server.");
-            } else {
-                error("Error in setting up request.");
             }
         } finally {
             setloading(false);
@@ -265,7 +263,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     <span className='block mr-3'>Verified { condition ? <CheckCircleOutlined className='text-green-700'  /> : <CloseCircleOutlined className='text-red-700'/> }</span>
                     {lockfun(isLock)}
                     {
-                        data.user ?  <Switch disabled={disabled} defaultChecked={data.user.status_id === 12} 
+                        data.user ?  <Switch disabled={disabled} defaultChecked={data.user.status.id == 12}
                         onChange={(checked) => onChange(checked, data.user.id)}  /> : "loading"
                     }
                 </Space>
@@ -282,12 +280,12 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3 '>Personal Info</h3>
-                            <li>{`Student Id : ${data.user ? data.user.regnumber : "Loading..."}`}</li>
-                            <li>{`Real Name : ${data.user ? data.user.name : "Loading..."}`}</li>
-                            <li>{`NRC : ${data.user ? data.user.name : "Loading..."}`} </li>
-                            <li>{`Gender : ${data.gender ? data.gender.name : "Loading..."}`}</li>
-                            <li>{`Country : ${data.country ? data.country.name : "Loading..."}`}</li>
-                            <li>{`City: ${data.city ? data.city.name : "Loading..."}`}</li>
+                            <li>{`Student Id : ${data.user ? data.user.regnumber : "---"}`}</li>
+                            <li>{`Real Name : ${data.user &&  data.user.verification ? data.user.verification.realname : "---"}`}</li>
+                            <li>{`NRC : ${data.user &&  data.user.verification ? data.user.verification.card_number  : "---"}`} </li>
+                            <li>{`Gender : ${data.gender ? data.gender.name : "---"}`}</li>
+                            <li>{`Country : ${data.country ? data.country.name : "---"}`}</li>
+                            <li>{`City: ${data.city ? data.city.name : "---"}`}</li>
                         </ul>
                         <ul className='' style={
                             {
@@ -295,11 +293,10 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                             }
                         }>
                             <h3 className='text-lg mb-3'>Contact Info</h3>
-                            <li>{`Address : ${data.user ? data.user.name : "Loading..."}`}</li>
                             <li>{`Email : ${data.user ? data.user.email : "Loading..."}`}</li>
-                            <li>{`Contact Detail : ${data.user ? data.user.name : "Loading..."}`} </li>
+                            <li>{`Phone : ${data.user ? data.user.phone : "Loading..."}`}</li>
+                            <li>{`Contact Detail : ${data.user ? data.user.phone : "Loading..."}`} </li>
                             <li>{`Emergency Content : ${data.user ? data.user.emergency_number : "Loading..."}`}</li>
-                            <li>{`Invitation Code : ${data.user ? data.user.name : "Loading..."}`}</li>
                         </ul>
                     </div>
                     {/* end user info */}

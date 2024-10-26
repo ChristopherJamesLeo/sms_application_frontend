@@ -203,6 +203,7 @@ export default function Deviceinfos({title}){
                 <UserSearch/>
             </div>
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={isLoading}

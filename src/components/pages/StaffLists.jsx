@@ -38,8 +38,8 @@ export default function StaffLists({title}){
                     point: item.userpoint?item.userpoint.topup : "0",
                     email: item.email,
                     gender: item.gender.name,
-                    city: null,
-                    country: item.country.name,
+                    city: item.city ? item.city.name : " ",
+                    country: item.country ? item.country.name : " ",
                     role: item.role.name,
                     createdAt : item.created_at,
                     onlinestatus :<div><Tag >{item.status.name}</Tag><Tag color={`${item.is_online ? "green" : "red"}`}>{item.active.name}</Tag></div>  ,
@@ -93,6 +93,11 @@ export default function StaffLists({title}){
             width: 200,
             dataIndex: 'reg_id',
             key: 'reg_id'
+        },{
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+            width: 150,
         },{
             title: 'Points',
             width: 200,
@@ -172,6 +177,7 @@ export default function StaffLists({title}){
             </div>
 
             <Table
+                bordered
                 dataSource={data}
                 columns={columns}
                 loading={Boolean(isLoading)}

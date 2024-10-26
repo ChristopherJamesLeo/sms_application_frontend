@@ -183,6 +183,7 @@ export default function Gpalist({ title }) {
                 expandable={{
                     expandedRowRender,
                 }}
+
                 bordered
                 dataSource={data}
                 loading={isLoading}
