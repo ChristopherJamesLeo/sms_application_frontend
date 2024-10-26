@@ -101,7 +101,7 @@ export default function Realnames({title}){
              : null,
             action : <div className='space-x-3'>
                     <UserManualVerification userId={item.id} title="Edit" size = "small" fetchingData={fetchingData} />
-                    <ViewVerification userId={item.id} title="View" size="small"  />
+                    <ViewVerification userId={item.id} title="View" size="small" fetchingData={fetchingData}   />
                 </div>
         }));
         setLoading(false)

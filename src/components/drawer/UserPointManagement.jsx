@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Space, ConfigProvider, message, Modal, Form, InputNumber, Button, Popconfirm } from 'antd';
+import {Col, Row, Space, ConfigProvider, message, Modal, Form, InputNumber, Button, Popconfirm, Input} from 'antd';
 import api from '../api/api';
 
 export default function UserPointManagement({ userdata, userid }) {
@@ -60,6 +60,15 @@ export default function UserPointManagement({ userdata, userid }) {
                                     rules={[{ required: true, message: `Please Enter Amount` }]}
                                 >
                                     <InputNumber style={{ width: "100%" }} min="0" max="100000000000" step="1000" stringMode />
+                                </Form.Item>
+                            </Col>
+                            <Col span={24}>
+                                <Form.Item
+                                    name="description"
+                                    label="Remark"
+                                    rules={[{ required: true, message: 'Please enter Remark' }]}
+                                >
+                                    <Input.TextArea rows={4} placeholder="Please enter Remark" />
                                 </Form.Item>
                             </Col>
                         </Row>

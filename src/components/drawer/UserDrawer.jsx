@@ -8,11 +8,13 @@ import Usertimeline from '../timeline/Usertimeline';
 import UserDisable from '../models/UserDisable';
 import UserPromote from '../models/UserPromote';
 import UserVerify from '../models/UserVerify';
+import {ViewVerification} from '../models/UserManualVerification';
+
 import UserPointManagement from './UserPointManagement';
 import AttendedRecord from '../models/AttendedRecord';
 import LeaveRecord from '../models/LeaveRecord';
 import UserNote from '../models/UserNote';
-import PointChangeRecord from '../models/userPointManagement/PointChangeRecord';
+import PointChangeRecord from '../models/PointChangeRecord.jsx';
 
 
 
@@ -23,7 +25,7 @@ const conicColors = {
     '0%': '#ff0000',
     '50%': '#ffe58f',
     '100%': '#87d068',
-  }
+}
 
 const getGrade = (percent) =>{
     if (percent > 0 && percent < 20){
@@ -78,6 +80,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
     var [isLoading , setloading] = useState(true);
 
     var [userEnrolls, setUserEnrolls] = useState([]);
+    var [role,setRole] = useState({});
 
     var [disabled, setDisabled] = useState(true);
     var [ isLock , setLock] = useState(true);
@@ -168,6 +171,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     setData(data);
                     setDisabled(data.status_id === 12 ? false : true)
                     setUserEnrolls(data.enrolls)
+                    setRole(data.role);
                     isAdmin(data.user.role_id);
                     setCondition(data.user.is_verify);
                     setloading(false);
@@ -192,11 +196,42 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
     };
     // console.log(data);
 
+    // start rating
+    function ratingFun(){
+        let attendant= 0;
+        let leadAttendant = 0;
+        userEnrolls.forEach(function (enroll,idx){
+            attendant += enroll.attendances;
+            leadAttendant += enroll.leadAttendances;
+
+        })
+        return  Math.round(( attendant / leadAttendant ) * 100 );
+
+    }
+
+    // end rating
+
+    // start role
+    function rating (){
+        if(role.id == 5 || role.id == 6){
+            return (
+                <>
+                    <div className='mb-3'>
+                        <h3 className='text-lg'>Rating</h3>
+                        <Progress percent={ratingFun()} status="active" strokeColor={conicColors}/>
+                    </div>
+                </>
+            )
+        }
+    }
+
+    // end role
+
     // console.log(userEnrolls)
     const showDrawer = () => {
         setOpen(true);
         formHandler(userid)
-        
+
     };
 
     const onClose = () => {
@@ -270,10 +305,8 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     {/* end user info */}
 
                     {/* start overall ratig */}
-                    <div className='mb-3'>
-                        <h3 className='text-lg'>Rating</h3>
-                        <Progress percent={90} status="active" strokeColor={conicColors}/>
-                    </div>
+
+                    {rating()}
                     
                     {/* end overall rating */}
 
@@ -281,21 +314,21 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
 
                     {/* start grade */}
                     <div className=" grade_container">
-                        <h3 className="text-center text-2xl mb-3">Grade</h3>
-                        <div className='flex justify-evenly'>
-                            {/* assigment grade */}
-                            <Progress type="dashboard" percent={90} strokeColor={conicColors} 
-                                format={(percent)=>{
-                                    return getGrade(percent);
-                                }
-                            } />
-                            {/* Oberant grade */}
-                            <Progress type="dashboard" percent={15.6} strokeColor={conicColors}   
-                                format={(percent)=>{
-                                    return getGrade(percent);
-                                }
-                            } />
-                        </div>
+                        {/*<h3 className="text-center text-2xl mb-3">Grade</h3>*/}
+                        {/*<div className='flex justify-evenly'>*/}
+                        {/*    /!* assigment grade *!/*/}
+                        {/*    <Progress type="dashboard" percent={90} strokeColor={conicColors} */}
+                        {/*        format={(percent)=>{*/}
+                        {/*            return getGrade(percent);*/}
+                        {/*        }*/}
+                        {/*    } />*/}
+                        {/*    /!* Oberant grade *!/*/}
+                        {/*    <Progress type="dashboard" percent={15.6} strokeColor={conicColors}   */}
+                        {/*        format={(percent)=>{*/}
+                        {/*            return getGrade(percent);*/}
+                        {/*        }*/}
+                        {/*    } />*/}
+                        {/*</div>*/}
 
                         {/* user records */}
                         <div className='my-5'>
@@ -303,9 +336,8 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
 
                                 <AttendedRecord userid={userid}/>
                                 <LeaveRecord userid={userid}/>
-                                <UserVerify userid={userid}/>
+                                <ViewVerification userId={userid} title="Verification Details"  size="middle"  />
                                 <PointChangeRecord  userid={userid} />
-                                { isVerify( condition , userid) } 
                                 
                             </Space>
                             

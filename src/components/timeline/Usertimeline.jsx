@@ -17,6 +17,7 @@ export default function Usertimeline({userEnrolls}){
             }
             items={
                 userEnrolls.map(function(userEnroll){
+                    console.log(userEnroll);
                     let enrollarr=  {
                         children: ( 
                             <>
@@ -26,7 +27,9 @@ export default function Usertimeline({userEnrolls}){
                                     <span>
                                         <Coursedrawer courseId = {userEnroll.course.id} name={userEnroll.course.name} />
                                     </span><br />
-                                    <span>Attendance 90 %</span>
+                                    <span>
+                                        {Math.round(( userEnroll.attendances / userEnroll.leadAttendances ) * 100) + " %"}
+                                    </span>
                                     <p >
                                         {userEnroll.remark}
                                     </p>

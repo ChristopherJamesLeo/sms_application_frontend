@@ -114,8 +114,6 @@ const UserManualVerification = ({ userId,title,size, fetchingData}) => {
                 }
             } else if (err.request) {
                 error("No response received from server.");
-            } else {
-                error("Error in setting up request.");
             }
         }
 
@@ -233,11 +231,12 @@ const UserManualVerification = ({ userId,title,size, fetchingData}) => {
 
 export default UserManualVerification;
 
-export function ViewVerification({title,userId}){
+export function ViewVerification({title,userId,size,fetchingData}){
     const [open, setOpen] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [messageApi, contextHolder] = message.useMessage();
+    const [is_verify,setIsVerify] = useState(null);
 
     var success = (msg) => messageApi.open({ type: 'success', content: msg });
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
@@ -251,7 +250,14 @@ export function ViewVerification({title,userId}){
             });
             console.log(response.data)
             if (response.data) {
-                setData(response.data);
+                setData(response.data.userdata);
+                console.log(response.data.userdata);
+                if(response.data.status){
+                    setIsVerify(true);
+                }else {
+                    setIsVerify(false);
+                }
+                // isVerify();
             } else {
                 error("Data fetching failed.");
             }
@@ -267,10 +273,48 @@ export function ViewVerification({title,userId}){
             setLoading(false);
         }
     }
+
+    function isVerify(){
+
+        if(!is_verify){
+            return (
+                <UserManualVerification userId={userId} title="Edit" size = "small" fetchingData={fetchingData} />
+            )
+        }else {
+            return (
+                <Row gutter={12}>
+                    <>
+
+                        <Col span={24} className='mb-3'>
+                            <div className='bg-gray-100 p-1 mb-2'>Name - { data ? data.realname : null} </div>
+                            <div className='bg-gray-100 p-1'>ID Card Number - { data ? data.card_number : null} </div>
+                        </Col>
+                        <Col span={12}>
+                            <Image
+                                src={ data ? data.card_image : null}
+                                alt="ID card photo"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <Image
+                                src={ data ? data.selfie_image : null}
+                                alt="Selfie photo"
+                            />
+                        </Col>
+                    </>
+
+                </Row>
+            )
+        }
+    }
+
+
+
+
     return (
         <>
         <ConfigProvider >
-            <Button type="primary" size="small" onClick={buttonHanlder}>
+            <Button type="primary" size={size} onClick={buttonHanlder}>
                 {title}
             </Button>
         </ConfigProvider>
@@ -286,33 +330,8 @@ export function ViewVerification({title,userId}){
             width={900}
             footer={null}
         >
-            <Row gutter={12}>
-                {
-                    data.map(function(data,idx){
-                        return (
-                            <>
-                                <Col span={24} className='mb-3'>
-                                    <div className='bg-gray-100 p-1 mb-2'>Name - { data ? data.realname : null} </div>
-                                    <div className='bg-gray-100 p-1'>ID Card Number - { data ? data.card_number : null} </div>
-                                </Col>
-                                <Col span={12}>
-                                    <Image
-                                        src={ data ? data.card_image : null}
-                                        alt="ID card photo"
-                                    />
-                                </Col>
-                                <Col span={12}>
-                                    <Image
-                                        src={ data ? data.selfie_image : null}
-                                        alt="Selfie photo"
-                                    />
-                                </Col>
-                            </>
-                        )
-                    })
-                }
+            {isVerify()}
 
-            </Row>
         </Modal>
     </>
     )
