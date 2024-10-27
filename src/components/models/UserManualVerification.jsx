@@ -291,12 +291,14 @@ export function ViewVerification({title,userId,size,fetchingData}){
                         </Col>
                         <Col span={12}>
                             <Image
+                                public_id = { data ? data.card_public_id : null}
                                 src={ data ? data.card_image : null}
                                 alt="ID card photo"
                             />
                         </Col>
                         <Col span={12}>
                             <Image
+                                public_id = { data ? data.selfie_public_id : null}
                                 src={ data ? data.selfie_image : null}
                                 alt="Selfie photo"
                             />

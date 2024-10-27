@@ -1,5 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { message , Checkbox , Button, Modal , ConfigProvider , Col, DatePicker, TimePicker , Form, Input, Row, Select, Space , InputNumber , Upload} from 'antd';
+import {
+    message,
+    Checkbox,
+    Button,
+    Modal,
+    ConfigProvider,
+    Col,
+    DatePicker,
+    TimePicker,
+    Form,
+    Input,
+    Row,
+    Select,
+    Space,
+    InputNumber,
+    Upload,
+    Image
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import api from '../api/api';
 import ReactQuill from 'react-quill';
@@ -17,6 +34,7 @@ const EditCourse = ({courseId,fetchData}) => {
     const [infoBox , setInfoBox] = useState(false);
     var [categories,setCategories] = useState([]);
     var [courselevels,setCourseLevels] = useState([]);
+    var [coursedata,setCourseData] = useState({});
     var [days,setDays] = useState([]);
     var [trainers,setTrainers] = useState([]);
     var [types,setTypes] = useState([]);
@@ -55,6 +73,7 @@ const EditCourse = ({courseId,fetchData}) => {
                     console.log(data);
                     console.log([moment(data.course.starttime,"HH:mm:ss"),moment(data.course.endtime,"HH:mm:ss")]);
                     setCategories(data.categories);
+                    setCourseData(data.course);
                     setCourseLevels(data.courselevels);
                     setDays(data.days);
                     setTrainers(data.trainers);
@@ -68,18 +87,18 @@ const EditCourse = ({courseId,fetchData}) => {
                         passcode: data.coursecontact.passcode ? data.coursecontact.passcode : null,
                         videoCount: data.coursecontact.videoCount ? data.coursecontact.videoCount : null,
                         videoPoint: data.coursecontact.videoPoint ? data.coursecontact.videoPoint : null,
-                        name: data.course.name,
+                        name: coursedata.name,
                         trainer_id: data.course.trainer_id,
-                        category_id: data.course.category_id,
-                        level_id: data.course.level_id,
+                        category_id: coursedata.category_id,
+                        level_id: coursedata.level_id,
                         // coursetype_id: data.course.coursetype_id,
                         // time : [moment(data.course.starttime,"HH:mm:ss"),moment(data.course.endtime,"HH:mm:ss")],
                         // date : [moment(data.course.startdate,"YYYY/MM/DD"),moment(data.course.enddate,"YYYY/MM/DD")],
-                        fee: data.course.fee,
-                        paymentPoint: data.course.paymentPoint,
-                        bonousPoint: data.course.bonousPoint,
-                        attendedPoint: data.course.attendedPoint,
-                        leavePoint: data.course.leavePoint,
+                        fee: coursedata.fee,
+                        paymentPoint: coursedata.paymentPoint,
+                        bonousPoint: coursedata.bonousPoint,
+                        attendedPoint: coursedata.attendedPoint,
+                        leavePoint: coursedata.leavePoint,
                         days : data.coursedays.map(function(day){
                             return day.day_id;
                         }),
@@ -694,24 +713,49 @@ const EditCourse = ({courseId,fetchData}) => {
                                     <Button icon={<UploadOutlined />}>Select File</Button>
                                 </Upload>
                             </Form.Item>
-                            {previewUrl && (
-                                <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
-                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
-                                </div>
-                            )}
+
                         </Col>
-                    </Row>
+                    <Col span={24}>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                {previewUrl && (
+                                    <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
+                                        <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                                    </div>
+                                )}
+                            </Col>
+                            <Col span={12}>
+                                <div
+                                    className={`mb-3 p-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
+                                    <Image
+                                        width={"100%"}
+                                        height={"400px"}
+                                        style={
+                                            {
+                                                objectFit: "cover",
+                                            }
+                                        }
+                                        public_id={`${coursedata.public_id}`}
+                                        src={`${coursedata.image}`}
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
+
+
+                    </Col>
+                </Row>
                 <div className='flex justify-end'>
                     <Space>
                         <SubmitButton form={form}>Submit</SubmitButton>
                         <Button htmlType="reset" onClick={
-                            ()=>{
+                            () => {
                                 setPreviewUrl(null);
                             }
                         }>Reset</Button>
                     </Space>
                 </div>
-               
+
             </Form>
         </Modal>
         </>

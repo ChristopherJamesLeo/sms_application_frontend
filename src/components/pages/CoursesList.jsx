@@ -89,13 +89,14 @@ export default function Courses({title}){
             width: 200,
             dataIndex: 'name',
             key: 'name',
+            fixed: 'left',
         },
         {
             title: 'Categorie',
             width: 200,
             dataIndex: 'categorie',
             key: 'categorie',
-            fixed: 'left',
+
         },
         {
             title: 'Course Id',
@@ -155,6 +156,7 @@ export default function Courses({title}){
             width: 200,
             dataIndex: 'action',
             key: 'updatedaction_at',
+            fixed: 'right',
         },
     ]
     // end demo 

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Table , message } from 'antd';
+import {Table, message, Image} from 'antd';
 import "./../CustomCss/tablestyle.css";
 import api from '../api/api';
 
@@ -42,7 +42,6 @@ export default function PointEnrolls({title}){
                     course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
                     
                     generate_id : item.transactionId,
-                    image : item.image? item.image : null,
                     payment_type : item.paymentType.name,
                     payment_method : item.paymentMethod? item.paymentMethod.name : "Point Pay",
                     stage_id : item.stage.name,
@@ -114,11 +113,6 @@ export default function PointEnrolls({title}){
             title: 'Payment Method',
             dataIndex: 'payment_method',
             key: 'payment_method',
-            width: 150,
-        },{
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
             width: 150,
         },{
             title: 'Stage',

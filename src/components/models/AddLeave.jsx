@@ -97,6 +97,7 @@ const AddLeave = ({fetchData}) => {
 
     // start image preview
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const beforeUpload = (file) => {
         // Read the selected file as a data URL for preview
@@ -106,6 +107,8 @@ const AddLeave = ({fetchData}) => {
         };
         reader.readAsDataURL(file);
 
+        setSelectedFile(file);
+
         // Prevent the file from being uploaded immediately
         return false;
     };
@@ -114,6 +117,7 @@ const AddLeave = ({fetchData}) => {
 
     // start data
     let [dateTime,setDateTime] = useState(null);
+
     const onOk = (value,dateString) => {
         // console.log('onOk: ', dateString);
         setDateTime(dateString);
@@ -127,15 +131,25 @@ const AddLeave = ({fetchData}) => {
 
     async function formHandler(values){
         values.datetime = dateTime;
-        values.id = userId;
         values.user_id = userId;
-        console.log(values);
+
+        const formData = new FormData();
+        formData.append("user_id",userId);
+        formData.append("datetime",dateTime);
+        formData.append("course_id",values.course_id);
+        formData.append("remark",values.remark);
+
+        if (selectedFile) {
+            formData.append('image', selectedFile);
+        }
 
         try {
-            console.log(values);
 
-            const response = await api.post('/leaves', values, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            const response = await api.post('/leaves', formData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('api_token')}` ,
+                    "Content-Type": "multipart/form-data",
+                }
             });
             if (response.data) {
                 console.log(response.data);

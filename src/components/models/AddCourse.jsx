@@ -100,7 +100,7 @@ const AddCourse = ({fetchData}) => {
 
     // start image preview
     const [previewUrl, setPreviewUrl] = useState(null);
-
+    const [selectedFile, setSelectedFile] = useState(null);
     const beforeUpload = (file) => {
         // Read the selected file as a data URL for preview
         const reader = new FileReader();
@@ -108,6 +108,8 @@ const AddCourse = ({fetchData}) => {
             setPreviewUrl(reader.result);
         };
         reader.readAsDataURL(file);
+        setSelectedFile(file);
+
 
         // Prevent the file from being uploaded immediately
         return false;
@@ -117,24 +119,24 @@ const AddCourse = ({fetchData}) => {
 
         var [submittable, setSubmittable] = React.useState(false);
     // start submit button
-    const SubmitButton = ({ form, children }) => {
-
-        // Watch all values
-        const values = Form.useWatch([], form);
-        React.useEffect(() => {
-          form
-            .validateFields({
-              validateOnly: true,
-            })
-            .then(() => setSubmittable(true))
-            .catch(() => setSubmittable(false));
-        }, [form, values]);
-        return (
-          <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
-            {children}
-          </Button>
-        );
-    };
+    // const SubmitButton = ({ form, children }) => {
+    //
+    //     // Watch all values
+    //     const values = Form.useWatch([], form);
+    //     React.useEffect(() => {
+    //       form
+    //         .validateFields({
+    //           validateOnly: true,
+    //         })
+    //         .then(() => setSubmittable(true))
+    //         .catch(() => setSubmittable(false));
+    //     }, [form, values]);
+    //     return (
+    //       <Button type="primary" htmlType="submit" onClick={() => setOpen(false)} disabled={!submittable}>
+    //         {children}
+    //       </Button>
+    //     );
+    // };
 
     // end submit btn
 
@@ -143,30 +145,63 @@ const AddCourse = ({fetchData}) => {
     // start form submit
     async function formHandler(values){
         // console.log(values.date)
+        const formData = new FormData();
         const [startTime, endTime] = values.time;
         const [startDate, endDate] = values.date;
-        values.starttime = startTime.format("HH:mm:ss");
-        values.endtime = endTime.format("HH:mm:ss");
-        values.startdate = startDate.format("DD-MM-YYYY");
-        values.enddate = endDate.format("DD-MM-YYYY");
-        values.syllaby = quillValue;
+        // values.starttime = startTime.format("HH:mm:ss");
+        // values.endtime = endTime.format("HH:mm:ss");
+        // values.startdate = startDate.format("DD-MM-YYYY");
+        // values.enddate = endDate.format("DD-MM-YYYY");
+        // values.syllaby = quillValue;
+        formData.append("name",values.name);
+        formData.append("roomNo",values.roomNo);
+        formData.append("address",values.address);
+        formData.append("googleMap",values.googleMap);
+        formData.append("zoomId",values.zoomId);
+        formData.append("passcode",values.passcode);
+        formData.append("videoCount",values.videoCount);
+        formData.append("videoPoint",values.videoPoint);
+        formData.append("trainer_id",values.trainer_id);
+        formData.append("category_id",values.category_id);
+        formData.append("level_id",values.level_id);
+        formData.append("coursetype_id",values.coursetype_id);
+        formData.append("fee",values.fee);
+        formData.append("paymentPoint",values.paymentPoint);
+        formData.append("bonousPoint",values.bonousPoint);
+        formData.append("attendedPoint",values.attendedPoint);
+        formData.append("leavePoint",values.leavePoint);
+        formData.append("days", Array.from(values.days));
+        formData.append("syllaby", quillValue);
+        formData.append("starttime", startTime.format("HH:mm:ss"));
+        formData.append("endtime", endTime.format("HH:mm:ss"));
+        formData.append("startdate", startDate.format("DD-MM-YYYY"));
+        formData.append("enddate", endDate.format("DD-MM-YYYY"));
+
+
+        if (selectedFile) {
+            formData.append('image', selectedFile);
+        }
         console.log(values);
         try {
-            const response = await api.post('/courses', values , {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            const response = await api.post('/courses', formData , {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('api_token')}`,
+                    'Content-Type': 'multipart/form-data',
+                }
             });
             if (response.data) {
                 if (response.data) {
                     // let data = response.data;
                     fetchData()
-                    success("Course Create Successfu");
+                    success(response.data.message);
+                    console.log(response.data.message);
                 }else {
                     return false;
                 }
             } else {
                 error("Edit failed.");
             }
-    
+
         } catch (err) {
             if (err.response) {
                 if (err.response.status === 404) {
@@ -661,7 +696,8 @@ const AddCourse = ({fetchData}) => {
                     </Row>
                 <div className='flex justify-end'>
                     <Space>
-                        <SubmitButton form={form}>Submit</SubmitButton>
+                        {/*<SubmitButton form={form}>Submit</SubmitButton>*/}
+                        <Button type="primary" htmlType="submit" >Submit</Button>
                         <Button htmlType="reset" onClick={
                             ()=>{
                                 setPreviewUrl(null);

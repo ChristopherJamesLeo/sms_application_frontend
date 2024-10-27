@@ -292,13 +292,14 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                     <div className='w-100 h-54 poster_container'>
                         <Image
                             width={"100%"}
-                            height={"200px"}
+                            height={"300px"}
                             style={
                                 {
-                                    objectFit: "cover"
+                                    objectFit: "cover",
                                 }
                             }
-                            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                            public_id = {`${coursedata.public_id}`}
+                            src={`${coursedata.image}`}
                         />
                     </div>
                     {/* start Course info */}
