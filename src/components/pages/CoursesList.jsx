@@ -29,9 +29,9 @@ export default function Courses({title}){
             const response = await api.get('/courses', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
-            console.log(response.data)
+            // console.log(response.data)
             if (response.data) {
-                console.log(response.data)
+                // console.log(response.data)
                 let data = response.data.courses;
                 let showData = data.map((item, index) => ({
                     key: item.id,
@@ -51,7 +51,7 @@ export default function Courses({title}){
                     updated_at: item.updated_at,
                     action : <EditCourse courseId={item.id} fetchData={fetchingData}  />
                 }));
-                console.log(showData);
+                // console.log(showData);
                 setLoading(false)
                 setfetchData(showData);
                 

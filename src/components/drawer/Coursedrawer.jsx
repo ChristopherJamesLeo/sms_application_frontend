@@ -117,14 +117,14 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
     async function fetchingData(id){
         let getCourseId = id;
         try {
-            console.log(getCourseId);
+            // console.log(getCourseId);
             const response = await api.get(`/courses/${getCourseId}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
-            console.log(response)
+            // console.log(response)
             if (response.data) {
                 
-                console.log(response.data)
+                // console.log(response.data)
                 let data = response.data;
                 setCourseData(data.course);
                 setDays(data.days);
@@ -379,8 +379,9 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                                             <>
                                                 <li className='my-2 flex justify-between'>
 
-                                                    <span>{getDay} </span>
-                                                    <Switch 
+                                                    <span key={idx+1}>{getDay} </span>
+                                                    <Switch
+                                                        key={idx+1}
                                                     size='small'
                                                     defaultChecked={coursedata.courseDays[idx].status_id === 3} 
                                                     onChange={(checked) => dayStatusChange(checked, coursedata.courseDays[idx].id)} />

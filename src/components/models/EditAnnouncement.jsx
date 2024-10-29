@@ -91,6 +91,7 @@ const EditAnnouncement = ({announcement,fetchingData}) => {
         formData.append('title', values.title);
         formData.append('visibility_id', values.visibility_id);
         formData.append('description',quillValue);
+        formData.append("public_id",announcement.public_id);
     
         if (selectedFile) {
             formData.append('image', selectedFile);
@@ -98,10 +99,10 @@ const EditAnnouncement = ({announcement,fetchingData}) => {
     
         try {
             console.log(values);
-            const response = await api.put(`/announcements/${announcement.id}`, formData, {
+            const response = await api.post(`/announcement/update/${announcement.id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('api_token')}`,
-                    // "Content-Type " : 'multipart/form-data',
+                    "Content-Type " : 'multipart/form-data',
                 },
             });
     

@@ -72,7 +72,7 @@ const AddCourse = ({fetchData}) => {
         }
     };
 
-    console.log(categories,courselevels,days,trainers,types);
+    // console.log(categories,courselevels,days,trainers,types);
 
     function openModel(){
         getCourseData();
@@ -93,9 +93,6 @@ const AddCourse = ({fetchData}) => {
         
     }
 
-    function getQuilValue(){
-        console.log(quillValue);
-    }
     // end quill
 
     // start image preview
@@ -144,23 +141,18 @@ const AddCourse = ({fetchData}) => {
 
     // start form submit
     async function formHandler(values){
-        // console.log(values.date)
+        console.log(values)
         const formData = new FormData();
         const [startTime, endTime] = values.time;
         const [startDate, endDate] = values.date;
-        // values.starttime = startTime.format("HH:mm:ss");
-        // values.endtime = endTime.format("HH:mm:ss");
-        // values.startdate = startDate.format("DD-MM-YYYY");
-        // values.enddate = endDate.format("DD-MM-YYYY");
-        // values.syllaby = quillValue;
         formData.append("name",values.name);
-        formData.append("roomNo",values.roomNo);
-        formData.append("address",values.address);
-        formData.append("googleMap",values.googleMap);
-        formData.append("zoomId",values.zoomId);
-        formData.append("passcode",values.passcode);
-        formData.append("videoCount",values.videoCount);
-        formData.append("videoPoint",values.videoPoint);
+        formData.append("roomNo",values.roomNo !== undefined ? values.roomNo : null);
+        formData.append("address",values.address !== undefined ? values.address : null);
+        formData.append("googleMap",values.googleMap !== undefined  ? values.googleMap : null);
+        formData.append("zoomId",values.zoomId !== undefined ? values.zoomId : null);
+        formData.append("passcode",values.passcode !== undefined ? values.passcode : null);
+        formData.append("videoCount",values.videoCount !== undefined ? values.videoCount : null);
+        formData.append("videoPoint",values.videoPoint !== undefined ? values.videoPoint : null);
         formData.append("trainer_id",values.trainer_id);
         formData.append("category_id",values.category_id);
         formData.append("level_id",values.level_id);
@@ -221,7 +213,6 @@ const AddCourse = ({fetchData}) => {
     
     function classTypeHandler(value) {
         setInfoBox(value);
-        
       }
     function infoBoxHandler(type ){
         
@@ -693,7 +684,7 @@ const AddCourse = ({fetchData}) => {
                                 </div>
                             )}
                         </Col>
-                    </Row>
+                </Row>
                 <div className='flex justify-end'>
                     <Space>
                         {/*<SubmitButton form={form}>Submit</SubmitButton>*/}
