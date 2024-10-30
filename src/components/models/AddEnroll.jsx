@@ -233,6 +233,7 @@ const AddEnroll = ({fetchData}) => {
         setPaymentType(null);
         setCourses(null);
         setUserData({})
+        setSelectedFile(null);
     };
 
     // end form reset
@@ -248,7 +249,7 @@ const AddEnroll = ({fetchData}) => {
         formData.append("regId",values.regId);
         formData.append("course_id",values.course_id);
         formData.append("payment_type_id",values.payment_type_id);
-        formData.append("payment_method_id",values.payment_method_id);
+        formData.append("payment_method_id",values.payment_method_id ? values.payment_method_id : null);
         formData.append("remark",values.remark);
         if (selectedFile) {
             formData.append('image', selectedFile);
@@ -271,6 +272,7 @@ const AddEnroll = ({fetchData}) => {
                     return false;
                 }else {
                     success(response.data.message);
+                    console.log(response.data.message);
                     onReset();
                     setOpen(false);
                     fetchData();

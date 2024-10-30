@@ -705,11 +705,30 @@ const EditCourse = ({courseId,fetchData}) => {
                                     <Button icon={<UploadOutlined />}>Select File</Button>
                                 </Upload>
                             </Form.Item>
-                            {previewUrl && (
-                                <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
-                                    <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
-                                </div>
-                            )}
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Image
+                                        width={"100%"}
+                                        height={"300px"}
+                                        style={
+                                            {
+                                                objectFit: "cover",
+                                            }
+                                        }
+                                        public_id = {`${coursedata.public_id}`}
+                                        src={`${coursedata.image}`}
+                                    />
+                                </Col>
+                                <Col span={12}>
+                                    {previewUrl && (
+                                        <div className={`mb-3 py-3 w-100 flex justify-center border-dashed border-2 border-gray-200 `}>
+                                            <img src={previewUrl} alt="Image preview" style={{ maxWidth: '300px', maxHeight: '300px' , }} />
+                                        </div>
+                                    )}
+                                </Col>
+                            </Row>
+
+
                         </Col>
                     </Row>
                     <div className='flex justify-end'>

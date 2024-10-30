@@ -127,6 +127,7 @@ const AddLeave = ({fetchData}) => {
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null);
+        setSelectedFile(null);
     };
 
     async function formHandler(values){

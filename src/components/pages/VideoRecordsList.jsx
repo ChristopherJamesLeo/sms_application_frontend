@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState , useMemo} from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message , Switch , Tooltip} from 'antd';
+import { Table , message , Switch , Tooltip , Button} from 'antd';
 import api from '../api/api';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
@@ -13,6 +13,9 @@ import EditRecordVideo,{DeleteRecordVideo} from '../models/EditRecordVideo';
 import RecordVideoExport from '../export/RecordVideoExport';
 import UserSearch from "../inputs/UserSearch";
 import Coursedrawer from '../drawer/Coursedrawer';
+
+
+
 
 export default function Videorecords({title}){
     const [data, setfetchData] = useState([]);
@@ -90,7 +93,7 @@ export default function Videorecords({title}){
         }
     };
     // end fetching Data
-    console.log(courses);
+    // console.log(courses);
 
     const [arrow, setArrow] = useState('Show');
     const mergedArrow = useMemo(() => {
@@ -105,6 +108,8 @@ export default function Videorecords({title}){
       };
     }, [arrow]);
 
+
+
     
     // update data 
     function updateDate(videodata){
@@ -117,17 +122,23 @@ export default function Videorecords({title}){
             course_id :  <Coursedrawer courseId = {item.course.id} name={item.course.name} />,
             video_link:  <Tooltip
                             placement="right"
-                            title={<a href={`${item.link}`} target='blank'>{item.link}</a>}
+                            title={<a onClick={()=>{
+                                downLoadVideo(item.id)
+                            }} >{item.link}</a>}
                             arrow={mergedArrow}>
-                            <a href={`${item.link}`} target='blank'>{item.link.substring(0, 25)+"..."}</a>
+                            <a onClick={()=>{
+                                downLoadVideo(item.id)
+                            }} target='blank'>{item.link.substring(0, 25)+"..."}</a>
                         </Tooltip>,
             date_time : item.datetime,
-            remark : <Tooltip
-                        placement="right"
-                        title={<div dangerouslySetInnerHTML={{ __html: item.remark }} />}
-                        arrow={mergedArrow}>
-                        <div dangerouslySetInnerHTML={{ __html: item.remark.substring(0,20)+"..." }} />
-                    </Tooltip>,
+            remark : <div>
+                <Tooltip
+                    placement="right"
+                    title={<div dangerouslySetInnerHTML={{ __html: item.remark }} />}
+                    arrow={mergedArrow}>
+                    <div dangerouslySetInnerHTML={{ __html: item.remark.substring(0,20)}} />
+                </Tooltip>
+            </div> ,
             count : item.count,
             admit_by : item.user.name,
             visibility : item.visibility.name,
@@ -148,6 +159,81 @@ export default function Videorecords({title}){
     // console.log(courses);
 
     // end update data
+
+
+    // start bulk delete
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+
+    async function bulkdelete(){
+        // console.log('selectedRowKeys changed: ', selectedRowKeys);
+        try {
+            // console.log("hello");
+
+            const response = await api.post('/video/bulkdelete',selectedRowKeys ,{
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            console.log(response.data)
+            if (response.data) {
+                fetchingData();
+                setSelectedRowKeys([]);
+                success(response.data.message);
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+    // end bulk delete
+
+    // download video
+    async function downLoadVideo(id){
+        console.log('downLoadVideo', id);
+        try {
+            // console.log("hello");
+
+            const response = await api.get(`/videos/download/${id}`,{
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+
+            if (response.data) {
+                fetchingData()
+                success(response.data.message);
+                window.open(response.data.link, '_blank');
+            } else {
+                error("Data fetching failed.");
+            }
+        } catch (err) {
+            if (err.response) {
+                error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+    // end download video
+
 
     useEffect(() => {
         fetchingData();
@@ -232,10 +318,17 @@ export default function Videorecords({title}){
                     <AddRecordVideo courses={courses} fetchingData={fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
+                    {/*start bulk delete*/}
+                    <Button type="primary" onClick={bulkdelete}  disabled={!hasSelected} >
+                        Bulk Delete
+                    </Button>
+                    {/*{hasSelected ? `Selected ${selectedRowKeys.length} items` : null}*/}
+                    {/*end bulk delete*/}
                     <RecordVideoExport courses={courses} updateData = {updateDate}/>
                 </div>
             </div>
             <Table
+                rowSelection={rowSelection}
                 bordered
                 dataSource={data}
                 columns={columns}

@@ -89,7 +89,7 @@ export default function Realnames({title}){
             key: item.id,
             no: index + 1,
             id: item.id,
-            student_id: item.regnumber,
+            student_id: <Userlistdrawer userid = {item.id}  name={item.regnumber} />,
             realname: item.verification ? item.verification.realname : null ,
             card_number: item.verification ? item.verification.card_number : null ,
             admit_by : item.admit_by ? item.admit_by.name : null ,

@@ -19,7 +19,7 @@ export default function EditRecordVideo({videoLink,videoDate,videoId,videoRemark
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
 
-    console.log(videoId,courseId,visibility_id)
+    // console.log(videoId,courseId,visibility_id)
     // start data
     let [dateTime,setDateTime] = useState(null);
     const onOk = (value,dateString) => {
@@ -88,7 +88,7 @@ export default function EditRecordVideo({videoLink,videoDate,videoId,videoRemark
         }
     }
 
-    console.log( formInitialVal );
+    // console.log( formInitialVal );
 
     const formHandler = async (values) => {
         values.datetime = dateTime;

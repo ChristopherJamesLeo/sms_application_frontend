@@ -40,6 +40,7 @@ export default function Courses({title}){
                     name: <Coursedrawer fetchData={fetchingData} courseId = {item.id} name={item.name} />,
                     categorie: item.category.name,
                     regId: item.regId,
+                    totalDownLoadCount: item.totalVideoDownloadCount,
                     user_id: item.user.name,
                     trainer: item.trainer.name,
                     type_id: item.courseType.name,
@@ -103,6 +104,12 @@ export default function Courses({title}){
             width: 200,
             dataIndex: 'regId',
             key: 'regId',
+        },
+        {
+            title: 'Download Count',
+            width: 200,
+            dataIndex: 'totalDownLoadCount',
+            key: 'totalDownLoadCount',
         },
         {
             title: 'Post By',

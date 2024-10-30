@@ -124,7 +124,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
             // console.log(response)
             if (response.data) {
                 
-                // console.log(response.data)
+                console.log(response.data)
                 let data = response.data;
                 setCourseData(data.course);
                 setDays(data.days);
@@ -305,7 +305,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                     {/* start Course info */}
                     <ul className="mb-4 flex gap-x-3">
                         {/*<li>Course View - 1</li> |*/}
-                        {/*<li>Like - 2 </li> |*/}
+                        <li>Download Video Count - {coursedata.totalVideoDownloadCount} </li> |
                         <li><EnrollDrawer postId={coursedata? coursedata.id : null} name={"Enrolls"}/>  - {enrollCount} </li> |
                         <li><Postcomments postId={2} name={"Comments"}/> - 3 </li> |
                         <li><GlobalOutlined /> <ChangeVisibility 
