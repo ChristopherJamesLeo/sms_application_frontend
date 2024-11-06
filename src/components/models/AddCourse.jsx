@@ -328,6 +328,39 @@ const AddCourse = ({fetchData}) => {
                     </Col>
                 </Row>
             )
+        }else if(type == 3){
+            return (
+                <Row gutter={16} className='online_class'>
+                    <Col span={12}>
+                        <Form.Item
+                            name="videoCount"
+                            label="Video Count"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please enter video count',
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter video count" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="videoPoint"
+                            label="Video Point"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please enter Video Point',
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Please Enter Passcode" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            )
         }
     }
 

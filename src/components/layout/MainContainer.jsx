@@ -59,6 +59,7 @@ import LeadAttendancesList from '../pages/LeadAttendancesList';
 
 import Theme from '../settings/Theme';
 import Statues from '../settings/Statuses';
+import Prefixes from '../settings/Prefixes';
 import Stages from '../settings/Stages';
 import Categories from '../settings/Categories';
 import Days from '../settings/Days';
@@ -412,6 +413,9 @@ const MainLayout = () => {
           {
             key: '20',
             label: <Link to="/statuses">Statuses</Link>,
+          },{
+            key: '193743',
+            label: <Link to="/prefixes">Prefixes</Link>,
           },
           {
             key: '21',
@@ -802,6 +806,7 @@ const MainLayout = () => {
 
                 <Route path='/themes' element={<Theme title="Theme Setting" />}/>
                 <Route path='/statuses' element={<Statues title="Statuses" />}/>
+                <Route path='/prefixes' element={<Prefixes title="Prefixes" />}/>
                 <Route path='/stages' element={<Stages title="Stages" />}/>
                 <Route path='/categories' element={<Categories title="Categories" />}/>
                 <Route path='/days' element={<Days title="Days" />}/>

@@ -214,9 +214,12 @@ export default function Videorecords({title}){
             });
 
             if (response.data) {
-                fetchingData()
+
                 success(response.data.message);
+                console.log(response.data);
+                console.log(response.data.link);
                 window.open(response.data.link, '_blank');
+                fetchingData()
             } else {
                 error("Data fetching failed.");
             }
