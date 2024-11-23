@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table , message , Tag} from 'antd';
-import "./../CustomCss/tablestyle.css";
-import Adduser from '../models/Adduser';
-import UserSearch from "../inputs/UserSearch";
-import api from '../api/api';
+import "./../../CustomCss/tablestyle.css";
+import Adduser from './../../models/Adduser';
+import UserSearch from "./../../inputs/UserSearch";
+import api from './../../api/api';
 
-import Userlistdrawer from '../drawer/UserDrawer';
-import UserExport from '../export/UserExport';
+import Userlistdrawer from './../../drawer/UserDrawer';
+import UserExport from './../../export/UserExport';
 
 export default function Userstable({title}){
     const [data, setfetchData] = useState([]);

@@ -24,7 +24,7 @@ import { logout } from '../authantication/Auth';
 import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
 
-import Userstable from '../pages/UserList';
+import UserList from "./../userManagement/user/UserList";
 import StaffLists from '../pages/StaffLists';
 
 import Overview from '../pages/Overview';
@@ -764,7 +764,7 @@ const MainLayout = () => {
               
                 <Route path='/dashboard' element={<Overview title="Overview" />}/>
                 
-                <Route path='/userlists' element={<Userstable title="User Lists" />}/>
+                <Route path='/userlists' element={<UserList title="User Lists" />}/>
                 <Route path='/stafflists' element={<StaffLists title="Staff Lists" />}/>
 
                 <Route path='/orderlists' element={<Orders title="Order Lists" />}/>
