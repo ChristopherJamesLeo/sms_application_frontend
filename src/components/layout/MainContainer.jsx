@@ -76,6 +76,7 @@ import Operationplatform from '../settings/OperationPlatforms';
 import Surveyplatform from '../settings/SurveyPlatforms';
 import Gpagrades from '../settings/GpaGrades';
 import IpBanList from '../pages/IpBanList';
+import AdminAccessIP from '../pages/AdminAccessIP';
 
 import Login from '../authantication/Login';
 import ServiceTypes from '../settings/ServiceTypes';
@@ -322,6 +323,10 @@ const MainLayout = () => {
           {
             key: '213',
             label: <Link to="/ipbanlists">IP Ban List</Link>,
+          },
+          {
+            key: Math.floor(Math.random()*100),
+            label: <Link to="/adminaccessips">Admin Access Ips</Link>,
           },
           {
             key: '12',
@@ -793,6 +798,7 @@ const MainLayout = () => {
                 <Route path='/deviceinfos' element={<Deviceinfos title="User Device Info" />}/>
                 <Route path='/verificationlogs' element={<Verificationlogs title="Verification Logs" />}/>
                 <Route path="/ipbanlists" element={<IpBanList title={"IP Ban List"} />} />
+                <Route path="/adminaccessips" element={<AdminAccessIP title={"Admin Access IPs"} />} />
 
                 <Route path='/invitations' element={<Invitations title="Invitation List" />}/>
 
