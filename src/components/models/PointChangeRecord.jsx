@@ -46,10 +46,12 @@ const PointChangeRecord = ({userid}) => {
                     sender :  <Userlistdrawer userid = {item.sender.id}  name={item.sender.name} /> ,
                     receiver :  <Userlistdrawer userid = {item.receiver.id}  name={item.receiver.name} />,
                     generate_id : item.generate_id,
+                    before :  item.before,
                     amount :  item.amount,
+                    after :  item.after,
                     stage : item.stage.name,
-                    remark : item.description,
                     datetime : item.created_at,
+                    remark : item.description,
                 }));
                 console.log(showData);
                 setLoading(false)
@@ -93,32 +95,40 @@ const PointChangeRecord = ({userid}) => {
             dataIndex: 'receiver',
             key: 'receiver',
         },{
-            title: 'Amount',
-            width: 150,
-            dataIndex: 'amount',
-            key: 'amount',
-        },{
             title: 'Transaction Id',
-            width: 150,
+            width: 200,
             dataIndex: 'generate_id',
             key: 'generate_id',
         },{
-            title: 'Stage',
+            title: 'Before Amount',
+            width: 150,
+            dataIndex: 'before',
+            key: 'before',
+        },{
+            title: 'Transaction Amount',
+            width: 200,
+            dataIndex: 'amount',
+            key: 'amount',
+        },{
+            title: 'After Amount',
+            width: 150,
+            dataIndex: 'after',
+            key: 'after',
+        },{
+            title: 'Transaction Type',
             width: 150,
             dataIndex: 'stage',
             key: 'stage',
-        },
-        {
-            title: 'Remark',
-            width: 200,
-            dataIndex: 'remark',
-            key: 'remark',
-        },
-        {
+        },{
             title: 'Date and Time',
             dataIndex: 'datetime',
             key: 'datetime',
-            width: 150,
+            width: 250,
+        },{
+            title: 'Remark',
+            width: 300,
+            dataIndex: 'remark',
+            key: 'remark',
         },
 
 
@@ -157,7 +167,7 @@ const PointChangeRecord = ({userid}) => {
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => setOpen(false)}
-                width={1300}
+                width={1500}
                 footer={null}
             >
                 <Table
