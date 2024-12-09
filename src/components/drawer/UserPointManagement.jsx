@@ -13,11 +13,13 @@ export default function UserPointManagement({ userdata, userid }) {
     const notify = (type, msg) => messageApi.open({ type, content: msg });
 
     const handleFormSubmit = async (url, values, onSuccess) => {
+        console.log(values);
         try {
             const { data } = await api.put(url, { ...values, user_id: userid }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('api_token')}` }
             });
             if (data?.userpoint) {
+                console.log("success");
                 setUserPoint(data.userpoint);
                 onSuccess();
             }
