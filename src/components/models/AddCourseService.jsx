@@ -1,44 +1,56 @@
 
 
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Button, Modal , Col, DatePicker, Form, Input, Row, Select, Space , message} from 'antd';
 import axios from 'axios';
 import $ from "jquery";
-const AddCourseService = () => {
+import api from '../api/api';
+
+const AddCourseService = ({categories,servicePlatforms,fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-        messageApi.open({
-          type: 'success',
-          content: 'User Add Successful',
-        });
-    };
-    const error = () => {
-        messageApi.open({
-          type: 'error',
-          content: 'User Add Fail',
-        })
+    const success = (msg) => messageApi.open({ type: 'success', content: msg });
+    const error = (msg) => messageApi.open({ type: 'error', content: msg });
+
+    const onReset = () => form.resetFields();
+
+
+
+    const formHandler = async (values) => {
+        values.service_type_id = 2;
+        try {
+            const response = await api.post('/services', values, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+            });
+            if (response.data) {
+                if (response.data) {
+                    console.log("done")
+                    form.resetFields();
+                    setOpen(false);
+                    success(response.data.message);
+                    fetchData();
+                }
+            } else {
+                error("Edit failed.");
+            }
+    
+        } catch (err) {
+            if (err.response) {
+                if (err.response.status === 404) {
+                    error("Resource not found (404).");
+                } else {
+                    error(`Error: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                error("No response received from server.");
+            } else {
+                error("Error in setting up request.");
+            }
+        }
     };
 
-    const onReset = () => {
-        form.resetFields();
-    };
-
-    function formHandler(values){
-        const url = "https://666f5437f1e1da2be52288af.mockapi.io/SMS/users";
-        axios.post(url, values)
-        .then(response => {
-            console.log('Data successfully posted:', response.data);
-            onReset();
-            setOpen(false);
-            success();
-        }).catch(error => {
-           
-            error();
-        });
-    }
   return (
     <>
         <Button type="primary" onClick={() => setOpen(true)}>
@@ -68,14 +80,19 @@ const AddCourseService = () => {
                             ]}
                         >
                             <Select placeholder="Choose Class" >
-                                <Option value="1">Web development</Option>
-                                <Option value="2">Linux</Option>
+                                {
+                                    categories.map(function(categorie){
+                                        return (
+                                            <Option key={Math.floor(Math.random()*1000)} value={categorie.id} >{categorie.name}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={24}>
                         <Form.Item
-                            name="service_platform"
+                            name="service_platform_id"
                             label="Choose Platform"
                             rules={[
                             {
@@ -85,8 +102,13 @@ const AddCourseService = () => {
                             ]}
                         >
                             <Select placeholder="Choose Platform" >
-                                <Option value="1">Telegram</Option>
-                                <Option value="2">Messanger</Option>
+                            {
+                                    servicePlatforms.map(function(servicePlatform){
+                                        return (
+                                            <Option key={Math.floor(Math.random()*1000)} value={servicePlatform.id} >{servicePlatform.name}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>

@@ -186,6 +186,7 @@ const AddCourse = ({fetchData}) => {
                     // let data = response.data;
                     fetchData()
                     success(response.data.message);
+                    setOpen(false);
                     console.log(response.data.message);
                 }else {
                     return false;

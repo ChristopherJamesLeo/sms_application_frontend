@@ -92,6 +92,7 @@ const EditCourse = ({courseId,fetchData}) => {
                 setTypes(data.types);
                 setQuillValue(data.syllabus.syllaby);
                 setInfoBox(data.course.course_type);
+                
 
                 // const startDate = moment(data.course.startdate, "DD-MM-YYYY");
                 // const endDate = moment(data.course.enddate, "DD-MM-YYYY");
@@ -335,9 +336,9 @@ const EditCourse = ({courseId,fetchData}) => {
             });
             if (response.data) {
                 if (response.data) {
-                    // let data = response.data;
                     fetchData()
                     success("Course Update Successfu");
+                    setOpen(false);
                     console.log(response.data);
                 }else {
                     return false;

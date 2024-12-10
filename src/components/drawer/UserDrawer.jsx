@@ -72,7 +72,7 @@ const isAdmin = (con , userid) => {
 const Userlistdrawer = ({fetchData,name,userid}) => {
 
     // console.log(name,userid);
-    var [condition, setCondition] = useState(true); 
+    var [condition, setCondition] = useState(null); 
     var [permission, setAdmin] = useState(true);
 
     var [open, setOpen] = useState(false);
@@ -165,7 +165,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     // console.log(response.data.data);
                     const data = response.data;
                     // console.log(data.user);
-                    console.log(response.data);
+                    console.warn(response.data);
                     setData(data);
                     setDisabled(data.status_id === 12 ? false : true)
                     setUserEnrolls(data.enrolls)
@@ -173,6 +173,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     isAdmin(data.user.role_id);
                     setCondition(data.user.is_verify);
                     setloading(false);
+                    console.log(data.user.is_verify)
                 }
             } else {
                 error("Edit failed.");
@@ -192,7 +193,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
             }
         }
     };
-    // console.log(data);
+
 
     // start rating
     function ratingFun(){

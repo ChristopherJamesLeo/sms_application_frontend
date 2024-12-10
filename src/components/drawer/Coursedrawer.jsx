@@ -53,6 +53,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
     var [days,setDays] = useState([]);
     var [enrollCount,setEnrollCount] = useState(0);
     var [coursedata,setCourseData] = useState({});
+    const [contactLinks, setContactLinks] = useState([]);
 
 
 
@@ -128,8 +129,9 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                 let data = response.data;
                 setCourseData(data.course);
                 setDays(data.days);
-                setEnrollCount(data.enrollCount)
-                setloading(false)
+                setEnrollCount(data.enrollCount);
+                setContactLinks(data.course.services);
+                setloading(false);
                 
             } else {
                 error("Data fetching failed.");
@@ -266,7 +268,7 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
             <Drawer
                 // title={`Name : ${data.address ? data.address.street : "Loading..."}`}
                 title={`Name : ${ name ? name : "Loading..."}`}
-                width={1000}
+                width={1200}
                 onClose={onClose}
                 loading = {Boolean(isLoading)}
                 open={open}
@@ -319,11 +321,11 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                     </ul>
                     {/* <CommentBox coursedata = {coursedata}/> */}
                         
-                    <div className="mb-3 flex justify-between">
+                    <div className="mb-3 flex justify-between space-x-3">
                         
                         <ul className='' style={
                             {
-                                width: "25%"
+                                width: "20%"
                             }
                         }>
                             <h3 className='text-lg mb-3 '>Course Info</h3>
@@ -391,6 +393,20 @@ const Coursedrawer = ({fetchData,courseId, name}) => {
                                     })
                                     
                                 }
+                        </ul>
+                        <ul className='' style={
+                            {
+                                width: "25%"
+                            }
+                        }>
+                            <h3 className='text-lg mb-3'>Contact Links</h3>
+                            {
+                                contactLinks.map(function(contactLink){
+                                    return (
+                                        <li key={Math.floor(Math.random()*1000)}><a href={contactLink.name} target="_blank">{contactLink.serviceplatform.name}</a>  </li>
+                                    )
+                                })
+                            }
                         </ul>
 
 

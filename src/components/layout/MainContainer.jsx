@@ -70,6 +70,7 @@ import Genders from '../settings/Genders';
 import Coursetypes from '../settings/CourseTypes';
 import CourseLevel from '../settings/CourseLevel';
 import Paymentstype from '../settings/PaymentTypes';
+import ServicePlatform from '../settings/ServicePlatforms';
 
 import Paymentmethods from '../settings/PaymentMethods';
 import Operationplatform from '../settings/OperationPlatforms';
@@ -474,6 +475,9 @@ const MainLayout = () => {
           {
             key: '31',
             label: <Link to="/surveyplatforms">Survey Platform</Link>,
+          },{
+            key: Math.floor(Math.random()*1000),
+            label: <Link to="/serviceplatforms">Service Platform</Link>,
           },
           {
             key: '210',
@@ -826,6 +830,7 @@ const MainLayout = () => {
                 <Route path='/paymentmethods' element={<Paymentmethods title="Payment Methods" />}/>
                 <Route path='/operationplatforms' element={<Operationplatform title="Operation Platforms" />}/>
                 <Route path='/surveyplatforms' element={<Surveyplatform title="Survey Platforms" />}/>
+                <Route path='/serviceplatforms' element={<ServicePlatform title="Service Platforms" />}/>
                 <Route path='/servicetypes' element={<ServiceTypes title="Service Types" />}/>
                 <Route path='/grades' element={<Gpagrades title="GPA Grades" />}/>
 
