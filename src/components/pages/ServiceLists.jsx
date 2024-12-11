@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table , message } from 'antd';
+import { Table , message , Switch} from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
-import AddCourseService from '../models/AddCourseService';
+import AddService,{EditService,DeleteService} from '../models/AddService';
 import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
@@ -14,24 +14,61 @@ export default function ServiceLists({title}){
     const [data, setfetchData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
+    let [categories, setCategories] = useState([]);
+    let [servicePlatforms, setServicePlatforms] = useState([]);
     const [messageApi, contextHolder] = message.useMessage();
 
     var success = (msg) => messageApi.open({ type: 'success', content: msg });
     var error = (msg) => messageApi.open({ type: 'error', content: msg });
 
+        // start active switch
+        const onChange = async (checked, idx) => {
+            // console.log(idx);
+            let statusId = checked ? 3 : 4; 
+            // console.log("status id is", statusId);
+            
+            let values = {
+                id: idx,
+                status_id: statusId
+            };
+            
+            try {
+                const response = await api.put(`/services/status/${idx}`, values, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
+                });
+                if (response.data) {
+                    success("Edit successful");
+                } else {
+                    error("Edit failed.");
+                }
+        
+            } catch (err) {
+                if (err.response) {
+                    error(err.response.status === 404 ? "Resource not found (404)." : `Error: ${err.response.status}`);
+                } else if (err.request) {
+                    error("No response received from server.");
+                } else {
+                    error("Error in setting up request.");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        // end active switch
 
     // start fetching data
     const fetchingData = async () => {
         try {
-
 
             const response = await api.get('/service/customerservice', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });
             console.log(response.data)
             if (response.data) {
-                console.log(response.data)
-                updateDate(response.data);
+                updateDate(response.data.services);
+                setCategories(response.data.categories);
+                setCategories(response.data.categories);
+                setServicePlatforms(response.data.servicePlatforms);
             } else {
                 error("Data fetching failed.");
             }
@@ -56,13 +93,19 @@ export default function ServiceLists({title}){
             key: item.id,
             no: index + 1,
             id: item.id,
-            name : item.course.name,
             link : <a href={item.name} className="text-blue-500" target='_blank'>{item.name}</a>,
             servicetype : item.servicetype.name,
+            serviceplatform : item.serviceplatform.name,
             user_id: item.user.name,
-            status_id : item.status.name,
+            status_id: (
+                <Switch 
+                    defaultChecked={item.status.id === 3} 
+                    onChange={(checked) => onChange(checked, item.id)} 
+                />
+            ),
             created_at : item.created_at,
             updated_at : item.updated_at,
+            action : <div className='flex space-x-2 justify-center'><EditService id={item.id} fetchData = {fetchingData}/><DeleteService id={item.id} fetchData={fetchingData} /></div> 
             
         }));
         console.log(showData);
@@ -84,16 +127,15 @@ export default function ServiceLists({title}){
             fixed: 'left',
         },
         {
-            title: 'Course Title',
-            width: 200,
-            dataIndex: 'name',
-            key: 'name',
-            fixed: 'left',
-        },
-        {
             title: 'Link',
             dataIndex: 'link',
             key: 'link',
+            width: 150,
+        },
+        {
+            title: 'Platform',
+            dataIndex: 'serviceplatform',
+            key: 'serviceplatform',
             width: 150,
         },
         {
@@ -126,6 +168,12 @@ export default function ServiceLists({title}){
             key: 'updated_at',
             width: 150,
         },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            width: 150,
+        },
     ];
 
     let tableWidth = 0 ;
@@ -141,10 +189,9 @@ export default function ServiceLists({title}){
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
                     {contextHolder}
-                    <AddCourseService/>
+                    <AddService  categories={categories} servicePlatforms={servicePlatforms} fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
-                    <UserSearch/>
                 </div>
             </div>
             <Table

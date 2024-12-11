@@ -6,7 +6,7 @@ import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
 import Userlistdrawer from '../drawer/UserDrawer';
-import AddCourseService from '../models/AddCourseService';
+import AddCourseService,{EditCustomerService,DeleteCustomerService} from '../models/AddCourseService';
 import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
@@ -109,6 +109,7 @@ export default function Courseservices({title}){
             ),
             created_at : item.created_at,
             updated_at : item.updated_at,
+            action : <div className='flex space-x-2 justify-center'><EditCustomerService id={item.id} fetchData = {fetchingData}/><DeleteCustomerService id={item.id} fetchData={fetchingData} /></div>
             
         }));
         console.log(showData);
@@ -176,6 +177,12 @@ export default function Courseservices({title}){
             title: 'Updated At',
             dataIndex: 'updated_at',
             key: 'updated_at',
+            width: 150,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
             width: 150,
         },
     ];
