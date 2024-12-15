@@ -230,8 +230,8 @@ const AddEnroll = ({fetchData}) => {
     const onReset = () => {
         form.resetFields();
         setPreviewUrl(null); // Clear the preview image
-        setPaymentType(null);
-        setCourses(null);
+        setPaymentType([]);
+        setCourses([]);
         setUserData({})
         setSelectedFile(null);
     };
@@ -314,9 +314,9 @@ const AddEnroll = ({fetchData}) => {
                     setOpen(false)
                     form.resetFields();
                     setPreviewUrl(null);
-                    setPaymentType(null);
+                    setPaymentType([]);
                     setUserId(null);
-                    setCourses(null);
+                    setCourses([]);
                     setUserData({});
                 }}
                 footer={null}

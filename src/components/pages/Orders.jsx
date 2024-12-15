@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table , message , Tag , Switch} from 'antd';
 import "./../CustomCss/tablestyle.css";
-import Adduser from '../models/Adduser';
+import AddPackageOrder from '../models/AddPackageOrder';
 import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
@@ -166,8 +166,7 @@ export default function Orders({title}){
             <h2 className='table_title'>{title}</h2>
             <div className="my-4 ">
                 <div className='mb-3 flex gap-x-2'>
-                    <Adduser fetchData = {fetchingData}/>
-                    {/* <UserExport/> */}
+                    <AddPackageOrder fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
                     <UserSearch/>
