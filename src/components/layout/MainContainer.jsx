@@ -25,7 +25,7 @@ import { Button, Layout, Menu, theme , Tour } from 'antd';
 import Allsearch from '../inputs/Allsearch';
 
 import UserList from "./../userManagement/user/UserList";
-import StaffLists from '../pages/StaffLists';
+import StaffLists from '../userManagement/staff/StaffLists';
 
 import Overview from '../pages/Overview';
 
@@ -33,28 +33,28 @@ import Appeals from '../pages/Appeals';
 import Orders from '../pages/Orders';
 import SuccessOrders from '../pages/SuccessOrders';
 
-import Courses from '../pages/CoursesList';
+import Courses from '../courses/CoursesList';
 
-import Enrolls from '../pages/EnrollsList';
-import PointEnrolls from '../pages/PointEnrolls';
-import FeeEnrolls from '../pages/FeeEnrolls';
+import Enrolls from '../roster/enroll/EnrollsList';
+import PointEnrolls from '../roster/pointenroll/PointEnrolls';
+import FeeEnrolls from '../roster/feeenroll/FeeEnrolls';
 
-import Attendances from '../pages/AttendancesList';
-import Leaverecords from '../pages/LeaveRecordsList';
-import Videorecords from '../pages/VideoRecordsList';
-import Gpalist from '../pages/GpaList';
-import Announcements from '../pages/AnnouncementsList';
-import Activities from '../pages/ActivitiesList';
-import Realnames from '../pages/RealNamesList';
-import Deviceinfos from '../pages/DeviceInfosList';
-import Verificationlogs from '../pages/VerificationLogsList';
-import Invitations from '../pages/InvitationLists';
-import Courseservices from '../pages/CourseServices';
-import ServiceLists from '../pages/ServiceLists';
-import SurveyPlatform from '../pages/SurveyPlatformLists';
-import PointPackages from '../pages/PointPackages';
-import PointChangeRecord from '../pages/PointChangeRecord';
-import LeadAttendancesList from '../pages/LeadAttendancesList';
+import Attendances from '../attendance/attendance/AttendancesList';
+import Leaverecords from '../attendance/leaverecord/LeaveRecordsList';
+import Videorecords from '../records/videorecord/VideoRecordsList';
+import Gpalist from '../gpamanagement/GpaList';
+import Announcements from '../announcement/announcement/AnnouncementsList';
+import Activities from '../announcement/activity/ActivitiesList';
+import Realnames from '../useroperation/realname/RealNamesList';
+import Deviceinfos from '../useroperation/deviceinfo/DeviceInfosList';
+import Verificationlogs from '../useroperation/verificationlog/VerificationLogsList';
+import Invitations from '../relationship/invitation/InvitationLists';
+import Courseservices from '../service/course/CourseServices';
+import ServiceLists from '../service/service/ServiceLists';
+import SurveyPlatform from '../survery/record/SurveyPlatformLists';
+import PointPackages from '../pointcontrol/package/PointPackages';
+import PointChangeRecord from '../pointcontrol/pointchangerecord/PointChangeRecord';
+import LeadAttendancesList from '../attendance/leadattendance/LeadAttendancesList';
 
 
 import Theme from '../settings/Theme';
@@ -76,8 +76,8 @@ import Paymentmethods from '../settings/PaymentMethods';
 import Operationplatform from '../settings/OperationPlatforms';
 import Surveyplatform from '../settings/SurveyPlatforms';
 import Gpagrades from '../settings/GpaGrades';
-import IpBanList from '../pages/IpBanList';
-import AdminAccessIP from '../pages/AdminAccessIP';
+import IpBanList from '../useroperation/ipbanlist/IpBanList';
+import AdminAccessIP from '../useroperation/adminaccessip/AdminAccessIP';
 
 import Login from '../authantication/Login';
 import ServiceTypes from '../settings/ServiceTypes';

@@ -5,7 +5,7 @@ import { Table } from 'antd';
 import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 
-import Userlistdrawer from '../drawer/UserDrawer';
+import Userlistdrawer from './../userManagement/user/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
 export default function Operationplatform({title}){

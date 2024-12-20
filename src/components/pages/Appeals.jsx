@@ -8,7 +8,7 @@ import "./../CustomCss/tablestyle.css";
 import Adduser from '../models/Adduser';
 import UserSearch from "../inputs/UserSearch";
 
-import Userlistdrawer from '../drawer/UserDrawer';
+import Userlistdrawer from './../userManagement/user/UserDrawer';
 
 export default function Appeals({title}){
     const [data, setfetchData] = useState([]);

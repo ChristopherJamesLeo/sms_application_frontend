@@ -8,7 +8,7 @@ import {
   } from '@ant-design/icons';
 import axios, { Axios } from 'axios';
 
-import Userlistdrawer from './UserDrawer';
+import Userlistdrawer from '../userManagement/user/UserDrawer';
 
 
 const Postcomments = ({name,postId}) => {

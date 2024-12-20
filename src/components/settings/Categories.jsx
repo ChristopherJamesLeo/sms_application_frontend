@@ -8,7 +8,7 @@ import api from '../api/api';
 
 
 
-import Userlistdrawer from '../drawer/UserDrawer';
+import Userlistdrawer from './../userManagement/user/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 
 import AddCategories,{EditCategory} from '../models/SettingModels/Categories';

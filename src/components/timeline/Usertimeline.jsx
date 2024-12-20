@@ -1,7 +1,7 @@
 
 import {message, Tag, Timeline} from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
-import Coursedrawer from '../drawer/Coursedrawer';
+import Coursedrawer from '../courses/Coursedrawer.jsx';
 import React from "react";
 import api from "../api/api.jsx";
 export default function Usertimeline({userEnrolls}){

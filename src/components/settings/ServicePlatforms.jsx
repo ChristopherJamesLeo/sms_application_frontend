@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Table , Switch , message } from 'antd';
 import "./../CustomCss/tablestyle.css";
 import api from '../api/api';
-import AddServicePlatform,{EditServicePlatform} from '../models/SettingModels/ServicePlatform';
+import AddServicePlatform,{EditServicePlatform} from '../survery/record/ServicePlatform';
 
 
 export default function ServicePlatform({title}){

@@ -6,7 +6,7 @@ import axios, { Axios } from 'axios';
 import "./../CustomCss/tablestyle.css";
 import AddStatus , {EditPrefix} from '../models/SettingModels/Prefix';
 
-import Userlistdrawer from '../drawer/UserDrawer';
+import Userlistdrawer from './../userManagement/user/UserDrawer';
 import UserSearch from "../inputs/UserSearch";
 import api from '../api/api';
 
