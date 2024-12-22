@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 // import Adduser from '../models/Adduser';
 import axios, { Axios } from 'axios';
-import "./../CustomCss/tablestyle.css";
-import Adduser from '../models/Adduser';
-import UserSearch from "../inputs/UserSearch";
+import "./../../CustomCss/tablestyle.css";
+import Adduser from '../../models/Adduser';
+import UserSearch from "../../inputs/UserSearch";
 
-import Userlistdrawer from './../userManagement/user/UserDrawer';
+import Userlistdrawer from '../../userManagement/user/UserDrawer';
 
 export default function Appeals({title}){
     const [data, setfetchData] = useState([]);

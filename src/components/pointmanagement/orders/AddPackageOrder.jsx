@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, Col, Form, Input, Row, Upload, Space, message , Select , Image , ConfigProvider} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import Userlistdrawer from '../userManagement/user/UserDrawer';
-import Coursedrawer from '../courses/Coursedrawer';
-import api from '../api/api';
+import Userlistdrawer from '../../userManagement/user/UserDrawer';
+import Coursedrawer from '../../courses/Coursedrawer';
+import api from '../../api/api';
 
 const AddPackageOrder = ({fetchData}) => {
     const [form] = Form.useForm();
@@ -294,7 +294,7 @@ const AddPackageOrder = ({fetchData}) => {
             </Button>
             {contextHolder}
             <Modal
-                title="Add Enroll"
+                title="Add Point orders"
                 open={open}
                 onOk={() => setOpen(false)}
                 onCancel={() => { 

@@ -29,9 +29,9 @@ import StaffLists from '../userManagement/staff/StaffLists';
 
 import Overview from '../pages/Overview';
 
-import Appeals from '../pages/Appeals';
-import Orders from '../pages/Orders';
-import SuccessOrders from '../pages/SuccessOrders';
+import Appeals from '../pointmanagement/appeals/Appeals';
+import Orders from '../pointmanagement/orders/Orders';
+import SuccessOrders from '../pointmanagement/successorders/SuccessOrders';
 
 import Courses from '../courses/CoursesList';
 

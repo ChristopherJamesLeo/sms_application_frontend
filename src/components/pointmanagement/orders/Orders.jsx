@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table , message , Tag , Switch , Image} from 'antd';
-import "./../CustomCss/tablestyle.css";
-import AddPackageOrder from '../models/AddPackageOrder';
-import UserSearch from "../inputs/UserSearch";
-import api from '../api/api';
+import "./../../CustomCss/tablestyle.css";
+import AddPackageOrder from './AddPackageOrder';
+import api from '../../api/api';
+import View from "./View";
+import Paid from "./Paid";
+import Unpaid from "./Unpaid";
 
-import Userlistdrawer from '../userManagement/user/UserDrawer';
-import UserExport from '../export/UserExport';
+import Userlistdrawer from '../../userManagement/user/UserDrawer';
 
 export default function Orders({title}){
     const [data, setfetchData] = useState([]);
@@ -75,7 +76,8 @@ export default function Orders({title}){
             remark : item.description,
             admit_by :  item.admit ? item.admit.name : null,
             created_at : item.created_at,
-            updated_at : item.updated_at
+            updated_at : item.updated_at,
+            actions : <div> <View/> <Paid/> <Unpaid/> </div> 
         }));
         console.log(showData);
         setLoading(false)
@@ -116,16 +118,16 @@ export default function Orders({title}){
             key: 'packagename'
         },
         {
-            title: 'Point',
+            title: 'Point Amount',
             width: 250,
             dataIndex: 'point',
             key: 'point',
         },
         {
-            title: 'Stage',
-            dataIndex: 'stage',
-            key: 'stage',
-            width: 150,
+            title: 'Payment At',
+            dataIndex: 'payment_at',
+            key: 'payment_at',
+            width: 200,
         },
         {
             title: 'Image',
@@ -133,16 +135,11 @@ export default function Orders({title}){
             key: 'image',
             width: 150,
         },
+       
         {
-            title: 'Remark',
-            dataIndex: 'remark',
-            key: 'remark',
-            width: 150,
-        },
-        {
-            title: 'Admit By',
-            dataIndex: 'admit_by',
-            key: 'admit_by',
+            title: 'Stage',
+            dataIndex: 'stage',
+            key: 'stage',
             width: 150,
         },
         {
@@ -152,11 +149,38 @@ export default function Orders({title}){
             width: 200,
         },
         {
-            title: 'Updated At',
-            dataIndex: 'updated_at',
-            key: 'updated_at',
+            title: 'Cancelled At',
+            dataIndex: 'cancelled_at',
+            key: 'cancelled_at',
             width: 200,
-        }, {
+        },
+        {
+            title: 'Canceller',
+            dataIndex: 'canceller',
+            key: 'canceller',
+            width: 200,
+        },
+       
+       
+        {
+            title: 'Completed At',
+            dataIndex: 'completed_at',
+            key: 'completed_at',
+            width: 200,
+        },
+        {
+            title: 'Verify At',
+            dataIndex: 'verify_at',
+            key: 'verify_at',
+            width: 200,
+        },
+        {
+            title: 'Verify By',
+            dataIndex: 'admit_by',
+            key: 'admit_by',
+            width: 150,
+        },
+        {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
@@ -180,8 +204,7 @@ export default function Orders({title}){
                     <AddPackageOrder fetchData = {fetchingData}/>
                 </div>
                 <div className='flex justify-end'>
-                    <UserSearch/>
-                    <UserExport/>
+              
                 </div>
             </div>
 
