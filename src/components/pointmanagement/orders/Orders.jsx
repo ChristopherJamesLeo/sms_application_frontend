@@ -28,8 +28,6 @@ export default function Orders({title}){
     // start fetching data
     const fetchingData = async () => {
         try {
-
-
             const response = await api.get('/packageorders', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('api_token')}` }
             });

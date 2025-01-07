@@ -15,6 +15,7 @@ import AttendedRecord from './AttendedRecord.jsx';
 import LeaveRecord from './LeaveRecord.jsx';
 import UserNote from './UserNote.jsx';
 import PointChangeRecord from './PointChangeRecord.jsx';
+import EmailBox from './EmailBox.jsx';
 
 
 
@@ -336,6 +337,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                                 <LeaveRecord userid={userid}/>
                                 <ViewVerification userId={userid} title="Verification Details"  size="middle"  />
                                 <PointChangeRecord  userid={userid} />
+                                <EmailBox  userid={userid} />
                                 
                             </Space>
                             
@@ -348,7 +350,7 @@ const Userlistdrawer = ({fetchData,name,userid}) => {
                     <Divider/>
                     
                     <UserPointManagement userdata = {data} userid = {userid} formHandler = {formHandler}/>
-
+``
                     <Divider/>
 
                     <div>

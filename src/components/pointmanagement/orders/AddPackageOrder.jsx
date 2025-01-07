@@ -9,7 +9,7 @@ const AddPackageOrder = ({fetchData}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-
+    const [loading, setLoading] = useState(false);
     var [userId,setUserId] = useState(null);
     var [packageLists,setPackageLists] = useState([]);
     var [paymentMethods,setPaymentMethods] = useState([]);
@@ -221,6 +221,7 @@ const AddPackageOrder = ({fetchData}) => {
         setPackageLists([]);
         setUserData({})
         setSelectedFile(null);
+        setLoading(false);
     };
 
     // end form reset
@@ -242,6 +243,7 @@ const AddPackageOrder = ({fetchData}) => {
             formData.append('image', selectedFile);
         }
         console.log(values);
+        setLoading(true);
         try {
             console.log(values);
 
@@ -256,13 +258,15 @@ const AddPackageOrder = ({fetchData}) => {
                 
                 if(response.data.status == "fail"){
                     error(response.data.message);
+                    setLoading(false);
                     return false;
                 }else {
+                    setLoading(false);
                     success(response.data.message);
                     console.log(response.data.message);
                     onReset();
                     setOpen(false);
-                    // fetchData();
+                    fetchData();
                 }
                 
                 
@@ -305,6 +309,7 @@ const AddPackageOrder = ({fetchData}) => {
                     setUserId(null);
                     setPackageLists([]);
                     setUserData({});
+                    setLoading(false);
                 }}
                 footer={null}
                 width={500}
@@ -370,7 +375,7 @@ const AddPackageOrder = ({fetchData}) => {
                     </Row>
                     {paymentTypeRender(paymentType)}
                     <Space>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" loading={loading}>
                             Submit
                         </Button>
                         <Button htmlType="button" onClick={onReset}>

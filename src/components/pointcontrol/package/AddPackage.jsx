@@ -46,6 +46,7 @@ const AddPackage = ({fetchData}) => {
         setPreviewUrl(null); // Clear the preview image
         setSelectedFile(null); // Clear the selected file
         setQuillValue("");
+        setLoading(false);
     };
 
     const formHandler = async (values) => {
@@ -107,6 +108,7 @@ const AddPackage = ({fetchData}) => {
                 onCancel={() => {
                     setOpen(false);
                     onReset();
+                    setLoading(false);
                 }}
                 footer={null}
                 width={600}
